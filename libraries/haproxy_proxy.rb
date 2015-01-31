@@ -10,8 +10,38 @@ class Chef::Resource
   class HaproxyProxy < Chef::Resource
     identity_attr :name
 
+    # excluded: option_http_proxy, which is inconsistently named
     PROXY_KEYWORDS = %w(
-
+      bind-process
+      compression
+      disabled
+      enabled
+      errorfile
+      errorloc
+      errorloc302
+      errorloc303
+      log
+      mode
+      option_forceclose
+      option_forwardfor
+      option_http-keep-alive
+      option_http-no-delay
+      option_http-pretend-keepalive
+      option_http-server-close
+      option_http-tunnel
+      option_httpclose
+      option_httplog
+      option_independent-streams
+      option_nolinger
+      option_originalto
+      option_splice-auto
+      option_splice-request
+      option_splice-response
+      option_tcpka
+      option_tcplog
+      timeout_http-keep-alive
+      timeout_http-request
+      timeout_tarpit
     )
 
     DEFAULTS_KEYWORDS = %w(
