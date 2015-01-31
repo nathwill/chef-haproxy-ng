@@ -1,5 +1,5 @@
 #
-# Cookbook Name: haproxy-ng
+# Cookbook Name:: haproxy-ng
 # Resource:: instance
 #
 
@@ -111,8 +111,23 @@ class Chef::Resource
         :equal_to => %w( debug quiet )
       )
     end
+
+    # List of proxies to pluck from the resource collection
+    # when building the instance template. Order matters!
+    def proxies(arg = nil)
+      set_or_return(
+        :proxies, arg,
+        :kind_of => Array,
+        :default => []
+      )
+    end
   end
 end
+
+#
+# Cookbook Name:: haproxy-ng
+# Provider:: instance
+#
 
 class Chef::Provider
   class HaproxyInstance < Chef::Provider
