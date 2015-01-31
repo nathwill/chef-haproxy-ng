@@ -38,6 +38,14 @@ class Chef::Resource
       @allowed_actions = [:create, :delete]
       @name = name
     end
+
+    def type(arg = nil)
+      set_or_return(
+        :type, arg,
+        :kind_of => String,
+        :equal_to => %w( defaults frontend backend listen )
+      )
+    end
   end
 end
 
