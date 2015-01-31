@@ -10,6 +10,26 @@ class Chef::Resource
   class HaproxyProxy < Chef::Resource
     identity_attr :name
 
+    PROXY_KEYWORDS = %w(
+
+    )
+
+    DEFAULTS_KEYWORDS = %w(
+
+    )
+
+    FRONTEND_KEYWORDS = %w(
+
+    )
+
+    BACKEND_KEYWORDS = %w(
+
+    )
+
+    LISTEN_KEYWORDS = %w(
+
+    )
+
     def initialize(name, run_context = nil)
       super
       @resource_name = :haproxy_proxy
