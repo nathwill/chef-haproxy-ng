@@ -1,3 +1,8 @@
+#
+# Cookbook Name: haproxy-ng
+# Helpers:: haproxy
+#
+
 module Haproxy
   module Helpers
     def self.instances

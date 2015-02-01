@@ -3,9 +3,6 @@
 # Resource:: instance
 #
 
-require 'chef/resource'
-require 'chef/provider'
-
 class Chef::Resource
   class HaproxyInstance < Chef::Resource
     identity_attr :name
