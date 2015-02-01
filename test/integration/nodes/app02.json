@@ -1,0 +1,9 @@
+{
+  "name": "app02",
+  "chef_environment": "_default",
+  "run_list": ["role[app]"],
+  "automatic": {
+    "ipaddress": "22.34.56.78",
+    "hostname": "app02"
+  }
+}

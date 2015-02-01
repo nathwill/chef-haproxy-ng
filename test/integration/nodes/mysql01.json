@@ -1,0 +1,9 @@
+{
+  "name": "mysql01",
+  "chef_environment": "_default",
+  "run_list": ["role[mysql]"],
+  "automatic": {
+    "ipaddress": "12.34.56.89",
+    "hostname": "mysql01"
+  }
+}
