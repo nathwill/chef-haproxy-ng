@@ -144,7 +144,7 @@ class Chef::Resource
       'stats show-node' => KEYWORD_DEFAULTS_BACKEND,
       'stats uri' => KEYWORD_DEFAULTS_BACKEND,
       'stick match' => KEYWORD_BACKEND,
-      'stick on' KEYWORD_BACKEND,
+      'stick on' => KEYWORD_BACKEND,
       'stick store-request' => KEYWORD_BACKEND,
       'stick store-response' => KEYWORD_BACKEND,
       'stick-table' => KEYWORD_BACKEND,
