@@ -79,14 +79,16 @@ class Chef::Resource
     def config(arg = nil)
       set_or_return(
         :config, arg,
-        :kind_of => Hash,
-        :default => {
-          'daemon' => nil,
-          'maxconn' => 256
-        },
+        :kind_of => Array,
+        :default => [
+          'daemon',
+          'maxconn 256'
+        ],
         :callbacks => {
           'is a valid config' => lambda do |spec|
-            spec.keys.all? { |keyword| CONFIG_KEYWORDS.include? keyword }
+            spec.all? do |conf|
+              CONFIG_KEYWORDS.any? { |kw| conf.start_with? kw }
+            end
           end
         }
       )
@@ -95,10 +97,12 @@ class Chef::Resource
     def tuning(arg = nil)
       set_or_return(
         :tuning, arg,
-        :kind_of => Hash,
+        :kind_of => Array,
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
-            spec.keys.all? { |keyword| TUNING_KEYWORDS.include? keyword }
+            spec.all? do |conf|
+              TUNING_KEYWORDS.any? { |kw| conf.start_with? kw }
+            end
           end
         }
       )
