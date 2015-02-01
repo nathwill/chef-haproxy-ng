@@ -112,6 +112,32 @@ class Chef::Resource
       )
     end
 
+    def userlists(arg = nil)
+      set_or_return(
+        :userlists, arg,
+        :kind_of => Hash,
+        :default => {},
+        :callbacks => {
+          'is a valid userlist' => lambda do |spec|
+            spec.values.all? { |v| v.start_with?('user', 'group') }
+          end
+        }
+      )
+    end
+
+    def peers(arg = nil)
+      set_or_return(
+        :peers, arg,
+        :kind_of => Hash,
+        :default => {},
+        :callbacks => {
+          'is a valid peer list' => lambda do |spec|
+            # TODO: validate peer configuration
+          end
+        }
+      )
+    end
+
     # List of proxies to pluck from the resource collection
     # when building the instance template. Order matters!
     def proxies(arg = nil)
