@@ -7,26 +7,37 @@ class Chef::Resource
   class HaproxyInstance < Chef::Resource
     identity_attr :name
 
-    CONFIG_KEYWORDS = %w(
-      ca-base
-      chroot
-      crt-base
-      daemon
-      uid
-      gid
-      group
-      log
-      log-send-hostname
-      nbproc
-      pidfile
-      ulimit-n
-      user
-      stats
-      ssl-server-verify
-      node
-      description
-      unix-bind
-    )
+    CONFIG_KEYWORDS = [
+      'ca-base',
+      'chroot',
+      'cpu-map',
+      'crt-base',
+      'daemon',
+      'gid',
+      'group',
+      'log',
+      'log-send-hostname',
+      'log-tag',
+      'nbproc',
+      'pidfile',
+      'ulimit-n',
+      'user',
+      'ssl-default-bind-ciphers',
+      'ssl-default-bind-options',
+      'ssl-default-server-ciphers',
+      'ssl-default-server-options',
+      'ssl-server-verify',
+      'stats bind-process',
+      'stats socket',
+      'stats timeout',
+      'stats maxconn',
+      'uid',
+      'ulimit-n',
+      'unix-bind',
+      'user',
+      'node',
+      'description',
+    ]
 
     TUNING_KEYWORDS = %w(
       max-spread-checks
@@ -38,6 +49,7 @@ class Chef::Resource
       maxsessrate
       maxsslconn
       maxsslrate
+      maxzlibmem
       noepoll
       nokqueue
       nopoll
@@ -56,10 +68,12 @@ class Chef::Resource
       tune.pipesize
       tune.rcvbuf.client
       tune.rcvbuf.server
+      tune.sndbuf.client
+      tune.sndbuf.server
       tune.ssl.cachesize
+      tune.ssl.force-private-cache
       tune.ssl.lifetime
       tune.ssl.maxrecord
-      tune.ssl.force-private-cache
       tune.ssl.default-dh-param
       tune.zlib.memlevel
       tune.zlib.windowsize
