@@ -190,6 +190,24 @@ class Chef::Resource
         :equal_to => %w( defaults frontend backend listen )
       )
     end
+
+    def config(arg = nil)
+      set_or_return(
+        :config, arg,
+        :kind_of => Array,
+        :callbacks => {
+          'is a valid config' => lambda do |spec|
+            spec.all? do |conf|
+              valid_keywords = PROXY_KEYWORD_GRID.select do |k,v|
+                v.include? self.type
+              end
+
+              valid_keywords.keys.any? { |kw| conf.include? kw }
+            end
+          end
+        },
+      )
+    end
   end
 end
 
