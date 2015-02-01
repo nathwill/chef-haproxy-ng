@@ -6,6 +6,9 @@
 require 'chef/resource'
 require 'chef/provider'
 
+require 'chef/resource/file'
+require 'chef/provider/file'
+
 class Chef::Resource
   class HaproxyProxy < Chef::Resource
     identity_attr :name
@@ -230,7 +233,14 @@ class Chef::Provider
     end
 
     def edit_proxy(exec_action)
-        
+      f = Chef::Resource::File.new(new_resource.name)
+      f.path ::File.join(
+        "#{Chef::Config['file_cache_path'] || '/tmp'}",
+        "#{new_resource.name}.haproxy.proxy.cfg"
+      )
+      f.content Haproxy::Helpers.proxy_config(new_resource)
+      f.run_action exec_action
+      f.updated_by_last_action?
     end
   end
 end

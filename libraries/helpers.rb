@@ -21,7 +21,7 @@ module Haproxy
     end
 
     def self.proxy_config(proxy)
-      
+      'config'
     end
 
     def self.resources(resource)
