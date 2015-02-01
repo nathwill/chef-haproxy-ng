@@ -20,7 +20,7 @@ module Haproxy
       self.proxies.select { |p| p.name == name }
     end
 
-    def self.proxy_config
+    def self.proxy_config(proxy)
       
     end
 
