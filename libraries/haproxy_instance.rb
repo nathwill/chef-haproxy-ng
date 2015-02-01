@@ -32,7 +32,8 @@ class Chef::Resource
     )
 
     TUNING_KEYWORDS = %w(
-      max-spread-checksmaxconn
+      max-spread-checks
+      maxconn
       maxconnrate
       maxcomprate
       maxcompcpuusage

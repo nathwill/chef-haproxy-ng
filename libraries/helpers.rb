@@ -21,7 +21,9 @@ module Haproxy
     end
 
     def self.proxy_config(proxy)
-      'config'
+      declaration = "#{proxy.type} #{proxy.name}"
+      configuration = proxy.config.join("\n\t")
+      "#{declaration}\n\t#{configuration}\n\n"
     end
 
     def self.resources(resource)
