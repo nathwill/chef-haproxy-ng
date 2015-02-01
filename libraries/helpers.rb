@@ -9,7 +9,9 @@ module Haproxy
     end
 
     def self.instance_config(instance)
-      
+      declaration = 'global'
+      configuration = (instance.config + instance.tuning).join("\n  ")
+      "#{declaration}\n  #{configuration}\n\n"
     end
 
     def self.proxies
@@ -22,8 +24,8 @@ module Haproxy
 
     def self.proxy_config(proxy)
       declaration = "#{proxy.type} #{proxy.name}"
-      configuration = proxy.config.join("\n\t")
-      "#{declaration}\n\t#{configuration}\n\n"
+      configuration = proxy.config.join("\n  ")
+      "#{declaration}\n  #{configuration}\n\n"
     end
 
     def self.resources(resource)
