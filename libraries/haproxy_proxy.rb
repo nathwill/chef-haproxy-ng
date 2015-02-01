@@ -202,7 +202,7 @@ class Chef::Resource
                 v.include? self.type
               end
 
-              valid_keywords.keys.any? { |kw| conf.include? kw }
+              valid_keywords.keys.any? { |kw| conf.start_with? kw }
             end
           end
         },
