@@ -136,7 +136,7 @@ class Chef::Resource
         :default => {},
         :callbacks => {
           'is a valid peer list' => lambda do |spec|
-            # TODO: validate peer configuration
+            true # TODO: validate peer configuration
           end
         }
       )

@@ -1,7 +1,7 @@
 module Haproxy
   module Helpers
     def self.instances
-      self.resource(Chef::Resource::HaproxyInstance)
+      self.resources(Chef::Resource::HaproxyInstance)
     end
 
     def self.instance(name)
@@ -13,7 +13,7 @@ module Haproxy
     end
 
     def self.proxies
-      self.resource(Chef::Resource::HaproxyProxy)
+      self.resources(Chef::Resource::HaproxyProxy)
     end
 
     def self.proxy(name)
@@ -24,7 +24,7 @@ module Haproxy
       
     end
 
-    private def self.resource(resource)
+    def self.resources(resource)
       run_context.resource_collection.select do |r|
         r.is_a?(resource)
       end
