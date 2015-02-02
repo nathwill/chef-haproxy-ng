@@ -3,19 +3,15 @@
 #
 
 if defined?(ChefSpec)
-  def create_haproxy_instance(instance)
-    ChefSpec::Matchers::ResourceMatcher.new(:haproxy_instance, :create, instance)
-  end
-
-  def delete_haproxy_instance(instance)
-    ChefSpec::Matchers::ResourceMatcher.new(:haproxy_instance, :delete, instance)
-  end
-
-  def create_haproxy_proxy(proxy)
-    ChefSpec::Matchers::ResourceMatcher.new(:haproxy_proxy, :create, proxy)
-  end
-
-  def delete_haproxy_proxy(proxy)
-    ChefSpec::Matchers::ResourceMatcher.new(:haproxy_proxy, :delete, proxy)
+  %w( instance proxy backend defaults frontend listen ).each do |r|
+    %w( create delete ).each do |a|
+      define_method("#{a}_haproxy_#{r}") do |arg|
+        ChefSpec::Matchers::ResourceMatcher.new(
+          "haproxy_#{r}".to_sym,
+          a.to_sym,
+          arg
+        )
+      end
+    end
   end
 end
