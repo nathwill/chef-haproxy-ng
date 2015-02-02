@@ -4,8 +4,12 @@
 #
 
 class Chef::Resource
-  class HaproxyListen < Chef::Resource
+  class HaproxyListen < Chef::Resource::HaproxyProxy
     identity_attr :name
+
+    def type
+      'listen'
+    end
 
     def acls
       set_or_return(

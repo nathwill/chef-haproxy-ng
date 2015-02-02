@@ -1,11 +1,27 @@
 #
 # Cookbook Name: haproxy-ng
-# Resource:: backend
+# Resource:: defaults
 #
 
 class Chef::Resource
-  class HaproxyBackend < Chef::Resource
+  class HaproxyDefaults < Chef::Resource::HaproxyProxy
     identity_attr :name
+
+    def type
+      'defaults'
+    end
+
+    def balance
+      set_or_return(
+
+      )
+    end
+
+    def backlog
+      set_or_return(
+
+      )
+    end
 
     def balance
       set_or_return(
@@ -15,6 +31,18 @@ class Chef::Resource
 
     def config
       set_or_return(
+
+      )
+    end
+
+    def default_backend
+      set_or_return(
+
+      )
+    end
+
+    def maxconn
+       set_or_return(
 
       )
     end
@@ -31,24 +59,6 @@ class Chef::Resource
       )
     end
 
-    def servers
-      set_or_return(
-
-      )
-    end
-
-    def server_port
-      set_or_return(
-
-      )
-    end
-
-    def server_config
-      set_or_return(
-
-      )
-    end
-
     def source
       set_or_return(
 
@@ -58,7 +68,7 @@ class Chef::Resource
 end
 
 class Chef::Provider
-  class HaproxyBackend < Chef::Provider
+  class HaproxyDefaults < Chef::Provider
 
   end
 end

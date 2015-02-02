@@ -8,12 +8,33 @@ module Haproxy
     def self.config(declaration, configuration)
       "#{declaration}\n  #{configuration.join("\n  ")}"
     end
+
+    def self.proxies(run_context)
+      self.resources(Chef::Resource::HaproxyProxy, run_context)
+    end
+
+    def self.proxy(name, run_context)
+      self.proxies(run_context).select { |p| p.name == name }.first
+    end
+
+    private
+
+    def self.resources(resource, run_context)
+      run_context.resource_collection.select do |r|
+        r.is_a?(resource)
+      end
+    end
   end
 end
 
 module Haproxy::Helpers
+  module Instance
+    def self.config(instance)
+      Haproxy::Helpers.config('global', instance.config + instance.tuning)
+    end
+  end
+
   module Proxy
-    # Keyword valid combos
     KEYWORD_ALL = %w( defaults frontend listen backend )
     KEYWORD_DEFAULTS_FRONTEND = %w( defaults frontend listen )
     KEYWORD_DEFAULTS_BACKEND = %w( defaults backend listen )
@@ -192,12 +213,6 @@ module Haproxy::Helpers
 
     def self.config(proxy)
       Haproxy::Helpers.config("#{proxy.type} #{proxy.name}", proxy.config)
-    end
-  end
-
-  module Instance
-    def self.config(instance)
-      Haproxy::Helpers.config('global', instance.config + instance.tuning)
     end
   end
 end

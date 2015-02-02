@@ -1,19 +1,6 @@
 #
 # Spin up an instance
 #
-haproxy_instance 'my-app' do
-  config [
-    'daemon',
-  ]
-  tuning [
-    'maxconn 256',
-  ]
-  peers({
-
-  })
-  proxies %w( http config_http app config_tcp mysql redis )
-  action :create
-end
 
 haproxy_proxy 'config_http' do
   type 'defaults'
@@ -79,4 +66,19 @@ haproxy_proxy 'redis' do
     'tcp-check send QUIT\r\n',
     'tcp-check expect string +OK',
   ]
+end
+
+my_app_proxies = %w( http config_http app config_tcp mysql redis ).map do |n|
+  Haproxy::Helpers.proxy(n, run_context)
+end
+
+haproxy_instance 'my-app' do
+  config [
+    'daemon',
+  ]
+  tuning [
+    'maxconn 256',
+  ]
+  proxies my_app_proxies
+  action :create
 end

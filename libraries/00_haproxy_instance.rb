@@ -199,16 +199,6 @@ class Chef::Provider
 
     private
 
-    def proxies
-      run_context.resource_collection.select do |r|
-        r.is_a?(Chef::Resource::HaproxyProxy)
-      end
-    end
-
-    def proxy(name)
-      proxies.select { |p| p.name == name }.first
-    end
-
     def edit_instance(exec_action)
       t = Chef::Resource::Template.new(
         "haproxy-instance-#{new_resource.name}",
@@ -219,7 +209,6 @@ class Chef::Provider
       t.source 'haproxy.cfg.erb'
       t.variables({
         :instance => new_resource,
-        :proxies => new_resource.proxies.map { |p| proxy(p) }
       })
       t.run_action exec_action
       t.updated_by_last_action?

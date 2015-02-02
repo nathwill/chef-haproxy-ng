@@ -1,13 +1,17 @@
 #
 # Cookbook Name: haproxy-ng
-# Resource:: defaults
+# Resource:: frontend
 #
 
 class Chef::Resource
-  class HaproxyDefaults < Chef::Resource
+  class HaproxyFrontend < Chef::Resource::HaproxyProxy
     identity_attr :name
 
-    def balance
+    def type
+      'frontend'
+    end
+
+    def acls
       set_or_return(
 
       )
@@ -19,7 +23,7 @@ class Chef::Resource
       )
     end
 
-    def balance
+    def bind
       set_or_return(
 
       )
@@ -38,7 +42,7 @@ class Chef::Resource
     end
 
     def maxconn
-       set_or_return(
+      set_or_return(
 
       )
     end
@@ -49,13 +53,7 @@ class Chef::Resource
       )
     end
 
-    def retries
-      set_or_return(
-
-      )
-    end
-
-    def source
+    def use_backends
       set_or_return(
 
       )
@@ -64,7 +62,7 @@ class Chef::Resource
 end
 
 class Chef::Provider
-  class HaproxyDefaults < Chef::Provider
+  class HaproxyFrontend < Chef::Provider
 
   end
 end
