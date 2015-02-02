@@ -10,3 +10,11 @@ Suggested background reading:
 ### haproxy_instance
 
 ### haproxy_proxy
+
+### haproxy_frontend
+
+### haproxy_defaults
+
+### haproxy_backend
+
+### haproxy_listen
