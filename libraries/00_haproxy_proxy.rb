@@ -61,7 +61,7 @@ class Chef::Provider
 
     def edit_proxy(exec_action)
       f = Chef::Resource::File.new(
-        "haproxy-proxy-#{new_resource.name}",
+        "haproxy-#{new_resource.type}-#{new_resource.name}",
         run_context
       )
       f.path ::File.join(

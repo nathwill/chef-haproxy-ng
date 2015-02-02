@@ -56,7 +56,9 @@ class Chef::Resource
         :callbacks => {
           'is a valid servers list' => lambda do |spec|
              spec.empty? || spec.all? do |s|
-               s.is_a? Chef::Resource::HaproxyServer
+               s.is_a? Hash && [:name, :ipaddress, :port].all? do |a|
+                 s.keys.include? a
+               end
              end
           end
         }
@@ -88,6 +90,7 @@ class Chef::Provider
       new_resource.servers.each do |server|
         @current_resource.config.shift(Haproxy::Server.config(server))
       end
+      super
     end
   end
 end
