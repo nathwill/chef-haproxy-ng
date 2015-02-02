@@ -5,38 +5,16 @@
 
 module Haproxy
   module Helpers
-    def self.instances
-      self.resources(Chef::Resource::HaproxyInstance)
-    end
-
-    def self.instance(name)
-      self.instances.select { |i| i.name == name }
+    def self.config(declaration, configuration)
+      "#{declaration}\n  #{configuration.join("\n  ")}"
     end
 
     def self.instance_config(instance)
-      declaration = 'global'
-      configuration = (instance.config + instance.tuning).join("\n  ")
-      "#{declaration}\n  #{configuration}\n\n"
-    end
-
-    def self.proxies
-      self.resources(Chef::Resource::HaproxyProxy)
-    end
-
-    def self.proxy(name)
-      self.proxies.select { |p| p.name == name }
+      config('global', instance.config + instance.tuning)
     end
 
     def self.proxy_config(proxy)
-      declaration = "#{proxy.type} #{proxy.name}"
-      configuration = proxy.config.join("\n  ")
-      "#{declaration}\n  #{configuration}\n\n"
-    end
-
-    def self.resources(resource)
-      run_context.resource_collection.select do |r|
-        r.is_a?(resource)
-      end
+      config("#{proxy.type} #{proxy.name}", proxy.config)
     end
   end
 end

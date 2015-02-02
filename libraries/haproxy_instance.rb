@@ -88,6 +88,14 @@ class Chef::Resource
       @name = name
     end
 
+    def cookbook(arg = nil)
+      set_or_return(
+        :cookbook, arg,
+        :kind_of => String,
+        :default => 'haproxy-ng'
+      )
+    end
+
     def config(arg = nil)
       set_or_return(
         :config, arg,
@@ -189,8 +197,32 @@ class Chef::Provider
       new_resource.updated_by_last_action(edit_instance(:delete))
     end
 
+    private
+
+    def proxies
+      run_context.resource_collection.select do |r|
+        r.is_a?(Chef::Resource::HaproxyProxy)
+      end
+    end
+
+    def proxy(name)
+      proxies.select { |p| p.name == name }.first
+    end
+
     def edit_instance(exec_action)
-        
+      t = Chef::Resource::Template.new(
+        "haproxy-instance-#{new_resource.name}",
+        run_context
+      )
+      t.cookbook new_resource.cookbook
+      t.path "/etc/haproxy/#{new_resource.name}.cfg"
+      t.source 'haproxy.cfg.erb'
+      t.variables({
+        :instance => new_resource,
+        :proxies => new_resource.proxies.map { |p| proxy(p) }
+      })
+      t.run_action exec_action
+      t.updated_by_last_action?
     end
   end
 end
