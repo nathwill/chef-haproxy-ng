@@ -58,7 +58,7 @@ class Chef::Resource
 end
 
 class Chef::Provider
-  class HaproxyDefaults < Chef::Provider::Haproxy::Proxy
+  class HaproxyDefaults < Chef::Provider::HaproxyProxy
     def initialize(*args)
       super
     end

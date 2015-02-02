@@ -49,6 +49,7 @@ class Chef::Resource
           'backend exists' => lambda do |spec|
             Haproxy::Helpers.proxy(spec, run_context)
               .is_a? Chef::Resource::HaproxyProxy
+          end
         }
       )
     end
@@ -77,8 +78,8 @@ class Chef::Resource
             spec.empty? || spec.all? do |u|
               u.is_a? Hash && [:backend, :condition].all? do |a|
                 spec.keys.include? a
-            end && Haproxy::Helpers.proxy(spec, run_context)
-              .is_a? Chef::Resource::HaproxyProxy
+              end
+            end
           end
         }
       )
@@ -87,7 +88,7 @@ class Chef::Resource
 end
 
 class Chef::Provider
-  class HaproxyFrontend < Chef::Provider
+  class HaproxyFrontend < Chef::Provider::HaproxyProxy
     def initialize(*args)
       super
     end
