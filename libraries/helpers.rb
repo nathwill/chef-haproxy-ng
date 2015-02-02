@@ -4,6 +4,8 @@
 #
 
 module Haproxy
+  MODES = %w( tcp http health )
+
   module Helpers
     def self.config(declaration, configuration)
       "#{declaration}\n  #{configuration.join("\n  ")}"
@@ -283,6 +285,34 @@ module Haproxy
 
     def self.config(proxy)
       Haproxy::Helpers.config("#{proxy.type} #{proxy.name}", proxy.config)
+    end
+
+    def valid_config?(config = [], type)
+      valid_keywords = KEYWORD_MATRIX.select do |k, v|
+        v.include? type
+      end
+
+      config.all? do |c|
+        valid_keywords.any? { |kw| c.start_with? kw }
+      end
+    end
+
+    module Backend
+      BALANCE_ALGORITHMS = %w(
+        roundrobin
+        static-rr
+        leastconn
+        first
+        source
+        uri
+        url_param
+        hdr
+        rdp-cookie
+      )
+    end
+
+    module Frontend
+
     end
   end
 end

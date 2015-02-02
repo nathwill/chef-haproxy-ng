@@ -29,12 +29,6 @@ class Chef::Resource
       )
     end
 
-    def config
-      set_or_return(
-
-      )
-    end
-
     def default_backend
       set_or_return(
 

@@ -28,15 +28,10 @@ class Chef::Resource
       set_or_return(
         :config, arg,
         :kind_of => Array,
+        :default => [],
         :callbacks => {
-          'is a valid config' => lambda do |spec|
-            spec.all? do |conf|
-              valid_keywords = Haproxy::Proxy::KEYWORD_MATRIX.select do |k,v|
-                v.include? self.type
-              end
-
-              valid_keywords.keys.any? { |kw| conf.start_with? kw }
-            end
+          "is a valid #{self.type} config" => lambda do |spec|
+            Haproxy::Proxy.valid_config?(spec, self.type)
           end
         },
       )

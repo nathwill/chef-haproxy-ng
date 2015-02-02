@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['haproxy']['source'].tap do |haproxy|
+default['haproxy']['source'].tap do |source|
   source['version'] = '1.5.10'
 
   source['base_url'] = 'http://www.haproxy.org/download'

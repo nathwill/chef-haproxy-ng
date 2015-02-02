@@ -16,5 +16,3 @@ Suggested background reading:
 ### haproxy_defaults
 
 ### haproxy_backend
-
-### haproxy_listen

@@ -14,7 +14,7 @@ platforms:
 suites:
   - name: package
     run_list:
-      - recipe[haproxy-ng::default]
+      - recipe[haproxy-ng::install]
       - recipe[setup]
     attributes:
       haproxy:
