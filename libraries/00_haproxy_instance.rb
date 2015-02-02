@@ -7,78 +7,6 @@ class Chef::Resource
   class HaproxyInstance < Chef::Resource
     identity_attr :name
 
-    CONFIG_KEYWORDS = [
-      'ca-base',
-      'chroot',
-      'cpu-map',
-      'crt-base',
-      'daemon',
-      'gid',
-      'group',
-      'log',
-      'log-send-hostname',
-      'log-tag',
-      'nbproc',
-      'pidfile',
-      'ulimit-n',
-      'user',
-      'ssl-default-bind-ciphers',
-      'ssl-default-bind-options',
-      'ssl-default-server-ciphers',
-      'ssl-default-server-options',
-      'ssl-server-verify',
-      'stats bind-process',
-      'stats socket',
-      'stats timeout',
-      'stats maxconn',
-      'uid',
-      'ulimit-n',
-      'unix-bind',
-      'user',
-      'node',
-      'description',
-    ]
-
-    TUNING_KEYWORDS = %w(
-      max-spread-checks
-      maxconn
-      maxconnrate
-      maxcomprate
-      maxcompcpuusage
-      maxpipes
-      maxsessrate
-      maxsslconn
-      maxsslrate
-      maxzlibmem
-      noepoll
-      nokqueue
-      nopoll
-      nosplice
-      nogetaddrinfo
-      spread-checks
-      tune.bufsize
-      tune.chksize
-      tune.comp.maxlevel
-      tune.http.cookielen
-      tune.http.maxhdr
-      tune.idletimer
-      tune.maxaccept
-      tune.maxpollevents
-      tune.maxrewrite
-      tune.pipesize
-      tune.rcvbuf.client
-      tune.rcvbuf.server
-      tune.sndbuf.client
-      tune.sndbuf.server
-      tune.ssl.cachesize
-      tune.ssl.force-private-cache
-      tune.ssl.lifetime
-      tune.ssl.maxrecord
-      tune.ssl.default-dh-param
-      tune.zlib.memlevel
-      tune.zlib.windowsize
-    )
-
     def initialize(name, run_context = nil)
       super
       @resource_name = :haproxy_instance
@@ -107,7 +35,9 @@ class Chef::Resource
         :callbacks => {
           'is a valid config' => lambda do |spec|
             spec.all? do |conf|
-              CONFIG_KEYWORDS.any? { |kw| conf.start_with? kw }
+              Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
+                conf.start_with? kw
+              end
             end
           end
         }
@@ -121,7 +51,9 @@ class Chef::Resource
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
             spec.all? do |conf|
-              TUNING_KEYWORDS.any? { |kw| conf.start_with? kw }
+              Haproxy::Instance::TUNING_KEYWORDS.any? do |kw|
+                conf.start_with? kw
+              end
             end
           end
         }

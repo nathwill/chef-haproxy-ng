@@ -25,10 +25,80 @@ module Haproxy
       end
     end
   end
-end
 
-module Haproxy::Helpers
   module Instance
+    CONFIG_KEYWORDS = [
+      'ca-base',
+      'chroot',
+      'cpu-map',
+      'crt-base',
+      'daemon',
+      'gid',
+      'group',
+      'log',
+      'log-send-hostname',
+      'log-tag',
+      'nbproc',
+      'pidfile',
+      'ulimit-n',
+      'user',
+      'ssl-default-bind-ciphers',
+      'ssl-default-bind-options',
+      'ssl-default-server-ciphers',
+      'ssl-default-server-options',
+      'ssl-server-verify',
+      'stats bind-process',
+      'stats socket',
+      'stats timeout',
+      'stats maxconn',
+      'uid',
+      'ulimit-n',
+      'unix-bind',
+      'user',
+      'node',
+      'description',
+    ]
+
+    TUNING_KEYWORDS = %w(
+      max-spread-checks
+      maxconn
+      maxconnrate
+      maxcomprate
+      maxcompcpuusage
+      maxpipes
+      maxsessrate
+      maxsslconn
+      maxsslrate
+      maxzlibmem
+      noepoll
+      nokqueue
+      nopoll
+      nosplice
+      nogetaddrinfo
+      spread-checks
+      tune.bufsize
+      tune.chksize
+      tune.comp.maxlevel
+      tune.http.cookielen
+      tune.http.maxhdr
+      tune.idletimer
+      tune.maxaccept
+      tune.maxpollevents
+      tune.maxrewrite
+      tune.pipesize
+      tune.rcvbuf.client
+      tune.rcvbuf.server
+      tune.sndbuf.client
+      tune.sndbuf.server
+      tune.ssl.cachesize
+      tune.ssl.force-private-cache
+      tune.ssl.lifetime
+      tune.ssl.maxrecord
+      tune.ssl.default-dh-param
+      tune.zlib.memlevel
+      tune.zlib.windowsize
+    )
+
     def self.config(instance)
       Haproxy::Helpers.config('global', instance.config + instance.tuning)
     end

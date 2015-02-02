@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: haproxy-ng
-# Recipe:: install
+# Attribute:: search
 #
 # Copyright 2015 Nathan Williams
 # 
@@ -16,11 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-case node['haproxy']['install_method']
-when 'package'
-  package 'haproxy'
-when 'source'
-  include_recipe "#{cookbook_name}::source"
-else
-  Chef::Log.warn 'Unknown install_method for haproxy. Skipping install!'
+default['haproxy']['search'].tap do |search|
+  search['app_role'] = 'app'
 end

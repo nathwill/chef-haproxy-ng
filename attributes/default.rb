@@ -16,18 +16,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['haproxy'].tap do |haproxy|
-  # One of: package, source
-  haproxy['install_method'] = 'package'
-
-  haproxy['version'] = '1.5.10'
-
-  haproxy['source_base_url'] = 'http://www.haproxy.org/download'
-
-  haproxy['source_package_url'] = [
-    "#{haproxy['source_base_url']}",
-    "#{haproxy['version'].split('.')[0,1].join('.')}",
-    "src",
-    "#{haproxy['version']}.tar.gz"
-  ].join('/')
-end
+default['haproxy']['install_method'] = 'package'

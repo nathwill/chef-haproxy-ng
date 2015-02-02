@@ -31,7 +31,7 @@ class Chef::Resource
         :callbacks => {
           'is a valid config' => lambda do |spec|
             spec.all? do |conf|
-              valid_keywords = Haproxy::Helpers::Proxy::KEYWORD_MATRIX.select do |k,v|
+              valid_keywords = Haproxy::Proxy::KEYWORD_MATRIX.select do |k,v|
                 v.include? self.type
               end
 
@@ -73,7 +73,7 @@ class Chef::Provider
         "#{Chef::Config['file_cache_path'] || '/tmp'}",
         "haproxy.#{new_resource.type}.#{new_resource.name}.cfg"
       )
-      f.content Haproxy::Helpers::Proxy.config(new_resource)
+      f.content Haproxy::Proxy.config(new_resource)
       f.run_action exec_action
       f.updated_by_last_action?
     end
