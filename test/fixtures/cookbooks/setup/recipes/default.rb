@@ -2,7 +2,7 @@
 # Spin up an instance
 #
 
-haproxy_proxy 'config_http' do
+haproxy_proxy 'HTTP' do
   type 'defaults'
   config [
     'mode http',
@@ -38,7 +38,7 @@ haproxy_proxy 'elasticsearch' do
   ]
 end
 
-haproxy_proxy 'config_tcp' do
+haproxy_proxy 'TCP' do
   type 'defaults'
   config [
     'mode tcp',
@@ -68,7 +68,7 @@ haproxy_proxy 'redis' do
   ]
 end
 
-my_app_proxies = %w( http config_http app config_tcp mysql redis ).map do |n|
+my_app_proxies = %w( HTTP http app TCP mysql redis ).map do |n|
   Haproxy::Helpers.proxy(n, run_context)
 end
 

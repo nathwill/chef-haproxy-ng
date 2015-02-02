@@ -287,13 +287,13 @@ module Haproxy
       Haproxy::Helpers.config("#{proxy.type} #{proxy.name}", proxy.config)
     end
 
-    def valid_config?(config = [], type)
+    def self.valid_config?(config = [], type)
       valid_keywords = KEYWORD_MATRIX.select do |k, v|
         v.include? type
       end
 
       config.all? do |c|
-        valid_keywords.any? { |kw| c.start_with? kw }
+        valid_keywords.keys.any? { |kw| c.start_with? kw }
       end
     end
 
