@@ -51,16 +51,14 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyDefaults.new(new_resource.name)
       @current_resource.type new_resource.type
-      @current_resource.config new_resource.config
+      merged_config = new_resource.config
       {
-        'retries' => new_resource.retries,
-        'backlog' => new_resource.backlog,
-        'maxconn' => new_resource.maxconn,
         'balance' => new_resource.balance,
         'mode' => new_resource.mode,
-      }.each_pair do |kw, val|
-        @current_resource.config.unshift("#{kw} #{val}") if val
+      }.each_pair do |kw, arg|
+        merged_config.unshift("#{kw} #{arg}") if arg
       end
+      @current_resource.config merged_config
       @current_resource
     end
   end

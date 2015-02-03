@@ -21,10 +21,11 @@ class Chef::Resource
       set_or_return(
         :acls, arg,
         :kind_of => Array,
+        :default => [],
         :callbacks => {
           'is a valid list of acls' => lambda do |spec|
             spec.all? do |a|
-              a.is_a? Hash && [:name, :criterion].all? do |k|
+              [:name, :criterion].all? do |k|
                 a.keys.include? k
               end
             end
@@ -36,7 +37,7 @@ class Chef::Resource
     def bind(arg = nil)
       set_or_return(
         :bind, arg,
-        :kind_of => String,
+        :kind_of => [String, Array],
       )
     end
 
@@ -65,10 +66,11 @@ class Chef::Resource
       set_or_return(
         :use_backends, arg,
         :kind_of => Array,
+        :default => [],
         :callbacks => {
           'is a valid use_backends list' => lambda do |spec|
             spec.empty? || spec.all? do |u|
-              u.is_a? Hash && [:backend, :condition].all? do |a|
+              [:backend, :condition].all? do |a|
                 spec.keys.include? a
               end
             end
@@ -88,7 +90,19 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyFrontend.new(new_resource.name)
       @current_resource.type new_resource.type
-      @current_resource.config new_resource.config
+      merged_config = new_resource.config
+      merged_config.unshift("mode #{new_resource.mode}") if new_resource.mode
+      Array(new_resource.bind).each do |bind|
+        merged_config.unshift("bind #{bind}")
+      end
+      new_resource.acls.each do |acl|
+        merged_config << "acl #{acl[:name]} #{acl[:criterion]}"
+      end
+      new_resource.use_backends.each do |ub|
+        merged_config << "use_backend #{ub[:backend]} #{ub[:condition]}"
+      end
+      merged_config << "default_backend #{new_resource.default_backend}" if new_resource.default_backend
+      @current_resource.config merged_config
       @current_resource
     end
   end

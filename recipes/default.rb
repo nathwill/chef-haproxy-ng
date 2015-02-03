@@ -28,7 +28,7 @@ haproxy_defaults 'HTTP' do
   ]
 end
 
-app_members = search(:node, 'roles:app').map do |n|
+app_members = search(:node, 'role:app').map do |n|
   {
     :name => n.name,
     :address => n.ipaddress,

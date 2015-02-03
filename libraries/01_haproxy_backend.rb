@@ -47,7 +47,7 @@ class Chef::Resource
         :callbacks => {
           'is a valid servers list' => lambda do |spec|
              spec.empty? || spec.all? do |s|
-               s.is_a? Hash && [:name, :ipaddress, :port].all? do |a|
+               [:name, :address, :port].all? do |a|
                  s.keys.include? a
                end
              end
@@ -67,7 +67,17 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyBackend.new(new_resource.name)
       @current_resource.type new_resource.type
-      @current_resource.config new_resource.config
+      merged_config = new_resource.config
+      {
+        'mode' => new_resource.mode,
+        'balance' => new_resource.balance,
+      }.each_pair do |kw, arg|
+        merged_config.unshift("#{kw} #{arg}") if arg
+      end
+      new_resource.servers.each do |server|
+        merged_config << "server #{server[:name]} #{server[:address]}:#{server[:port]} #{server[:config]}"
+      end
+      @current_resource.config merged_config
       @current_resource
     end
   end
