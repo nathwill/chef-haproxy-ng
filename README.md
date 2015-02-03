@@ -314,4 +314,4 @@ resources (frontend, defaults, backend).
 
 ### haproxy_listen
 
-Not yet implemented. Use haproxy_proxy directly.
+Not yet implemented. Use the `haproxy_proxy` resource directly.
