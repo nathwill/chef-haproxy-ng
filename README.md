@@ -1,6 +1,6 @@
 # haproxy-ng cookbook
 
-* This cookbook is currently an alpha quality release. *
+_NOTE_: / This cookbook is currently an alpha quality release. /
 
 While it is believed to provide useful functionality, it has not been thoroughly 
 tested 'in the field', and is subject to rapid change.
