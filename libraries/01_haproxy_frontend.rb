@@ -7,6 +7,11 @@ class Chef::Resource
   class HaproxyFrontend < Chef::Resource::HaproxyProxy
     identity_attr :name
 
+    include ::Haproxy::Proxy::All
+    include ::Haproxy::Proxy::NonDefaults
+    include ::Haproxy::Proxy::DefaultsFrontend
+    include ::Haproxy::Proxy::Frontend
+
     def initialize(name, run_context = nil)
       super
       @resource_name = :haproxy_frontend
@@ -16,72 +21,6 @@ class Chef::Resource
     def type(_ = nil)
       'frontend'
     end
-
-    # rubocop: disable MethodLength
-    def acls(arg = nil)
-      set_or_return(
-        :acls, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
-          'is a valid list of acls' => lambda do |spec|
-            spec.empty? || spec.all? do |a|
-              [:name, :criterion].all? do |k|
-                a.keys.include? k
-              end
-            end
-          end
-        }
-      )
-    end
-    # rubocop: enable MethodLength
-
-    def bind(arg = nil)
-      set_or_return(
-        :bind, arg,
-        :kind_of => [String, Array]
-      )
-    end
-
-    def default_backend(arg = nil)
-      set_or_return(
-        :default_backend, arg,
-        :kind_of => String,
-        :callbacks => {
-          'backend exists' => lambda do |spec|
-            Haproxy::Helpers.proxy(spec, run_context)
-              .is_a? Chef::Resource::HaproxyProxy
-          end
-        }
-      )
-    end
-
-    def mode(arg = nil)
-      set_or_return(
-        :mode, arg,
-        :kind_of => String,
-        :equal_to => Haproxy::MODES
-      )
-    end
-
-    # rubocop: disable MethodLength
-    def use_backends(arg = nil)
-      set_or_return(
-        :use_backends, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
-          'is a valid use_backends list' => lambda do |spec|
-            spec.empty? || spec.all? do |u|
-              [:backend, :condition].all? do |a|
-                u.keys.include? a
-              end
-            end
-          end
-        }
-      )
-    end
-    # rubocop: enable MethodLength
   end
 end
 

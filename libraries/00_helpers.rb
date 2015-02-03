@@ -297,6 +297,49 @@ module Haproxy
       end
     end
 
+    module Frontend
+      def bind(arg = nil)
+        set_or_return(
+          :bind, arg,
+          :kind_of => [String, Array]
+        )
+      end
+
+      # rubocop: disable MethodLength
+      def use_backends(arg = nil)
+        set_or_return(
+          :use_backends, arg,
+          :kind_of => Array,
+          :default => [],
+          :callbacks => {
+            'is a valid use_backends list' => lambda do |spec|
+              spec.empty? || spec.all? do |u|
+                [:backend, :condition].all? do |a|
+                  u.keys.include? a
+                end
+              end
+            end
+          }
+        )
+      end
+      # rubocop: enable MethodLength
+    end
+
+    module DefaultsFrontend
+      def default_backend(arg = nil)
+        set_or_return(
+          :default_backend, arg,
+          :kind_of => String,
+          :callbacks => {
+            'backend exists' => lambda do |spec|
+              Haproxy::Helpers.proxy(spec, run_context)
+                .is_a? Chef::Resource::HaproxyProxy
+            end
+          }
+        )
+      end
+    end
+
     module Backend
       BALANCE_ALGORITHMS = %w(
         roundrobin
@@ -309,6 +352,74 @@ module Haproxy
         hdr
         rdp-cookie
       )
+
+      # rubocop: disable MethodLength
+      def servers(arg = nil)
+        set_or_return(
+          :servers, arg,
+          :kind_of => Array,
+          :default => [],
+          :callbacks => {
+            'is a valid servers list' => lambda do |spec|
+              spec.empty? || spec.all? do |s|
+                [:name, :address, :port].all? do |a|
+                  s.keys.include? a
+                end
+              end
+            end
+          }
+        )
+      end
+      # rubocop: enable MethodLength
+    end
+
+    module DefaultsBackend
+      # rubocop: disable MethodLength
+      def balance(arg = nil)
+        set_or_return(
+          :balance, arg,
+          :kind_of => String,
+          :callbacks => {
+            'is a valid balance algorithm' => lambda do |spec|
+              Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
+                spec.start_with? a
+              end
+            end
+          }
+        )
+      end
+      # rubocop: enable MethodLength
+    end
+
+    module NonDefaults
+      # rubocop: disable MethodLength
+      def acls(arg = nil)
+        set_or_return(
+          :acls, arg,
+          :kind_of => Array,
+          :default => [],
+          :callbacks => {
+            'is a valid list of acls' => lambda do |spec|
+              spec.empty? || spec.all? do |a|
+                [:name, :criterion].all? do |k|
+                  a.keys.include? k
+                end
+              end
+            end
+          }
+        )
+      end
+      # rubocop: enable MethodLength
+    end
+
+    module All
+      def mode(arg = nil)
+        set_or_return(
+          :mode, arg,
+          :kind_of => String,
+          :equal_to => Haproxy::MODES
+        )
+      end
     end
   end
 end

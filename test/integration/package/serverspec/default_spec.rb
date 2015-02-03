@@ -9,7 +9,7 @@ describe 'haproxy-ng::default' do
 
   describe 'configures haproxy' do
     describe file('/etc/haproxy/haproxy.cfg') do
-      its(:md5sum) { should eq '0849994f1ee87a04ec22b7c2a674a41d' }
+      its(:md5sum) { should eq 'c56b337eac3244c7c0fde70a846d2a9e' }
     end
   end
 
@@ -22,7 +22,7 @@ describe 'haproxy-ng::default' do
 
   describe 'configures individual proxies correctly' do
     {
-      'haproxy.defaults.HTTP.cfg' => '95fb6e5187ec16401fbdef786c622399',
+      'haproxy.defaults.HTTP.cfg' => '2b3a7f04e45efb99bbb7b57149d0d8b7',
       'haproxy.frontend.www.cfg' => 'de6616e18e200c8d6704297a51efd0e5',
       'haproxy.backend.app.cfg' => 'a23c89d6a99172fc425482161935e893',
     }.each_pair do |f, s|

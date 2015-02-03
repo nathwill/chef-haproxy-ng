@@ -7,6 +7,11 @@ class Chef::Resource
   class HaproxyBackend < Chef::Resource::HaproxyProxy
     identity_attr :name
 
+    include ::Haproxy::Proxy::All
+    include ::Haproxy::Proxy::NonDefaults
+    include ::Haproxy::Proxy::DefaultsBackend
+    include ::Haproxy::Proxy::Backend
+
     def initialize(name, run_context = nil)
       super
       @resource_name = :haproxy_backend
@@ -16,49 +21,6 @@ class Chef::Resource
     def type(_ = nil)
       'backend'
     end
-
-    # rubocop: disable MethodLength
-    def balance(arg = nil)
-      set_or_return(
-        :balance, arg,
-        :kind_of => String,
-        :callbacks => {
-          'is a valid balance algorithm' => lambda do |spec|
-            Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
-              spec.start_with? a
-            end
-          end
-        }
-      )
-    end
-    # rubocop: enable MethodLength
-
-    def mode(arg = nil)
-      set_or_return(
-        :mode, arg,
-        :kind_of => String,
-        :equal_to => Haproxy::MODES
-      )
-    end
-
-    # rubocop: disable MethodLength
-    def servers(arg = nil)
-      set_or_return(
-        :servers, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
-          'is a valid servers list' => lambda do |spec|
-            spec.empty? || spec.all? do |s|
-              [:name, :address, :port].all? do |a|
-                s.keys.include? a
-              end
-            end
-          end
-        }
-      )
-    end
-    # rubocop: enable MethodLength
   end
 end
 

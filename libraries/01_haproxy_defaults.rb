@@ -7,6 +7,10 @@ class Chef::Resource
   class HaproxyDefaults < Chef::Resource::HaproxyProxy
     identity_attr :name
 
+    include ::Haproxy::Proxy::All
+    include ::Haproxy::Proxy::DefaultsFrontend
+    include ::Haproxy::Proxy::DefaultsBackend
+
     def initialize(name, run_context = nil)
       super
       @resource_name = :haproxy_defaults
@@ -15,31 +19,6 @@ class Chef::Resource
 
     def type(_ = nil)
       'defaults'
-    end
-
-    # rubocop: disable MethodLength
-    def balance(arg = nil)
-      set_or_return(
-        :balance, arg,
-        :kind_of => String,
-        :default => 'roundrobin',
-        :callbacks => {
-          'is a valid balance algorithm' => lambda do |spec|
-            Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
-              spec.start_with? a
-            end
-          end
-        }
-      )
-    end
-    # rubocop: enable MethodLength
-
-    def mode(arg = nil)
-      set_or_return(
-        :mode, arg,
-        :kind_of => String,
-        :equal_to => Haproxy::MODES
-      )
     end
   end
 end
