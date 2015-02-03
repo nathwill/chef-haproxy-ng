@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: haproxy-ng
-# Spec:: default
+# Spec:: install
 #
 # Copyright 2015 Nathan Williams
 # 
@@ -19,7 +19,7 @@
 
 require 'spec_helper'
 
-describe 'haproxy-ng::default' do
+describe 'haproxy-ng::service' do
 
   context 'When all attributes are default, on an unspecified platform' do
 
@@ -27,32 +27,12 @@ describe 'haproxy-ng::default' do
       ChefSpec::ServerRunner.new.converge(described_recipe)
     end
 
-    it 'includes the install recipe' do
-      expect(chef_run).to include_recipe 'haproxy-ng::install'
+    it 'enables service' do
+      expect(chef_run).to enable_service 'haproxy'
     end
 
-    it 'creates haproxy_defaults HTTP' do
-      expect(chef_run).to create_haproxy_defaults 'HTTP'
-    end
-
-    it 'creates haproxy_backend app' do
-      expect(chef_run).to create_haproxy_backend 'app'
-    end
-
-    it 'creates haproxy_frontend www' do
-      expect(chef_run).to create_haproxy_frontend 'www'
-    end
-
-    it 'creates haproxy_instance haproxy' do
-      expect(chef_run).to create_haproxy_instance 'haproxy'
-    end
-
-    it 'skips validation' do
-      expect(chef_run).to_not run_execute 'validate-haproxy_instance-haproxy'
-    end
-
-    it 'includes the service recipe' do
-      expect(chef_run).to include_recipe 'haproxy-ng::service'
+    it 'starts service' do
+      expect(chef_run).to start_service 'haproxy'
     end
 
     it 'converges successfully' do
