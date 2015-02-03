@@ -28,6 +28,34 @@ describe 'haproxy-ng::default' do
       runner.converge(described_recipe)
     end
 
+    it 'includes the install recipe' do
+      expect(:chef_run).to include_recipe 'haproxy-ng::install'
+    end
+
+    it 'creates haproxy_default HTTP' do
+      expect(:chef_run).to create_haproxy_default 'HTTP'
+    end
+
+    it 'creates haproxy_backend app' do
+      expect(:chef_run).to create_haproxy_backend 'app'
+    end
+
+    it 'creates haproxy_frontend www' do
+      expect(:chef_run).to create_haproxy_frontend 'www'
+    end
+
+    it 'creates haproxy_instance haproxy' do
+      expect(:chef_run).to create_haproxy_instance 'haproxy'
+    end
+
+    it 'skips validation' do
+      expect(:chef_run).to_not run_execute 'validate-haproxy_instance-haproxy'
+    end
+
+    it 'includes the service recipe' do
+      expect(:chef_run).to include_recipe 'haproxy-ng::service'
+    end
+
     it 'converges successfully' do
       chef_run # This should not raise an error
     end
