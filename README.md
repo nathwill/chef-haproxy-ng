@@ -1,4 +1,4 @@
-# haproxy-ng cookbook
+# haproxy-ng cookbook  [![Build Status](https://travis-ci.org/nathwill/chef-haproxy-ng.svg?branch=master)](https://travis-ci.org/nathwill/chef-haproxy-ng)
 
 _NOTE_: This cookbook is currently an alpha quality release.
 
