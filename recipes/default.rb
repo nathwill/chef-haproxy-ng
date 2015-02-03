@@ -28,7 +28,7 @@ haproxy_defaults 'HTTP' do
   ]
 end
 
-app_role = node['haproxy']['search']['app_role']
+app_role = node['haproxy']['app_role']
 
 if Chef::Config[:solo]
   app_members = { :name => 'app', :address => '127.0.0.1', :port => 80 }

@@ -25,7 +25,7 @@ class Chef::Resource
         :default => [],
         :callbacks => {
           'is a valid list of acls' => lambda do |spec|
-            spec.all? do |a|
+            spec.empty? || spec.all? do |a|
               [:name, :criterion].all? do |k|
                 a.keys.include? k
               end
