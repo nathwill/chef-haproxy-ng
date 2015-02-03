@@ -42,7 +42,7 @@ end
 haproxy_backend 'app' do
   servers app_members
   config [
-    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ my-app.com'
+    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost'
   ]
 end
 
