@@ -5,8 +5,8 @@ license          'apache2'
 description      'Installs/Configures haproxy-ng'
 long_description 'Installs/Configures haproxy-ng'
 version          '0.1.0'
-source_url       'https://github.com/nathwill/chef-haproxy-ng'
-issues_url       'https://github.com/nathwill/chef-haproxy-ng/issues'
+#source_url       'https://github.com/nathwill/chef-haproxy-ng'
+#issues_url       'https://github.com/nathwill/chef-haproxy-ng/issues'
 
 %w( redhat scientific centos fedora debian ubuntu ).each do |platform|
   supports platform
