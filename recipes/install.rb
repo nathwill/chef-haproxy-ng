@@ -20,7 +20,7 @@ case node['haproxy']['install_method']
 when 'package'
   package 'haproxy'
 when 'source'
-  include_recipe "#{cookbook_name}::source"
+  Chef::Log.warn 'Source install not yet implemented!'
 else
   Chef::Log.warn 'Unknown install_method for haproxy. Skipping install!'
 end
