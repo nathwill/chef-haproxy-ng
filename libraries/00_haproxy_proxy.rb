@@ -69,7 +69,7 @@ class Chef::Provider
         run_context
       )
       f.path ::File.join(
-        "#{Chef::Config['file_cache_path'] || '/tmp'}",
+        Chef::Config['file_cache_path'] || '/tmp',
         "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
       )
       f.content Haproxy::Proxy.config(@current_resource)

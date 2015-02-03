@@ -22,8 +22,8 @@ default['haproxy']['source'].tap do |source|
   source['base_url'] = 'http://www.haproxy.org/download'
 
   source['package_url'] = [
-    "#{source['source_base_url']}",
-    "#{source['version'].split('.')[0, 1].join('.')}",
+    source['source_base_url'],
+    source['version'].split('.')[0, 1].join('.'),
     'src',
     "#{source['version']}.tar.gz"
   ].join('/')
