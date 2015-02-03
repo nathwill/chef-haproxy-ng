@@ -65,7 +65,6 @@ haproxy_instance 'haproxy' do
     'user haproxy',
     'group haproxy',
     'pidfile /var/run/haproxy.pid',
-    'chroot /var/lib/haproxy'
   ]
   tuning [
     'maxconn 50000'
