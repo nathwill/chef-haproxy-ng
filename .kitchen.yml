@@ -14,15 +14,13 @@ platforms:
 suites:
   - name: package
     run_list:
-      - recipe[haproxy-ng::install]
-      - recipe[setup]
+      - recipe[haproxy-ng::default]
     attributes:
       haproxy:
         install_method: package
   - name: source
     run_list:
       - recipe[haproxy-ng::default]
-      - recipe[setup]
     attributes:
       haproxy:
         install_method: source

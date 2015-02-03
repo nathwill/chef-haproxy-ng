@@ -7,7 +7,13 @@ class Chef::Resource
   class HaproxyFrontend < Chef::Resource::HaproxyProxy
     identity_attr :name
 
-    def type
+    def initialize(name, run_context = nil)
+      super
+      @resource_name = :haproxy_frontend
+      @provider = Chef::Provider::HaproxyFrontend
+    end
+
+    def type(arg = nil)
       'frontend'
     end
 
@@ -17,20 +23,13 @@ class Chef::Resource
         :kind_of => Array,
         :callbacks => {
           'is a valid list of acls' => lambda do |spec|
-            spec.empty? || spec.all? do |a|
+            spec.all? do |a|
               a.is_a? Hash && [:name, :criterion].all? do |k|
                 a.keys.include? k
               end
             end
           end
         }
-      )
-    end
-
-    def backlog(arg = nil)
-      set_or_return(
-        :backlog, arg,
-        :kind_of => Integer,
       )
     end
 
@@ -51,13 +50,6 @@ class Chef::Resource
               .is_a? Chef::Resource::HaproxyProxy
           end
         }
-      )
-    end
-
-    def maxconn(arg = nil)
-      set_or_return(
-        :maxconn, arg,
-        :kind_of => Integer
       )
     end
 
@@ -95,27 +87,9 @@ class Chef::Provider
 
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyFrontend.new(new_resource.name)
-    end
-
-    private
-
-    def merge_attribute(attribute, value)
-      @current_resource.config.unshift("#{attribute} #{value}") if value
-    end
-
-    def edit_proxy(exec_action)
-      merge_attribute('default_backend', new_resource.default_backend)
-      @current_resource.acls.each do |acl|
-        merge_attribute('acl', "#{acl.name} #{acl.criterion} #{acl.config}")
-      end
-      @current_resource.use_backends.each do |use_backend|
-        merge_attribute('use_backend', "#{use_backend.backend} #{use_backend.condition}")
-      end
-      merge_attribute('backlog', new_resource.backlog)
-      merge_attribute('maxconn', new_resource.maxconn)
-      merge_attribute('bind', new_resource.bind)
-      merge_attribute('mode', new_resource.mode)
-      super
+      @current_resource.type new_resource.type
+      @current_resource.config new_resource.config
+      @current_resource
     end
   end
 end

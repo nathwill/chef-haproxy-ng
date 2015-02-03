@@ -18,18 +18,14 @@
 
 include_recipe "#{cookbook_name}::install"
 
-haproxy_defaults 'http' do
+haproxy_defaults 'HTTP' do
   mode 'http'
   config [
-    'timeout connect 5000ms',
-    'timeout client 50000ms',
-    'timeout server 50000ms',
+    'maxconn 50000',
+    'timeout connect 5s',
+    'timeout client 50s',
+    'timeout server 50s',
   ]
-end
-
-haproxy_frontend 'www' do
-  bind '*:80'
-  default_backend 'app'
 end
 
 app_members = search(:node, 'roles:app').map do |n|
@@ -44,11 +40,16 @@ end
 haproxy_backend 'app' do
   servers app_members
   config [
-    "option httpchk GET /health_check HTTP/1.1\r\nHost:\ my-app.com",
+    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ my-app.com',
   ]
 end
 
-my_proxies = %w( http www app ).map do |p|
+haproxy_frontend 'www' do
+  bind '*:80'
+  default_backend 'app'
+end
+
+my_proxies = %w( HTTP www app ).map do |p|
   Haproxy::Helpers.proxy(p, run_context)
 end
 
@@ -67,6 +68,4 @@ haproxy_instance 'haproxy' do
   notifies :reload, 'service[haproxy]', :delayed
 end
 
-service 'haproxy' do
-  action [:enable, :start]
-end
+include_recipe "#{cookbook_name}::service"

@@ -47,6 +47,9 @@ class Chef::Provider
 
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyProxy.new(new_resource.name)
+      @current_resource.type new_resource.type
+      @current_resource.config new_resource.config
+      @current_resource
     end
 
     def action_create
@@ -61,14 +64,14 @@ class Chef::Provider
 
     def edit_proxy(exec_action)
       f = Chef::Resource::File.new(
-        "haproxy-#{new_resource.type}-#{new_resource.name}",
+        "haproxy-#{@current_resource.type}-#{@current_resource.name}",
         run_context
       )
       f.path ::File.join(
         "#{Chef::Config['file_cache_path'] || '/tmp'}",
-        "haproxy.#{new_resource.type}.#{new_resource.name}.cfg"
+        "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
       )
-      f.content Haproxy::Proxy.config(new_resource)
+      f.content Haproxy::Proxy.config(@current_resource)
       f.run_action exec_action
       f.updated_by_last_action?
     end

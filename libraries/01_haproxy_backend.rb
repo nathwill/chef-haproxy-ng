@@ -11,10 +11,9 @@ class Chef::Resource
       super
       @resource_name = :haproxy_backend
       @provider = Chef::Provider::HaproxyBackend
-      @name = name
     end
 
-    def type
+    def type(arg = nil)
       'backend'
     end
 
@@ -22,10 +21,9 @@ class Chef::Resource
       set_or_return(
         :balance, arg,
         :kind_of => String,
-        :default => 'roundrobin',
         :callbacks => {
           'is a valid balance algorithm' => lambda do |spec|
-            Haproxy::Backend::BALANCE_ALGORITHMS.any? do |a|
+            Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
               spec.start_with? a
             end
           end
@@ -38,13 +36,6 @@ class Chef::Resource
         :mode, arg,
         :kind_of => String,
         :equal_to => Haproxy::MODES,
-      )
-    end
-
-    def retries(arg = nil)
-      set_or_return(
-        :retries, arg,
-        :kind_of => Integer
       )
     end
 
@@ -75,22 +66,9 @@ class Chef::Provider
 
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyBackend.new(new_resource.name)
-    end
-
-    private
-
-    def merge_attribute(attribute, value)
-      @current_resource.config.unshift("#{attribute} #{value}") if value
-    end
-
-    def edit_proxy(exec_action)
-      merge_attribute('mode', new_resource.mode)
-      merge_attribute('balance', new_resource.balance)
-      merge_attribute('retries', new_resource.retries)
-      new_resource.servers.each do |server|
-        @current_resource.config.shift(Haproxy::Server.config(server))
-      end
-      super
+      @current_resource.type new_resource.type
+      @current_resource.config new_resource.config
+      @current_resource
     end
   end
 end

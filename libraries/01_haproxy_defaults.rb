@@ -7,7 +7,13 @@ class Chef::Resource
   class HaproxyDefaults < Chef::Resource::HaproxyProxy
     identity_attr :name
 
-    def type
+    def initialize(name, run_context = nil)
+      super
+      @resource_name = :haproxy_defaults
+      @provider = Chef::Provider::HaproxyDefaults
+    end
+
+    def type(arg = nil)
       'defaults'
     end
 
@@ -18,25 +24,11 @@ class Chef::Resource
         :default => 'roundrobin',
         :callbacks => {
           'is a valid balance algorithm' => lambda do |spec|
-            Haproxy::Backend::BALANCE_ALGORITHMS.any? do |a|
+            Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
               spec.start_with? a
             end
           end
         }
-      )
-    end
-
-    def backlog(arg = nil)
-      set_or_return(
-        :backlog, arg,
-        :kind_of => Integer
-      )
-    end
-
-    def maxconn(arg = nil)
-       set_or_return(
-        :maxconn, arg,
-        :kind_of => Integer
       )
     end
 
@@ -45,13 +37,6 @@ class Chef::Resource
         :mode, arg,
         :kind_of => String,
         :equal_to => Haproxy::MODES,
-      )
-    end
-
-    def retries(arg = nil)
-      set_or_return(
-        :retries, arg,
-        :kind_of => Integer
       )
     end
   end
@@ -65,21 +50,18 @@ class Chef::Provider
 
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyDefaults.new(new_resource.name)
-    end
-
-    private
-
-    def merge_attribute(attribute, value)
-      @current_resource.config.unshift("#{attribute} #{value}") if value
-    end
-
-    def edit_proxy(exec_action)
-      merge_attribute('mode', new_resource.mode)
-      merge_attribute('balance', new_resource.balance)
-      merge_attribute('retries', new_resource.retries)
-      merge_attribute('backlog', new_resource.backlog)
-      merge_attribute('maxconn', new_resource.maxconn)
-      super
+      @current_resource.type new_resource.type
+      @current_resource.config new_resource.config
+      {
+        'retries' => new_resource.retries,
+        'backlog' => new_resource.backlog,
+        'maxconn' => new_resource.maxconn,
+        'balance' => new_resource.balance,
+        'mode' => new_resource.mode,
+      }.each_pair do |kw, val|
+        @current_resource.config.unshift("#{kw} #{val}") if val
+      end
+      @current_resource
     end
   end
 end

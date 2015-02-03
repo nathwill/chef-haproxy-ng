@@ -30,7 +30,6 @@ class Chef::Resource
         :kind_of => Array,
         :default => [
           'daemon',
-          'maxconn 256'
         ],
         :callbacks => {
           'is a valid config' => lambda do |spec|
@@ -48,6 +47,9 @@ class Chef::Resource
       set_or_return(
         :tuning, arg,
         :kind_of => Array,
+        :default => [
+          'maxconn 256',
+        ],
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
             spec.all? do |conf|
