@@ -67,7 +67,13 @@ haproxy_instance 'haproxy' do
     'maxconn 50000'
   ]
   proxies my_proxies
+  notifies :run, 'execute[validate-haproxy_instance-haproxy]', :immediately
+end
+
+execute 'validate-haproxy_instance-haproxy' do
+  command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
   notifies :reload, 'service[haproxy]', :delayed
+  action :nothing
 end
 
 include_recipe "#{cookbook_name}::service"
