@@ -30,10 +30,10 @@ class Chef::Resource
         :kind_of => Array,
         :default => [],
         :callbacks => {
-          "is a valid #{self.type} config" => lambda do |spec|
-            Haproxy::Proxy.valid_config?(spec, self.type)
+          "is a valid #{type} config" => lambda do |spec|
+            Haproxy::Proxy.valid_config?(spec, type)
           end
-        },
+        }
       )
     end
   end
@@ -62,6 +62,7 @@ class Chef::Provider
 
     private
 
+    # rubocop: disable MethodLength
     def edit_proxy(exec_action)
       f = Chef::Resource::File.new(
         "haproxy-#{@current_resource.type}-#{@current_resource.name}",
@@ -75,5 +76,6 @@ class Chef::Provider
       f.run_action exec_action
       f.updated_by_last_action?
     end
+    # rubocop: enable MethodLength
   end
 end

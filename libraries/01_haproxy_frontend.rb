@@ -13,10 +13,11 @@ class Chef::Resource
       @provider = Chef::Provider::HaproxyFrontend
     end
 
-    def type(arg = nil)
+    def type(_ = nil)
       'frontend'
     end
 
+    # rubocop: disable MethodLength
     def acls(arg = nil)
       set_or_return(
         :acls, arg,
@@ -33,11 +34,12 @@ class Chef::Resource
         }
       )
     end
+    # rubocop: enable MethodLength
 
     def bind(arg = nil)
       set_or_return(
         :bind, arg,
-        :kind_of => [String, Array],
+        :kind_of => [String, Array]
       )
     end
 
@@ -58,10 +60,11 @@ class Chef::Resource
       set_or_return(
         :mode, arg,
         :kind_of => String,
-        :equal_to => Haproxy::MODES,
+        :equal_to => Haproxy::MODES
       )
     end
 
+    # rubocop: disable MethodLength
     def use_backends(arg = nil)
       set_or_return(
         :use_backends, arg,
@@ -71,13 +74,14 @@ class Chef::Resource
           'is a valid use_backends list' => lambda do |spec|
             spec.empty? || spec.all? do |u|
               [:backend, :condition].all? do |a|
-                spec.keys.include? a
+                u.keys.include? a
               end
             end
           end
         }
       )
     end
+    # rubocop: enable MethodLength
   end
 end
 
@@ -87,8 +91,12 @@ class Chef::Provider
       super
     end
 
+    # rubocop: disable AbcSize
+    # rubocop: disable MethodLength
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyFrontend.new(new_resource.name)
+      @current_resource ||= Chef::Resource::HaproxyFrontend.new(
+        new_resource.name
+      )
       @current_resource.type new_resource.type
       merged_config = new_resource.config
       merged_config.unshift("mode #{new_resource.mode}") if new_resource.mode
@@ -101,9 +109,13 @@ class Chef::Provider
       new_resource.use_backends.each do |ub|
         merged_config << "use_backend #{ub[:backend]} #{ub[:condition]}"
       end
-      merged_config << "default_backend #{new_resource.default_backend}" if new_resource.default_backend
+      if new_resource.default_backend
+        merged_config << "default_backend #{new_resource.default_backend}"
+      end
       @current_resource.config merged_config
       @current_resource
     end
+    # rubocop: enable AbcSize
+    # rubocop: enable MethodLength
   end
 end

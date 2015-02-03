@@ -12,11 +12,11 @@ module Haproxy
     end
 
     def self.proxies(run_context)
-      self.resources(Chef::Resource::HaproxyProxy, run_context)
+      resources(Chef::Resource::HaproxyProxy, run_context)
     end
 
     def self.proxy(name, run_context)
-      self.proxies(run_context).select { |p| p.name == name }.first
+      proxies(run_context).select { |p| p.name == name }.first
     end
 
     private
@@ -58,7 +58,7 @@ module Haproxy
       'unix-bind',
       'user',
       'node',
-      'description',
+      'description'
     ]
 
     TUNING_KEYWORDS = %w(
@@ -280,7 +280,7 @@ module Haproxy
       'unique-id-format' => KEYWORD_DEFAULTS_FRONTEND,
       'unique-id-header' => KEYWORD_DEFAULTS_FRONTEND,
       'use_backend' => KEYWORD_FRONTEND,
-      'use-server' => KEYWORD_BACKEND,
+      'use-server' => KEYWORD_BACKEND
     }
 
     def self.config(proxy)
@@ -288,7 +288,7 @@ module Haproxy
     end
 
     def self.valid_config?(config = [], type)
-      valid_keywords = KEYWORD_MATRIX.select do |k, v|
+      valid_keywords = KEYWORD_MATRIX.select do |_, v|
         v.include? type
       end
 
@@ -309,10 +309,6 @@ module Haproxy
         hdr
         rdp-cookie
       )
-    end
-
-    module Frontend
-
     end
   end
 end

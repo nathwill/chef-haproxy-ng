@@ -13,10 +13,11 @@ class Chef::Resource
       @provider = Chef::Provider::HaproxyDefaults
     end
 
-    def type(arg = nil)
+    def type(_ = nil)
       'defaults'
     end
 
+    # rubocop: disable MethodLength
     def balance(arg = nil)
       set_or_return(
         :balance, arg,
@@ -31,12 +32,13 @@ class Chef::Resource
         }
       )
     end
+    # rubocop: enable MethodLength
 
     def mode(arg = nil)
       set_or_return(
         :mode, arg,
         :kind_of => String,
-        :equal_to => Haproxy::MODES,
+        :equal_to => Haproxy::MODES
       )
     end
   end
@@ -48,18 +50,24 @@ class Chef::Provider
       super
     end
 
+    # rubocop: disable MethodLength
+    # rubocop: disable AbcSize
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyDefaults.new(new_resource.name)
+      @current_resource ||= Chef::Resource::HaproxyDefaults.new(
+        new_resource.name
+      )
       @current_resource.type new_resource.type
       merged_config = new_resource.config
       {
         'balance' => new_resource.balance,
-        'mode' => new_resource.mode,
+        'mode' => new_resource.mode
       }.each_pair do |kw, arg|
         merged_config.unshift("#{kw} #{arg}") if arg
       end
       @current_resource.config merged_config
       @current_resource
     end
+    # rubocop: enable AbcSize
+    # rubocop: enable MethodLength
   end
 end

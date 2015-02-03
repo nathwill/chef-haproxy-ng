@@ -3,13 +3,13 @@
 # Recipe:: default
 #
 # Copyright 2015 Nathan Williams
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,23 +24,25 @@ haproxy_defaults 'HTTP' do
     'maxconn 50000',
     'timeout connect 5s',
     'timeout client 50s',
-    'timeout server 50s',
+    'timeout server 50s'
   ]
 end
 
-app_members = search(:node, 'role:app').map do |n|
+app_role = node['haproxy']['search']['app_role']
+
+app_members = search(:node, "role:#{app_role}").map do |n|
   {
     :name => n.name,
     :address => n.ipaddress,
     :port => 80,
-    :config => 'check inter 5000 rise 2 fall 5',
+    :config => 'check inter 5000 rise 2 fall 5'
   }
 end
 
 haproxy_backend 'app' do
   servers app_members
   config [
-    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ my-app.com',
+    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ my-app.com'
   ]
 end
 
@@ -59,10 +61,10 @@ haproxy_instance 'haproxy' do
     'user haproxy',
     'group haproxy',
     'pidfile /var/run/haproxy.pid',
-    'chroot /var/lib/haproxy',
+    'chroot /var/lib/haproxy'
   ]
   tuning [
-    'maxconn 50000',
+    'maxconn 50000'
   ]
   proxies my_proxies
   notifies :reload, 'service[haproxy]', :delayed

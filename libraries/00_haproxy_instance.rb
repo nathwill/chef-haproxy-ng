@@ -24,12 +24,13 @@ class Chef::Resource
       )
     end
 
+    # rubocop: disable MethodLength
     def config(arg = nil)
       set_or_return(
         :config, arg,
         :kind_of => Array,
         :default => [
-          'daemon',
+          'daemon'
         ],
         :callbacks => {
           'is a valid config' => lambda do |spec|
@@ -42,13 +43,15 @@ class Chef::Resource
         }
       )
     end
+    # rubocop: enable MethodLength
 
+    # rubocop: disable MethodLength
     def tuning(arg = nil)
       set_or_return(
         :tuning, arg,
         :kind_of => Array,
         :default => [
-          'maxconn 256',
+          'maxconn 256'
         ],
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
@@ -61,6 +64,7 @@ class Chef::Resource
         }
       )
     end
+    # rubocop: enable MethodLength
 
     def debug(arg = nil)
       set_or_return(
@@ -90,7 +94,7 @@ class Chef::Resource
         :default => {},
         :callbacks => {
           'is a valid peer list' => lambda do |spec|
-            true # TODO: validate peer configuration
+            spec # TODO: validate peer configuration
           end
         }
       )
@@ -120,7 +124,9 @@ class Chef::Provider
     end
 
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyInstance.new(new_resource.name)
+      @current_resource ||= Chef::Resource::HaproxyInstance.new(
+        new_resource.name
+      )
     end
 
     def action_create
@@ -133,6 +139,7 @@ class Chef::Provider
 
     private
 
+    # rubocop: disable AbcSize
     def edit_instance(exec_action)
       t = Chef::Resource::Template.new(
         "haproxy-instance-#{new_resource.name}",
@@ -141,11 +148,10 @@ class Chef::Provider
       t.cookbook new_resource.cookbook
       t.path "/etc/haproxy/#{new_resource.name}.cfg"
       t.source 'haproxy.cfg.erb'
-      t.variables({
-        :instance => new_resource,
-      })
+      t.variables :instance => new_resource
       t.run_action exec_action
       t.updated_by_last_action?
     end
+    # rubocop: enable AbcSize
   end
 end

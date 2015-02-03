@@ -13,10 +13,11 @@ class Chef::Resource
       @provider = Chef::Provider::HaproxyBackend
     end
 
-    def type(arg = nil)
+    def type(_ = nil)
       'backend'
     end
 
+    # rubocop: disable MethodLength
     def balance(arg = nil)
       set_or_return(
         :balance, arg,
@@ -30,15 +31,17 @@ class Chef::Resource
         }
       )
     end
+    # rubocop: enable MethodLength
 
     def mode(arg = nil)
       set_or_return(
         :mode, arg,
         :kind_of => String,
-        :equal_to => Haproxy::MODES,
+        :equal_to => Haproxy::MODES
       )
     end
 
+    # rubocop: disable MethodLength
     def servers(arg = nil)
       set_or_return(
         :servers, arg,
@@ -46,15 +49,16 @@ class Chef::Resource
         :default => [],
         :callbacks => {
           'is a valid servers list' => lambda do |spec|
-             spec.empty? || spec.all? do |s|
-               [:name, :address, :port].all? do |a|
-                 s.keys.include? a
-               end
-             end
+            spec.empty? || spec.all? do |s|
+              [:name, :address, :port].all? do |a|
+                s.keys.include? a
+              end
+            end
           end
         }
       )
     end
+    # rubocop: enable MethodLength
   end
 end
 
@@ -64,21 +68,27 @@ class Chef::Provider
       super
     end
 
+    # rubocop: disable AbcSize
+    # rubocop: disable MethodLength
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyBackend.new(new_resource.name)
+      @current_resource ||= Chef::Resource::HaproxyBackend.new(
+        new_resource.name
+      )
       @current_resource.type new_resource.type
-      merged_config = new_resource.config
+      m = new_resource.config
       {
         'mode' => new_resource.mode,
-        'balance' => new_resource.balance,
+        'balance' => new_resource.balance
       }.each_pair do |kw, arg|
-        merged_config.unshift("#{kw} #{arg}") if arg
+        m.unshift("#{kw} #{arg}") if arg
       end
-      new_resource.servers.each do |server|
-        merged_config << "server #{server[:name]} #{server[:address]}:#{server[:port]} #{server[:config]}"
+      new_resource.servers.each do |s|
+        m << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
       end
-      @current_resource.config merged_config
+      @current_resource.config m
       @current_resource
     end
+    # rubocop: enable AbcSize
+    # rubocop: enable MethodLength
   end
 end
