@@ -11,12 +11,6 @@ module Haproxy
       "#{declaration}\n  #{configuration.join("\n  ")}"
     end
 
-    def self.valid_keyword?(directive)
-      Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
-        directive.start_with? kw
-      end
-    end
-
     def self.proxies(run_context)
       resources(Chef::Resource::HaproxyProxy, run_context)
     end
@@ -344,26 +338,17 @@ module Haproxy
           }
         )
       end
+      # rubocop: enable MethodLength
 
-      # rubocop: disable AbcSize
       def self.merged_config(config, frontend)
-        config.unshift("mode #{frontend.mode}") if frontend.mode
         Array(frontend.bind).each do |bind|
           config.unshift("bind #{bind}")
-        end
-        frontend.acls.each do |acl|
-          config << "acl #{acl[:name]} #{acl[:criterion]}"
         end
         frontend.use_backends.each do |ub|
           config << "use_backend #{ub[:backend]} #{ub[:condition]}"
         end
-        if frontend.default_backend
-          config << "default_backend #{frontend.default_backend}"
-        end
         config
       end
-      # rubocop: enable AbcSize
-      # rubocop: enable MethodLength
     end
 
     module DefaultsFrontend
@@ -378,6 +363,11 @@ module Haproxy
             end
           }
         )
+      end
+
+      def self.merged_config(conf, df)
+        conf << "default_backend #{df.default_backend}" if df.default_backend
+        conf
       end
     end
 
@@ -417,6 +407,7 @@ module Haproxy
         backend.servers.each do |s|
           conf << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
         end
+        conf
       end
     end
 
@@ -437,13 +428,16 @@ module Haproxy
       end
       # rubocop: enable MethodLength
 
-      def self.merged_config(conf, backend)
-        {
-          'balance' => backend.balance,
-          'mode' => backend.mode
-        }.each_pair do |kw, arg|
-          conf.unshift("#{kw} #{arg}") if arg
-        end
+      def source(arg = nil)
+        set_or_return(
+          :source, arg,
+          :kind_of => String
+        )
+      end
+
+      def self.merged_config(conf, db)
+        conf.unshift("#{balance} #{db.balance}") if db.balance
+        conf << "source #{source}" if db.source
         conf
       end
     end
@@ -467,6 +461,21 @@ module Haproxy
         )
       end
       # rubocop: enable MethodLength
+
+      def description(arg = nil)
+        set_or_return(
+          :description, arg,
+          :kind_of => String
+        )
+      end
+
+      def self.merged_config(conf, nd)
+        conf << "description #{nd.description}" if nd.description
+        nd.acls.each do |acl|
+          conf << "acl #{acl[:name]} #{acl[:criterion]}"
+        end
+        conf
+      end
     end
 
     module All
@@ -476,6 +485,11 @@ module Haproxy
           :kind_of => String,
           :equal_to => Haproxy::MODES
         )
+      end
+
+      def self.merged_config(conf, proxy)
+        conf.unshift("mode #{proxy.mode}") if proxy.mode
+        conf
       end
     end
   end

@@ -40,7 +40,7 @@ class Chef::Provider
 
     private
 
-    def merged_config
+    def merged_config(r)
       a = Haproxy::Proxy::All.merged_config(r.config, r)
       df_a = Haproxy::Proxy::DefaultsFrontend.merged_config(a, r)
       Haproxy::Proxy::DefaultsBackend.merged_config(df_a, r)
