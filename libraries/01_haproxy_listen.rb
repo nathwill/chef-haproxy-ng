@@ -9,10 +9,10 @@ class Chef::Resource
 
     include ::Haproxy::Proxy::All
     include ::Haproxy::Proxy::NonDefaults
-    include ::Haproxy::Proxy::DefaultsFrontend
-    include ::Haproxy::Proxy::Frontend
     include ::Haproxy::Proxy::DefaultsBackend
     include ::Haproxy::Proxy::Backend
+    include ::Haproxy::Proxy::DefaultsFrontend
+    include ::Haproxy::Proxy::Frontend
 
     def initialize(name, run_context = nil)
       super
@@ -37,8 +37,19 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config # FIXME
+      @current_resource.config merged_config(new_resource)
       @current_resource
+    end
+
+    private
+
+    def merged_config(r)
+      a = Haproxy::Proxy::All.merged_config(r.config, r)
+      nd_a = Haproxy::Proxy::NonDefaults.merged_config(a, r)
+      db_nd_a = Haproxy::Proxy::DefaultsBackend.merged_config(nd_a, r)
+      b_db_nd_a = Haproxy::Proxy::Backend.merged_config(db_nd_a, r)
+      df_b_db_nd_a = Haproxy::Proxy::DefaultsFronted.merged_config(b_db_nd_a, r)
+      Haproxy::Proxy::Frontend.merged_config(df_b_db_nd_a, r)
     end
   end
 end

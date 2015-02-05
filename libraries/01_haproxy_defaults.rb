@@ -34,11 +34,16 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config Haproxy::Proxy::DefaultsBackend.merged_config(
-        new_resource.config,
-        new_resource
-      )
+      @current_resource.config merged_config(new_resource)
       @current_resource
+    end
+
+    private
+
+    def merged_config
+      a = Haproxy::Proxy::All.merged_config(r.config, r)
+      df_a = Haproxy::Proxy::DefaultsFrontend.merged_config(a, r)
+      Haproxy::Proxy::DefaultsBackend.merged_config(df_a, r)
     end
   end
 end
