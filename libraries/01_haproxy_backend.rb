@@ -35,11 +35,21 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config Haproxy::Proxy::Backend.merged_config(
+      @current_resource.config merged_config
+      @current_resource
+    end
+
+    private
+
+    def merged_config
+      merged = Haproxy::Proxy::DefaultsBackend.merged_config(
         new_resource.config,
         new_resource
       )
-      @current_resource
+      new_resource.servers.each do |s|
+        merged << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
+      end
+      merged
     end
   end
 end
