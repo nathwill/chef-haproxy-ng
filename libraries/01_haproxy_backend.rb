@@ -30,27 +30,28 @@ class Chef::Provider
       super
     end
 
-    # rubocop: disable AbcSize
-    # rubocop: disable MethodLength
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyBackend.new(
         new_resource.name
       )
       @current_resource.type new_resource.type
-      m = new_resource.config
+      @current_resource.config merged_config(new_resource.config)
+      @current_resource
+    end
+
+    private
+
+    def merged_config(config)
       {
         'mode' => new_resource.mode,
         'balance' => new_resource.balance
       }.each_pair do |kw, arg|
-        m.unshift("#{kw} #{arg}") if arg
+        config.unshift("#{kw} #{arg}") if arg
       end
       new_resource.servers.each do |s|
-        m << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
+        config << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
       end
-      @current_resource.config m
-      @current_resource
+      config
     end
-    # rubocop: enable AbcSize
-    # rubocop: enable MethodLength
   end
 end

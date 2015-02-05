@@ -44,7 +44,7 @@ class Chef::Provider
     def initialize(*args)
       super
       @proxy_file = Chef::Resource::File.new(
-        "haproxy-#{@current_resource.type}-#{@current_resource.name}",
+        "haproxy-#{new_resource.type}-#{new_resource.name}",
         run_context
       )
     end
