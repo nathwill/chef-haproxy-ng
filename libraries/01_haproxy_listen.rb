@@ -31,5 +31,14 @@ class Chef::Provider
     def initialize(*args)
       super
     end
+
+    def load_current_resource
+      @current_resource ||= Chef::Provider::HaproxyListen.new(
+        new_resource.name
+      )
+      @current_resource.type new_resource.type
+      @current_resource.config # FIXME
+      @current_resource
+    end
   end
 end

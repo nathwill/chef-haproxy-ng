@@ -412,6 +412,12 @@ module Haproxy
         )
       end
       # rubocop: enable MethodLength
+
+      def self.merged_config(conf, backend)
+        backend.servers.each do |s|
+          conf << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
+        end
+      end
     end
 
     module DefaultsBackend
