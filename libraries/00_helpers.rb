@@ -344,6 +344,25 @@ module Haproxy
           }
         )
       end
+
+      # rubocop: disable AbcSize
+      def self.merged_config(config, frontend)
+        config.unshift("mode #{frontend.mode}") if frontend.mode
+        Array(frontend.bind).each do |bind|
+          config.unshift("bind #{bind}")
+        end
+        frontend.acls.each do |acl|
+          config << "acl #{acl[:name]} #{acl[:criterion]}"
+        end
+        frontend.use_backends.each do |ub|
+          config << "use_backend #{ub[:backend]} #{ub[:condition]}"
+        end
+        if frontend.default_backend
+          config << "default_backend #{frontend.default_backend}"
+        end
+        config
+      end
+      # rubocop: enable AbcSize
       # rubocop: enable MethodLength
     end
 

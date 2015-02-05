@@ -35,31 +35,11 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config merged_config(new_resource.config)
+      @current_resource.config Haproxy::Proxy::Frontend.merged_config(
+        new_resource.config,
+        new_resource
+      )
       @current_resource
     end
-
-    private
-
-    # rubocop: disable AbcSize
-    # rubocop: disable MethodLength
-    def merged_config(config)
-      config.unshift("mode #{new_resource.mode}") if new_resource.mode
-      Array(new_resource.bind).each do |bind|
-        config.unshift("bind #{bind}")
-      end
-      new_resource.acls.each do |acl|
-        config << "acl #{acl[:name]} #{acl[:criterion]}"
-      end
-      new_resource.use_backends.each do |ub|
-        config << "use_backend #{ub[:backend]} #{ub[:condition]}"
-      end
-      if new_resource.default_backend
-        config << "default_backend #{new_resource.default_backend}"
-      end
-      config
-    end
-    # rubocop: enable AbcSize
-    # rubocop: enable MethodLength
   end
 end
