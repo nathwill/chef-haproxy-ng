@@ -133,9 +133,10 @@ and most likely to a running service.
       <td>proxies</td>
       <td>
         Array of Chef::Resource::HaproxyProxy instances 
-        (`haproxy_{defaults,frontend,backend}` included). See the `default` recipe 
-        for an example of using the provided `Haproxy::Helpers#proxy` method to generate
-        this list from the resource collection.
+        (`haproxy_{defaults,frontend,backend,listen}` included).
+        See the `default` recipe for an example of using the provided
+        `Haproxy::Helpers#proxy` method to generate this list from the
+        resource collection.
       </td>
       <td><code>app</code></td>
     </tr>
