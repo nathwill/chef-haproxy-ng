@@ -9,11 +9,11 @@ class Chef::Resource
 
     def initialize(name, run_context = nil)
       super
+      @name = name
       @resource_name = :haproxy_proxy
       @provider = Chef::Provider::HaproxyProxy
-      @action = :create
       @allowed_actions = [:create, :delete]
-      @name = name
+      @action = :create
     end
 
     def type(arg = nil)
@@ -43,6 +43,10 @@ class Chef::Provider
   class HaproxyProxy < Chef::Provider
     def initialize(*args)
       super
+      @proxy_file = Chef::Resource::File.new(
+        "haproxy-#{@current_resource.type}-#{@current_resource.name}",
+        run_context
+      )
     end
 
     def load_current_resource
@@ -62,20 +66,14 @@ class Chef::Provider
 
     private
 
-    # rubocop: disable MethodLength
     def edit_proxy(exec_action)
-      f = Chef::Resource::File.new(
-        "haproxy-#{@current_resource.type}-#{@current_resource.name}",
-        run_context
-      )
-      f.path ::File.join(
+      @proxy_file.path ::File.join(
         Chef::Config['file_cache_path'] || '/tmp',
         "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
       )
-      f.content Haproxy::Proxy.config_block(@current_resource)
-      f.run_action exec_action
-      f.updated_by_last_action?
+      @proxy_file.content Haproxy::Proxy.config_block(@current_resource)
+      @proxy_file.run_action exec_action
+      @proxy_file.updated_by_last_action?
     end
-    # rubocop: enable MethodLength
   end
 end
