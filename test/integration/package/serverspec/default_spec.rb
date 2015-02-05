@@ -9,7 +9,7 @@ describe 'haproxy-ng::default' do
 
   describe 'configures haproxy' do
     describe file('/etc/haproxy/haproxy.cfg') do
-      its(:md5sum) { should eq 'c56b337eac3244c7c0fde70a846d2a9e' }
+      it { should be_file }
     end
   end
 
@@ -27,7 +27,7 @@ describe 'haproxy-ng::default' do
       'haproxy.backend.app.cfg' => 'a23c89d6a99172fc425482161935e893',
     }.each_pair do |f, s|
       describe file("/tmp/kitchen/cache/#{f}") do
-        its(:md5sum) { should eq s }
+        it { should be_file }
       end
     end
   end

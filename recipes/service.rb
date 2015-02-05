@@ -16,6 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+cookbook_file '/etc/default/haproxy' do
+  source 'haproxy.default.cfg'
+  only_if { platform?('ubuntu') }
+end
+
 service 'haproxy' do
   action [:enable, :start]
 end
