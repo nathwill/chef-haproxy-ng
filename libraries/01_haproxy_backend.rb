@@ -35,7 +35,7 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config Haproxy::Backend.merged_config(
+      @current_resource.config Haproxy::Proxy::Backend.merged_config(
         new_resource.config,
         new_resource
       )
