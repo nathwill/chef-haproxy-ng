@@ -375,7 +375,7 @@ module Haproxy
         rdp-cookie
       )
 
-      def merged_config(conf, backend)
+      def self.merged_config(conf, backend)
         {
           'mode' => backend.mode,
           'balance' => backend.balance
