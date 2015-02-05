@@ -7,8 +7,14 @@ module Haproxy
   MODES = %w( tcp http health )
 
   module Helpers
-    def self.config(declaration, configuration)
+    def self.config_block(declaration, configuration)
       "#{declaration}\n  #{configuration.join("\n  ")}"
+    end
+
+    def self.valid_keyword?(directive)
+      Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
+        directive.start_with? kw
+      end
     end
 
     def self.proxies(run_context)
@@ -101,8 +107,24 @@ module Haproxy
       tune.zlib.windowsize
     )
 
-    def self.config(instance)
-      Haproxy::Helpers.config('global', instance.config + instance.tuning)
+    def self.valid_config?(conf)
+      conf.all? do |c|
+        Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
+          c.start_with? kw
+        end
+      end
+    end
+
+    def self.valid_tuning?(conf)
+      conf.all? do |c|
+        Haproxy::Instance::TUNING_KEYWORDS.any? do |kw|
+          c.start_with? kw
+        end
+      end
+    end
+
+    def self.config_block(instance)
+      Haproxy::Helpers.config_block('global', instance.config + instance.tuning)
     end
   end
 
@@ -283,8 +305,8 @@ module Haproxy
       'use-server' => KEYWORD_BACKEND
     }
 
-    def self.config(proxy)
-      Haproxy::Helpers.config("#{proxy.type} #{proxy.name}", proxy.config)
+    def self.config_block(proxy)
+      Haproxy::Helpers.config_block("#{proxy.type} #{proxy.name}", proxy.config)
     end
 
     def self.valid_config?(config = [], type)

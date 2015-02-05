@@ -72,7 +72,7 @@ class Chef::Provider
         Chef::Config['file_cache_path'] || '/tmp',
         "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
       )
-      f.content Haproxy::Proxy.config(@current_resource)
+      f.content Haproxy::Proxy.config_block(@current_resource)
       f.run_action exec_action
       f.updated_by_last_action?
     end

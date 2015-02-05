@@ -9,11 +9,11 @@ class Chef::Resource
 
     def initialize(name, run_context = nil)
       super
+      @name = name
       @resource_name = :haproxy_instance
       @provider = Chef::Provider::HaproxyInstance
-      @action = :create
       @allowed_actions = [:create, :delete]
-      @name = name
+      @action = :create
     end
 
     def cookbook(arg = nil)
@@ -24,47 +24,31 @@ class Chef::Resource
       )
     end
 
-    # rubocop: disable MethodLength
     def config(arg = nil)
       set_or_return(
         :config, arg,
         :kind_of => Array,
-        :default => [
-          'daemon'
-        ],
+        :default => %w( daemon ),
         :callbacks => {
           'is a valid config' => lambda do |spec|
-            spec.all? do |conf|
-              Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
-                conf.start_with? kw
-              end
-            end
+            Haproxy::Instance.valid_config?(spec)
           end
         }
       )
     end
-    # rubocop: enable MethodLength
 
-    # rubocop: disable MethodLength
     def tuning(arg = nil)
       set_or_return(
         :tuning, arg,
         :kind_of => Array,
-        :default => [
-          'maxconn 256'
-        ],
+        :default => ['maxconn 256'],
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
-            spec.all? do |conf|
-              Haproxy::Instance::TUNING_KEYWORDS.any? do |kw|
-                conf.start_with? kw
-              end
-            end
+            Haproxy::Instance.valid_tuning?(spec)
           end
         }
       )
     end
-    # rubocop: enable MethodLength
 
     def debug(arg = nil)
       set_or_return(
