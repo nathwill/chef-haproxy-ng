@@ -84,13 +84,16 @@ class Chef::Resource
       )
     end
 
-    # List of proxies to pluck from the resource collection
-    # when building the instance template. Order matters!
     def proxies(arg = nil)
       set_or_return(
         :proxies, arg,
         :kind_of => Array,
-        :default => []
+        :default => [],
+        :callbacks => {
+          'is a valid proxy list' => lambda do |spec|
+            spec.all? { |p| p.is_a? Chef::Resource::HaproxyProxy }
+          end
+        }
       )
     end
   end
