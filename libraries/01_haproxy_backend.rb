@@ -35,23 +35,11 @@ class Chef::Provider
         new_resource.name
       )
       @current_resource.type new_resource.type
-      @current_resource.config merged_config(new_resource.config)
+      @current_resource.config Haproxy::Backend.merged_config(
+        new_resource.config,
+        new_resource
+      )
       @current_resource
-    end
-
-    private
-
-    def merged_config(config)
-      {
-        'mode' => new_resource.mode,
-        'balance' => new_resource.balance
-      }.each_pair do |kw, arg|
-        config.unshift("#{kw} #{arg}") if arg
-      end
-      new_resource.servers.each do |s|
-        config << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
-      end
-      config
     end
   end
 end

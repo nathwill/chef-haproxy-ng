@@ -375,6 +375,19 @@ module Haproxy
         rdp-cookie
       )
 
+      def merged_config(conf, backend)
+        {
+          'mode' => backend.mode,
+          'balance' => backend.balance
+        }.each_pair do |kw, arg|
+          conf.unshift("#{kw} #{arg}") if arg
+        end
+        backend.servers.each do |s|
+          conf << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
+        end
+        conf
+      end
+
       # rubocop: disable MethodLength
       def servers(arg = nil)
         set_or_return(
