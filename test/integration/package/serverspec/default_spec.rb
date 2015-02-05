@@ -7,9 +7,23 @@ describe 'haproxy-ng::default' do
     end
   end
 
-  describe 'configures haproxy' do
+  describe 'configures haproxy instance' do
     describe file('/etc/haproxy/haproxy.cfg') do
-      it { should be_file }
+      [
+        'global',
+        'daemon',
+        'user haproxy',
+        'group haproxy',
+        'pidfile /var/run/haproxy.pid',
+        'maxconn 50000',
+      ].each do |directive|
+        its(:content) { should match %r{#{directive}} }
+      end
+    end
+
+    describe command('haproxy -c -f /etc/haproxy/haproxy.cfg') do
+      its(:stdout) { should_not match /warning/i }
+      its(:stdout) { should match /valid/ }
     end
   end
 
@@ -21,13 +35,52 @@ describe 'haproxy-ng::default' do
   end
 
   describe 'configures individual proxies correctly' do
-    {
-      'haproxy.defaults.HTTP.cfg' => '2b3a7f04e45efb99bbb7b57149d0d8b7',
-      'haproxy.frontend.www.cfg' => 'de6616e18e200c8d6704297a51efd0e5',
-      'haproxy.backend.app.cfg' => 'a23c89d6a99172fc425482161935e893',
-    }.each_pair do |f, s|
-      describe file("/tmp/kitchen/cache/#{f}") do
-        it { should be_file }
+    %w(
+      /etc/haproxy/haproxy.cfg
+      /tmp/kitchen/cache/haproxy.defaults.HTTP.cfg
+    ).each do |f|
+      describe file(f) do
+        [
+          'defaults HTTP',
+          'mode http',
+          'maxconn 50000',
+          'timeout connect 5s',
+          'timeout client 50s',
+          'timeout server 50s',
+        ].each do |directive|
+          its(:content) { should match %r{#{directive}} }
+        end
+      end
+    end
+
+    %w(
+      /etc/haproxy/haproxy.cfg
+      /tmp/kitchen/cache/haproxy.frontend.www.cfg
+    ).each do |f|
+      describe file(f) do
+        [
+          'frontend www',
+          'bind \*:80',
+          'default_backend app',
+        ].each do |directive|
+          its(:content) { should match %r{#{directive}} }
+        end
+      end
+    end
+
+    %w(
+      /etc/haproxy/haproxy.cfg
+      /tmp/kitchen/cache/haproxy.backend.app.cfg
+      ).each do |f|
+      describe file(f) do
+        [
+          'backend app',
+          'option httpchk',
+          'server app01 12.34.56.78:80 check inter 5000 rise 2 fall 5',
+          'server app02 22.34.56.78:80 check inter 5000 rise 2 fall 5',
+        ].each do |directive|
+          its(:content) { should match Regexp.new(directive) }
+        end
       end
     end
   end
