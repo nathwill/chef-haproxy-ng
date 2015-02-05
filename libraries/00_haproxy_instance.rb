@@ -108,6 +108,10 @@ class Chef::Provider
   class HaproxyInstance < Chef::Provider
     def initialize(*args)
       super
+      @tpl = Chef::Resource::Template.new(
+        "haproxy-instance-#{new_resource.name}",
+        run_context
+      )
     end
 
     def load_current_resource
@@ -126,19 +130,13 @@ class Chef::Provider
 
     private
 
-    # rubocop: disable AbcSize
     def edit_instance(exec_action)
-      t = Chef::Resource::Template.new(
-        "haproxy-instance-#{new_resource.name}",
-        run_context
-      )
-      t.cookbook new_resource.cookbook
-      t.path "/etc/haproxy/#{new_resource.name}.cfg"
-      t.source 'haproxy.cfg.erb'
-      t.variables :instance => new_resource
-      t.run_action exec_action
-      t.updated_by_last_action?
+      @tpl.cookbook new_resource.cookbook
+      @tpl.path "/etc/haproxy/#{new_resource.name}.cfg"
+      @tpl.source 'haproxy.cfg.erb'
+      @tpl.variables :instance => new_resource
+      @tpl.run_action exec_action
+      @tpl.updated_by_last_action?
     end
-    # rubocop: enable AbcSize
   end
 end
