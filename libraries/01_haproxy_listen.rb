@@ -16,8 +16,8 @@ class Chef::Resource
 
     def initialize(name, run_context = nil)
       super
-      @resource_name = :haproxy_frontend
-      @provider = Chef::Provider::HaproxyFrontend
+      @resource_name = :haproxy_listen
+      @provider = Chef::Provider::HaproxyListen
     end
 
     def type(_ = nil)
