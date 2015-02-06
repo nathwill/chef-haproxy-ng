@@ -4,8 +4,6 @@
 #
 
 module Haproxy
-  MODES = %w( tcp http health )
-
   module Helpers
     def self.config_block(declaration, configuration)
       "#{declaration}\n  #{configuration.join("\n  ")}"
@@ -123,6 +121,8 @@ module Haproxy
   end
 
   module Proxy
+    MODES = %w( tcp http health )
+
     KEYWORD_ALL = %w( defaults frontend listen backend )
     KEYWORD_DEFAULTS_FRONTEND = %w( defaults frontend listen )
     KEYWORD_DEFAULTS_BACKEND = %w( defaults backend listen )
@@ -483,7 +483,7 @@ module Haproxy
         set_or_return(
           :mode, arg,
           :kind_of => String,
-          :equal_to => Haproxy::MODES
+          :equal_to => Haproxy::Proxy::MODES
         )
       end
 
