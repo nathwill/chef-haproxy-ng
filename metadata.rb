@@ -8,6 +8,6 @@ version          '0.1.4'
 #source_url       'https://github.com/nathwill/chef-haproxy-ng'
 #issues_url       'https://github.com/nathwill/chef-haproxy-ng/issues'
 
-%w( redhat scientific centos fedora debian ubuntu ).each do |platform|
+%w( redhat scientific centos fedora ubuntu ).each do |platform|
   supports platform
 end
