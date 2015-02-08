@@ -39,4 +39,20 @@ describe 'haproxy-ng::service' do
       chef_run # This should not raise an error
     end
   end
+
+  context 'Ubuntu' do
+    let(:chef_run) do
+      ChefSpec::ServerRunner
+        .new(platform: 'ubuntu', version: '14.04')
+        .converge(described_recipe)
+    end
+
+    it 'enables service to start/disables defaults fuckery' do
+      expect(chef_run).to create_cookbook_file '/etc/default/haproxy'
+    end
+
+    it 'converges successfully' do
+      chef_run
+    end
+  end
 end
