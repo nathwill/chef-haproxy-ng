@@ -183,7 +183,7 @@ module Haproxy
       'option clitcpka' => KEYWORD_DEFAULTS_FRONTEND,
       'option contstats' => KEYWORD_DEFAULTS_FRONTEND,
       'option dontlog-normal' => KEYWORD_DEFAULTS_FRONTEND,
-      'option donlognull' => KEYWORD_DEFAULTS_FRONTEND,
+      'option dontlognull' => KEYWORD_DEFAULTS_FRONTEND,
       'option forceclose' => KEYWORD_ALL,
       'option forwardfor' => KEYWORD_ALL,
       'option http-keep-alive' => KEYWORD_ALL,
