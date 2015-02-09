@@ -21,7 +21,7 @@ class Chef::Resource
     end
 
     def type(_ = nil)
-      'frontend'
+      'listen'
     end
   end
 end
