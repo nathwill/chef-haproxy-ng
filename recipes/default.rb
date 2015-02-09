@@ -31,14 +31,14 @@ end
 app_role = node['haproxy']['app_role']
 
 if Chef::Config[:solo]
-  app_members = { :name => 'app', :address => '127.0.0.1', :port => 80 }
+  app_members = { 'name' => 'app', 'address' => '127.0.0.1', 'port' => 80 }
 else
   app_members = search(:node, "role:#{app_role}").map do |n|
     {
-      :name => n.name,
-      :address => n.ipaddress,
-      :port => 80,
-      :config => 'check inter 5000 rise 2 fall 5'
+      'name' => n.name,
+      'address' => n.ipaddress,
+      'port' => 80,
+      'config' => 'check inter 5000 rise 2 fall 5'
     }
   end
 end

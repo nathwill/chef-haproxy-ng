@@ -330,7 +330,7 @@ module Haproxy
           :callbacks => {
             'is a valid use_backends list' => lambda do |spec|
               spec.empty? || spec.all? do |u|
-                [:backend, :condition].all? do |a|
+                %w( backend condition ).all? do |a|
                   u.keys.include? a
                 end
               end
@@ -345,7 +345,7 @@ module Haproxy
           config.unshift("bind #{bind}")
         end
         frontend.use_backends.each do |ub|
-          config << "use_backend #{ub[:backend]} #{ub[:condition]}"
+          config << "use_backend #{ub['backend']} #{ub['condition']}"
         end
         config
       end
@@ -393,7 +393,7 @@ module Haproxy
           :callbacks => {
             'is a valid servers list' => lambda do |spec|
               spec.empty? || spec.all? do |s|
-                [:name, :address, :port].all? do |a|
+                %w( name address port ).all? do |a|
                   s.keys.include? a
                 end
               end
@@ -403,11 +403,11 @@ module Haproxy
       end
       # rubocop: enable MethodLength
 
-      def self.merged_config(conf, backend)
+      def self.merged_config(c, backend)
         backend.servers.each do |s|
-          conf << "server #{s[:name]} #{s[:address]}:#{s[:port]} #{s[:config]}"
+          c << "server #{s['name']} #{s['address']}:#{s['port']} #{s['config']}"
         end
-        conf
+        c
       end
     end
 
@@ -452,7 +452,7 @@ module Haproxy
           :callbacks => {
             'is a valid list of acls' => lambda do |spec|
               spec.empty? || spec.all? do |a|
-                [:name, :criterion].all? do |k|
+                %w( name criterion ).all? do |k|
                   a.keys.include? k
                 end
               end
@@ -472,7 +472,7 @@ module Haproxy
       def self.merged_config(conf, nd)
         conf << "description #{nd.description}" if nd.description
         nd.acls.each do |acl|
-          conf << "acl #{acl[:name]} #{acl[:criterion]}"
+          conf << "acl #{acl['name']} #{acl['criterion']}"
         end
         conf
       end
