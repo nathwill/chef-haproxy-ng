@@ -1,3 +1,7 @@
+# 0.1.10 / 2015-02-09
+
+* use strings as keys
+
 # 0.1.8 / 2015-02-09
 
 * fix option typo
