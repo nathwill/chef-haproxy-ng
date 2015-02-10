@@ -1,3 +1,7 @@
+# 0.1.22 / 2015-02-10
+
+* fix Haproxy::Proxy::NonDefaults.merged_config source merge
+
 # 0.1.20 / 2015-02-10
 
 * instance resource filters on actionable proxies
