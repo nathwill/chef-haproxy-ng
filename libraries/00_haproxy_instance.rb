@@ -58,32 +58,6 @@ class Chef::Resource
       )
     end
 
-    def userlists(arg = nil)
-      set_or_return(
-        :userlists, arg,
-        :kind_of => Hash,
-        :default => {},
-        :callbacks => {
-          'is a valid userlist' => lambda do |spec|
-            spec.empty? || spec.values.all? { |v| v.start_with?('user', 'group') }
-          end
-        }
-      )
-    end
-
-    def peers(arg = nil)
-      set_or_return(
-        :peers, arg,
-        :kind_of => Hash,
-        :default => {},
-        :callbacks => {
-          'is a valid peer list' => lambda do |_|
-            true # TODO: validate peer configuration
-          end
-        }
-      )
-    end
-
     def proxies(arg = nil)
       set_or_return(
         :proxies, arg,
@@ -114,18 +88,18 @@ class Chef::Provider
       )
     end
 
+    # rubocop: disable AbcSize
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyInstance.new(
-        new_resource.name
-      )
+      @current_resource ||=
+        Chef::Resource::HaproxyInstance.new(new_resource.name)
       @current_resource.cookbook new_resource.cookbook
       @current_resource.config new_resource.config
       @current_resource.tuning new_resource.tuning
       @current_resource.debug new_resource.debug
-      @current_resource.userlists new_resource.userlists
-      @current_resource.peers new_resource.peers
       @current_resource.proxies actionable_proxies(new_resource.proxies)
+      @current_resource
     end
+    # rubocop: enable AbcSize
 
     def action_create
       new_resource.updated_by_last_action(edit_instance(:create))

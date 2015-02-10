@@ -26,14 +26,9 @@ end
 
 class Chef::Provider
   class HaproxyBackend < Chef::Provider::HaproxyProxy
-    def initialize(*args)
-      super
-    end
-
     def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyBackend.new(
-        new_resource.name
-      )
+      @current_resource ||=
+        Chef::Resource::HaproxyBackend.new(new_resource.name)
       @current_resource.type new_resource.type
       @current_resource.config merged_config(new_resource)
       @current_resource
