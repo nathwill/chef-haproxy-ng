@@ -437,7 +437,7 @@ module Haproxy
 
       def self.merged_config(conf, db)
         conf.unshift("balance #{db.balance}") if db.balance
-        conf << "source #{source}" if db.source
+        conf << "source #{db.source}" if db.source
         conf
       end
     end
