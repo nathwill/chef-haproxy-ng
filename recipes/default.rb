@@ -22,7 +22,7 @@ haproxy_defaults 'TCP' do
   mode 'tcp'
   config [
     'option srvtcpka',
-    'option clitcpka',
+    'option clitcpka'
   ]
 end
 
@@ -41,7 +41,7 @@ redis_members = search(:node, 'role:redis').map do |s|
     'name' => s.name,
     'address' => s.ipaddress,
     'port' => 6379,
-    'config' => 'backup check inter 1000 rise 2 fall 5',
+    'config' => 'backup check inter 1000 rise 2 fall 5'
   }
 end
 
@@ -54,7 +54,7 @@ haproxy_listen 'redis' do
     'tcp-check send info\ replication\r\n',
     'tcp-check expect string role:master',
     'tcp-check send QUIT\r\n',
-    'tcp-check expect string +OK',
+    'tcp-check expect string +OK'
   ]
 end
 
