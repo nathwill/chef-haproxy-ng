@@ -16,80 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe "#{cookbook_name}::install"
-
-haproxy_defaults 'TCP' do
-  mode 'tcp'
-  config [
-    'option clitcpka',
-    'option srvtcpka',
-    'timeout connect 5s',
-    'timeout client 300s',
-    'timeout server 300s'
-  ]
+%w( install proxies ).each do |r|
+  include_recipe "#{cookbook_name}::#{r}"
 end
 
-haproxy_defaults 'HTTP' do
-  mode 'http'
-  config [
-    'maxconn 50000',
-    'timeout connect 5s',
-    'timeout client 50s',
-    'timeout server 50s'
-  ]
+execute 'validate-haproxy_instance-haproxy' do
+  command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
+  notifies :reload, 'service[haproxy]', :delayed
+  action :nothing
 end
 
-redis_members = search(:node, 'role:redis').map do |s|
-  {
-    'name' => s.name,
-    'address' => s.ipaddress,
-    'port' => 6379,
-    'config' => 'backup check inter 1000 rise 2 fall 5'
-  }
-end
-
-haproxy_listen 'redis' do
-  bind '0.0.0.0:6379'
-  servers redis_members
-  config [
-    'option tcp-check',
-    'tcp-check send PING\r\n',
-    'tcp-check expect string +PONG',
-    'tcp-check send info\ replication\r\n',
-    'tcp-check expect string role:master',
-    'tcp-check send QUIT\r\n',
-    'tcp-check expect string +OK'
-  ]
-end
-
-app_role = node['haproxy']['app_role']
-
-if Chef::Config[:solo]
-  app_members = { 'name' => 'app', 'address' => '127.0.0.1', 'port' => 80 }
-else
-  app_members = search(:node, "role:#{app_role}").map do |n|
-    {
-      'name' => n.name,
-      'address' => n.ipaddress,
-      'port' => 80,
-      'config' => 'check inter 5000 rise 2 fall 5'
-    }
-  end
-end
-
-haproxy_backend 'app' do
-  servers app_members
-  config [
-    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost'
-  ]
-end
-
-haproxy_frontend 'www' do
-  bind '*:80'
-  default_backend 'app'
-end
-
-my_proxies = %w( TCP redis HTTP www app ).map do |p|
+my_proxies = node['haproxy']['proxies'].map do |p|
   Haproxy::Helpers.proxy(p, run_context)
 end
 
@@ -105,12 +42,6 @@ haproxy_instance 'haproxy' do
   ]
   proxies my_proxies
   notifies :run, 'execute[validate-haproxy_instance-haproxy]', :immediately
-end
-
-execute 'validate-haproxy_instance-haproxy' do
-  command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
-  notifies :reload, 'service[haproxy]', :delayed
-  action :nothing
 end
 
 include_recipe "#{cookbook_name}::service"

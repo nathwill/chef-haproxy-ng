@@ -18,5 +18,6 @@
 
 default['haproxy'].tap do |haproxy|
   haproxy['install_method'] = 'package'
+  haproxy['proxies'] = %w( TCP redis HTTP www app )
   haproxy['app_role'] = 'app'
 end
