@@ -48,7 +48,10 @@ class Chef::Provider
       nd_a = Haproxy::Proxy::NonDefaults.merged_config(a, r)
       db_nd_a = Haproxy::Proxy::DefaultsBackend.merged_config(nd_a, r)
       b_db_nd_a = Haproxy::Proxy::Backend.merged_config(db_nd_a, r)
-      df_b_db_nd_a = Haproxy::Proxy::DefaultsFrontend.merged_config(b_db_nd_a, r)
+      df_b_db_nd_a = Haproxy::Proxy::DefaultsFrontend.merged_config(
+        b_db_nd_a,
+        r
+      )
       Haproxy::Proxy::Frontend.merged_config(df_b_db_nd_a, r)
     end
   end
