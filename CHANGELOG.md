@@ -1,3 +1,9 @@
+# 0.1.20 / 2015-02-10
+
+* instance resource filters on actionable proxies
+* remove peer/usergroups attrs from instance resource pending actual build-out
+* extract default instance config into attributes to make it easier to consume default recipe
+
 # 0.1.18 / 2015-02-09
 
 * add timeout options to redis listen proxy
