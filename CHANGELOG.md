@@ -1,3 +1,8 @@
+# 0.1.14 / 2015-02-09
+
+* add listen resource to default recipe for testing
+* move mode attribute under general proxy resource
+
 # 0.1.12 / 2015-02-09
 
 * fix listen provider
