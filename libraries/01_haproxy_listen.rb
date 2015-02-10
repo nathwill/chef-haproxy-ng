@@ -7,7 +7,6 @@ class Chef::Resource
   class HaproxyListen < Chef::Resource::HaproxyProxy
     identity_attr :name
 
-    include ::Haproxy::Proxy::All
     include ::Haproxy::Proxy::NonDefaults
     include ::Haproxy::Proxy::DefaultsBackend
     include ::Haproxy::Proxy::Backend
@@ -44,15 +43,11 @@ class Chef::Provider
     private
 
     def merged_config(r)
-      a = Haproxy::Proxy::All.merged_config(r.config, r)
-      nd_a = Haproxy::Proxy::NonDefaults.merged_config(a, r)
-      db_nd_a = Haproxy::Proxy::DefaultsBackend.merged_config(nd_a, r)
-      b_db_nd_a = Haproxy::Proxy::Backend.merged_config(db_nd_a, r)
-      df_b_db_nd_a = Haproxy::Proxy::DefaultsFrontend.merged_config(
-        b_db_nd_a,
-        r
-      )
-      Haproxy::Proxy::Frontend.merged_config(df_b_db_nd_a, r)
+      nd = Haproxy::Proxy::NonDefaults.merged_config(r.config, r)
+      db_nd = Haproxy::Proxy::DefaultsBackend.merged_config(nd, r)
+      b_db_nd = Haproxy::Proxy::Backend.merged_config(db_nd, r)
+      df_b_db_nd = Haproxy::Proxy::DefaultsFrontend.merged_config(b_db_nd, r)
+      Haproxy::Proxy::Frontend.merged_config(df_b_db_nd, r)
     end
   end
 end
