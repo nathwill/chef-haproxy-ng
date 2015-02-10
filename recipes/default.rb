@@ -18,6 +18,14 @@
 
 include_recipe "#{cookbook_name}::install"
 
+haproxy_defaults 'TCP' do
+  mode 'tcp'
+  config [
+    'option srvtcpka',
+    'option clitcpka',
+  ]
+end
+
 haproxy_defaults 'HTTP' do
   mode 'http'
   config [
@@ -25,6 +33,28 @@ haproxy_defaults 'HTTP' do
     'timeout connect 5s',
     'timeout client 50s',
     'timeout server 50s'
+  ]
+end
+
+redis_members = search(:node, 'role:redis').map do |s|
+  {
+    'name' => s.name,
+    'address' => s.ipaddress,
+    'port' => 6379,
+    'config' => 'backup check inter 1000 rise 2 fall 5',
+  }
+end
+
+haproxy_listen 'redis' do
+  bind '0.0.0.0:6379'
+  servers redis_members
+  config [
+    'tcp-check send PING\r\n',
+    'tcp-check expect string +PONG',
+    'tcp-check send info\ replication\r\n',
+    'tcp-check expect string role:master',
+    'tcp-check send QUIT\r\n',
+    'tcp-check expect string +OK',
   ]
 end
 
@@ -55,7 +85,7 @@ haproxy_frontend 'www' do
   default_backend 'app'
 end
 
-my_proxies = %w( HTTP www app ).map do |p|
+my_proxies = %w( TCP redis HTTP www app ).map do |p|
   Haproxy::Helpers.proxy(p, run_context)
 end
 
