@@ -33,7 +33,7 @@ class Chef::Provider
     end
 
     def load_current_resource
-      @current_resource ||= Chef::Provider::HaproxyListen.new(
+      @current_resource ||= Chef::Resource::HaproxyListen.new(
         new_resource.name
       )
       @current_resource.type new_resource.type
@@ -48,7 +48,7 @@ class Chef::Provider
       nd_a = Haproxy::Proxy::NonDefaults.merged_config(a, r)
       db_nd_a = Haproxy::Proxy::DefaultsBackend.merged_config(nd_a, r)
       b_db_nd_a = Haproxy::Proxy::Backend.merged_config(db_nd_a, r)
-      df_b_db_nd_a = Haproxy::Proxy::DefaultsFronted.merged_config(b_db_nd_a, r)
+      df_b_db_nd_a = Haproxy::Proxy::DefaultsFrontend.merged_config(b_db_nd_a, r)
       Haproxy::Proxy::Frontend.merged_config(df_b_db_nd_a, r)
     end
   end
