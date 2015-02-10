@@ -65,7 +65,7 @@ class Chef::Resource
         :default => {},
         :callbacks => {
           'is a valid userlist' => lambda do |spec|
-            spec.values.all? { |v| v.start_with?('user', 'group') }
+            spec.empty? || spec.values.all? { |v| v.start_with?('user', 'group') }
           end
         }
       )
@@ -77,8 +77,8 @@ class Chef::Resource
         :kind_of => Hash,
         :default => {},
         :callbacks => {
-          'is a valid peer list' => lambda do |spec|
-            spec # TODO: validate peer configuration
+          'is a valid peer list' => lambda do |_|
+            true # TODO: validate peer configuration
           end
         }
       )
@@ -118,6 +118,13 @@ class Chef::Provider
       @current_resource ||= Chef::Resource::HaproxyInstance.new(
         new_resource.name
       )
+      @current_resource.cookbook new_resource.cookbook
+      @current_resource.config new_resource.config
+      @current_resource.tuning new_resource.tuning
+      @current_resource.debug new_resource.debug
+      @current_resource.userlists new_resource.userlists
+      @current_resource.peers new_resource.peers
+      @current_resource.proxies actionable_proxies(new_resource.proxies)
     end
 
     def action_create
@@ -130,11 +137,17 @@ class Chef::Provider
 
     private
 
+    def actionable_proxies(proxies)
+      proxies.select do |p|
+        p.action == :create && !p.should_skip?(new_resource.action)
+      end
+    end
+
     def edit_instance(exec_action)
-      @tpl.cookbook new_resource.cookbook
-      @tpl.path "/etc/haproxy/#{new_resource.name}.cfg"
+      @tpl.cookbook @current_resource.cookbook
+      @tpl.path "/etc/haproxy/#{@current_resource.name}.cfg"
       @tpl.source 'haproxy.cfg.erb'
-      @tpl.variables :instance => new_resource
+      @tpl.variables :instance => @current_resource
       @tpl.run_action exec_action
       @tpl.updated_by_last_action?
     end
