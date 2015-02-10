@@ -1,3 +1,7 @@
+# 0.1.16 / 2015-02-09
+
+* fix balance keyword for DefaultsBackend
+
 # 0.1.14 / 2015-02-09
 
 * add listen resource to default recipe for testing
