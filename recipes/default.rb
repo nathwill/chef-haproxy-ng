@@ -16,9 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%w( install proxies ).each do |r|
-  include_recipe "#{cookbook_name}::#{r}"
-end
+
+include_recipe "#{cookbook_name}::install"
+include_recipe "#{cookbook_name}::proxies" if node['haproxy']['use_default_proxies']
 
 execute 'validate-haproxy_instance-haproxy' do
   command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
