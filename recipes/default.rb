@@ -31,15 +31,8 @@ my_proxies = node['haproxy']['proxies'].map do |p|
 end
 
 haproxy_instance 'haproxy' do
-  config [
-    'daemon',
-    'user haproxy',
-    'group haproxy',
-    'pidfile /var/run/haproxy.pid'
-  ]
-  tuning [
-    'maxconn 50000'
-  ]
+  config node['haproxy']['config']
+  tuning node['haproxy']['tuning']
   proxies my_proxies
   notifies :run, 'execute[validate-haproxy_instance-haproxy]', :immediately
 end

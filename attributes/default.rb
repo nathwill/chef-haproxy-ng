@@ -18,6 +18,15 @@
 
 default['haproxy'].tap do |haproxy|
   haproxy['install_method'] = 'package'
-  haproxy['proxies'] = %w( TCP redis HTTP www app )
   haproxy['app_role'] = 'app'
+  haproxy['proxies'] = %w( TCP redis HTTP www app )
+  haproxy['config'] = [
+    'daemon',
+    'user haproxy',
+    'group haproxy',
+    'pidfile /var/run/haproxy.pid'
+  ]
+  haproxy['tuning'] = [
+    'maxconn 50000'
+  ]
 end
