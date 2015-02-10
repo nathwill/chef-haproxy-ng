@@ -1,3 +1,8 @@
+# 0.1.18 / 2015-02-09
+
+* add timeout options to redis listen proxy
+* move mode attr back into modules
+
 # 0.1.16 / 2015-02-09
 
 * fix balance keyword for DefaultsBackend
