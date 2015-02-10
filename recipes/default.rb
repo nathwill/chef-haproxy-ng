@@ -21,8 +21,11 @@ include_recipe "#{cookbook_name}::install"
 haproxy_defaults 'TCP' do
   mode 'tcp'
   config [
+    'option clitcpka',
     'option srvtcpka',
-    'option clitcpka'
+    'timeout connect 5s',
+    'timeout client 300s',
+    'timeout server 300s'
   ]
 end
 
@@ -49,6 +52,7 @@ haproxy_listen 'redis' do
   bind '0.0.0.0:6379'
   servers redis_members
   config [
+    'option tcp-check',
     'tcp-check send PING\r\n',
     'tcp-check expect string +PONG',
     'tcp-check send info\ replication\r\n',
