@@ -31,14 +31,6 @@ describe 'haproxy-ng::default' do
       expect(chef_run).to include_recipe 'haproxy-ng::install'
     end
 
-    it 'creates haproxy_defaults TCP' do
-      expect(chef_run).to create_haproxy_defaults 'TCP'
-    end
-
-    it 'creates haproxy_listen redis' do
-      expect(chef_run).to create_haproxy_listen 'redis'
-    end
-
     it 'creates haproxy_defaults HTTP' do
       expect(chef_run).to create_haproxy_defaults 'HTTP'
     end

@@ -7,6 +7,7 @@ class Chef::Resource
   class HaproxyBackend < Chef::Resource::HaproxyProxy
     identity_attr :name
 
+    include ::Haproxy::Proxy::All
     include ::Haproxy::Proxy::NonDefaults
     include ::Haproxy::Proxy::DefaultsBackend
     include ::Haproxy::Proxy::Backend
@@ -41,9 +42,10 @@ class Chef::Provider
     private
 
     def merged_config(r)
-      nd = Haproxy::Proxy::NonDefaults.merged_config(r.config, r)
-      db_nd = Haproxy::Proxy::DefaultsBackend.merged_config(nd, r)
-      Haproxy::Proxy::Backend.merged_config(db_nd, r)
+      a = Haproxy::Proxy::All.merged_config(r.config, r)
+      nd_a = Haproxy::Proxy::NonDefaults.merged_config(a, r)
+      db_nd_a = Haproxy::Proxy::DefaultsBackend.merged_config(nd_a, r)
+      Haproxy::Proxy::Backend.merged_config(db_nd_a, r)
     end
   end
 end

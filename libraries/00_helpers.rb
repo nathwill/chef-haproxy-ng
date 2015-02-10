@@ -477,5 +477,20 @@ module Haproxy
         conf
       end
     end
+
+    module All
+      def mode(arg = nil)
+        set_or_return(
+          :mode, arg,
+          :kind_of => String,
+          :equal_to => Haproxy::Proxy::MODES
+        )
+      end
+
+      def self.merged_config(conf, proxy)
+        conf.unshift("mode #{proxy.mode}") if proxy.mode
+        conf
+      end
+    end
   end
 end

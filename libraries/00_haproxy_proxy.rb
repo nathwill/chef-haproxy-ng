@@ -24,14 +24,6 @@ class Chef::Resource
       )
     end
 
-    def mode(arg = nil)
-      set_or_return(
-        :mode, arg,
-        :kind_of => String,
-        :equal_to => Haproxy::Proxy::MODES
-      )
-    end
-
     def config(arg = nil)
       set_or_return(
         :config, arg,
@@ -60,7 +52,7 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyProxy.new(new_resource.name)
       @current_resource.type new_resource.type
-      @current_resource.config merged_config(new_resource)
+      @current_resource.config new_resource.config
       @current_resource
     end
 
@@ -73,10 +65,6 @@ class Chef::Provider
     end
 
     private
-
-    def merged_config(r)
-      r.config.unshift "mode #{r.mode}" if r.mode
-    end
 
     def edit_proxy(exec_action)
       @proxy_file.path ::File.join(
