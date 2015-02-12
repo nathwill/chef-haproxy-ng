@@ -4,7 +4,7 @@ A resource-driven cookbook for configuring [HAProxy](http://www.haproxy.org/).
 
 Cookbook builds on 2 core resources:
 
-- `haproxy_instance`: the "parent" resource, which maps to a complete configuration and a running haproxy daemon.
+- `haproxy_instance`: the "parent" resource, which maps to a complete configuration and a running haproxy daemon
 - `haproxy_proxy`: the "core" proxy resource, which maps to a specific proxy
 
 Additional resources `haproxy_frontend`, `haproxy_backend`, `haproxy_defaults`, 
@@ -13,8 +13,8 @@ for common configuration keywords for their respective proxy type.
 
 Suggested background reading:
 
-- This README, the modules in `libraries/helper.rb`, and the individual HWRPs
 - [Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
+- This README, the modules in `libraries/helper.rb`, and the individual HWRPs
 
 _NOTE_: This cookbook is currently a beta quality release.
 
@@ -232,7 +232,7 @@ Maps to a 'defaults' block in haproxy configuration.
 
 ### haproxy_frontend
 
-Maps to a frontend block in the instance configuration, and typically to one or more listening ports.
+Maps to a frontend block in the instance configuration, and typically to one or more listening ports or sockets.
 
 <table>
   <thead>
@@ -253,7 +253,7 @@ Maps to a frontend block in the instance configuration, and typically to one or 
     <tr>
       <td>acls</td>
       <td>
-        Array of hashes. Each hash must contain keys `:name`, and `:criterion`.
+        Array of hashes. Each hash must contain keys `name`, and `criterion`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -282,7 +282,7 @@ Maps to a frontend block in the instance configuration, and typically to one or 
       <td>use_backends</td>
       <td>
         Array of `Hash`es mapping to a list of `use_backend` directives.
-        Each hash is verified to have keys `:backend` and `:condition`.
+        Each hash is verified to have keys `backend` and `condition`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -320,7 +320,7 @@ Maps to a backend configuration block in haproxy configuration.
     <tr>
       <td>acls</td>
       <td>
-        Array of hashes. Each hash must contain keys `:name`, and `:criterion`.
+        Array of hashes. Each hash must contain keys `name`, and `criterion`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -350,8 +350,8 @@ Maps to a backend configuration block in haproxy configuration.
     <tr>
       <td>servers</td>
       <td>
-        Array of `Hashes`. Each `Hash` must contain keys `:name`, `:address`, `:port`,
-        and optionally `:config`.
+        Array of `Hashes`. Each `Hash` must contain keys `name`, `address`, `port`,
+        and optionally `config`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -390,7 +390,7 @@ blocks into a single proxy.
     <tr>
       <td>acls</td>
       <td>
-        Array of hashes. Each hash must contain keys `:name`, and `:criterion`.
+        Array of hashes. Each hash must contain keys `name`, and `criterion`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -420,8 +420,8 @@ blocks into a single proxy.
     <tr>
       <td>servers</td>
       <td>
-        Array of `Hashes`. Each `Hash` must contain keys `:name`, `:address`, `:port`,
-        and optionally `:config`.
+        Array of `Hashes`. Each `Hash` must contain keys `name`, `address`, `port`,
+        and optionally `config`.
       </td>
       <td><code>[]</code></td>
     </tr>
@@ -443,7 +443,7 @@ blocks into a single proxy.
       <td>use_backends</td>
       <td>
         Array of `Hash`es mapping to a list of `use_backend` directives.
-        Each hash is verified to have keys `:backend` and `:condition`.
+        Each hash is verified to have keys `backend` and `condition`.
       </td>
       <td><code>[]</code></td>
     </tr>
