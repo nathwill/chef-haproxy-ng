@@ -20,13 +20,13 @@ Suggested background reading:
 
 ### haproxy-ng::default
 
-Most users will not find this useful, it is primarily intended as a simple 
-example of the resources, and a useful testing target.
+Configures a default 'haproxy' instance and service via the `config`, `tuning`, 
+and `proxies` cookbook attributes (which correspond to the resource attributes).
 
-Of particular use are the node-search -> backend server conversion, the 
-example use of the `Haproxy::Helpers#proxy` method, and the pattern of 
-an instance of the `haproxy_instance` resource notifying a config-validating 
-resource, which in turn notifies the service resource to reload.
+This recipe also provides a useful example of using the provided helper to map a 
+list of proxies by name to their corresponding resources in the resource collection
+via the `Haproxy::Helpers#proxy` method. It also illustrates the suggested pattern of 
+proxying service reloads through a validating execute resource.
 
 ### haproxy-ng::install
 
@@ -36,11 +36,13 @@ Currently only supports installation from a package.
 
 ### haproxy-ng::service
 
-Configures a default-named ("haproxy") service resource. 
-Useful if running one haproxy service ("service" in the init-system sense), 
-and you have no reason to use a non-default service name. Just create a 
-`haproxy_instance` resource named 'haproxy', and include the recipe.
+Configures a default-named ("haproxy") service resource.
+ 
+Useful for typical installs running a single haproxy service ("service" in the 
+init-system sense) under the default 'haproxy' service name.
 
+Service providers, or those running multiple haproxy instances will need to 
+configure a service instance per haproxy_instance.
 
 ## Attributes
 
@@ -61,11 +63,29 @@ and you have no reason to use a non-default service name. Just create a
       <td><code>package</code></td>
     </tr>
     <tr>
-      <td>app_role</td>
+      <td>proxies</td>
       <td>
-        App role used in `default` recipe for search.
+        Array of proxy names for the default haproxy_instance[haproxy].
+        Useful when used in conjunction with a wrapper cookbook that
+        includes the default recipe.
       </td>
-      <td><code>app</code></td>
+      <td><code>[]</code></td>
+    </tr>
+    <tr>
+      <td>config</td>
+      <td>
+        Array of global configuration keywords passed to the `config` attribute
+        of the haproxy_instance[haproxy] resource in the default recipe.
+      </td>
+      <td><code>See `attributes/default.rb`</code></td>
+    </tr>
+    <tr>
+      <td>tuning</td>
+      <td>
+        Array of global configuration keywords passed to the `tuning` attribute
+        of the haproxy_instance[haproxy] resource in the default recipe.
+      </td>
+      <td><code>See `attributes/default.rb`</code></td>
     </tr>
   </tbody>
 </table>
