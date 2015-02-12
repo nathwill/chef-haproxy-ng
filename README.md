@@ -16,11 +16,6 @@ Suggested background reading:
 - [Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
 - This README, the modules in `libraries/helper.rb`, and the individual HWRPs
 
-_NOTE_: This cookbook is currently a beta quality release.
-
-While it is believed to provide useful functionality, it has not been thoroughly
-tested 'in the field'.
-
 ## Recipes
 
 ### haproxy-ng::default
