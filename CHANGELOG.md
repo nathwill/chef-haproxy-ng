@@ -1,3 +1,10 @@
+# 0.2.0 / 2015-02-11
+
+* set type as required attribute for haproxy_proxy resource
+* remove default proxy list, proxies recipe
+* various and sundry documentation and testing improvements
+* add negated keyword equivalents where appropriate
+
 # 0.1.22 / 2015-02-10
 
 * fix Haproxy::Proxy::NonDefaults.merged_config source merge
