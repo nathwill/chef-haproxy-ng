@@ -42,12 +42,10 @@ haproxy_listen 'redis' do
   ]
 end
 
-app_role = node['haproxy']['app_role']
-
 if Chef::Config[:solo]
   app_members = { 'name' => 'app', 'address' => '127.0.0.1', 'port' => 80 }
 else
-  app_members = search(:node, "role:#{app_role}").map do |n|
+  app_members = search(:node, "role:app").map do |n|
     {
       'name' => n.name,
       'address' => n.ipaddress,
