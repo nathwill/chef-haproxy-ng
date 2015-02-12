@@ -23,6 +23,10 @@ describe 'my-lb::default' do
       expect(chef_run).to create_haproxy_backend 'app'
     end
 
+    it 'skips haproxy_backend should_not_exist' do
+      expect(chef_run).to_not create_haproxy_backend 'should_not_exist'
+    end
+
     it 'creates haproxy_frontend www' do
       expect(chef_run).to create_haproxy_frontend 'www'
     end

@@ -34,6 +34,12 @@ describe 'haproxy-ng::default' do
     end
   end
 
+  describe 'skips proxies when appropriate' do
+    describe file('/etc/haproxy/haproxy.cfg') do
+      its(:content) { should_not match /should_not_exist/ }
+    end
+  end
+
   describe 'configures individual proxies correctly' do
     %w(
       /etc/haproxy/haproxy.cfg

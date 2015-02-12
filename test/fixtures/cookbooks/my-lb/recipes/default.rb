@@ -9,16 +9,6 @@ haproxy_defaults 'TCP' do
   ]
 end
 
-haproxy_defaults 'HTTP' do
-  mode 'http'
-  config [
-    'maxconn 50000',
-    'timeout connect 5s',
-    'timeout client 50s',
-    'timeout server 50s'
-  ]
-end
-
 redis_members = search(:node, 'role:redis').map do |s|
   {
     'name' => s.name,
@@ -42,6 +32,16 @@ haproxy_listen 'redis' do
   ]
 end
 
+haproxy_defaults 'HTTP' do
+  mode 'http'
+  config [
+    'maxconn 50000',
+    'timeout connect 5s',
+    'timeout client 50s',
+    'timeout server 50s'
+  ]
+end
+
 if Chef::Config[:solo]
   app_members = { 'name' => 'app', 'address' => '127.0.0.1', 'port' => 80 }
 else
@@ -53,6 +53,10 @@ else
       'config' => 'check inter 5000 rise 2 fall 5'
     }
   end
+end
+
+haproxy_backend 'should_not_exist' do
+  not_if { true }
 end
 
 haproxy_backend 'app' do
