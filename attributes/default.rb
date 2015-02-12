@@ -19,7 +19,7 @@
 default['haproxy'].tap do |haproxy|
   haproxy['install_method'] = 'package'
   haproxy['app_role'] = 'app'
-  haproxy['proxies'] = [] 
+  haproxy['proxies'] = []
   haproxy['config'] = [
     'daemon',
     'user haproxy',
