@@ -1,13 +1,5 @@
-haproxy_defaults 'TCP' do
-  mode 'tcp'
-  config [
-    'option clitcpka',
-    'option srvtcpka',
-    'timeout connect 5s',
-    'timeout client 300s',
-    'timeout server 300s'
-  ]
-end
+# Exercise all resources and their attributes for testing,
+# even though this generates a pretty silly configuration.
 
 redis_members = search(:node, 'role:redis').map do |s|
   {
@@ -19,6 +11,16 @@ redis_members = search(:node, 'role:redis').map do |s|
 end
 
 haproxy_listen 'redis' do
+  mode 'tcp'
+  acls [
+    {
+      'name' => 'inside',
+      'criterion' => 'src 10.0.0.0/8'
+    }
+  ]
+  description 'redis pool'
+  balance 'leastconn'
+  source node['ipaddress']
   bind '0.0.0.0:6379'
   servers redis_members
   config [
@@ -32,13 +34,16 @@ haproxy_listen 'redis' do
   ]
 end
 
-haproxy_defaults 'HTTP' do
-  mode 'http'
+haproxy_defaults 'TCP' do
+  mode 'tcp'
+  balance 'leastconn'
+  source node['ipaddress']
   config [
-    'maxconn 50000',
+    'option clitcpka',
+    'option srvtcpka',
     'timeout connect 5s',
-    'timeout client 50s',
-    'timeout server 50s'
+    'timeout client 300s',
+    'timeout server 300s'
   ]
 end
 
@@ -60,6 +65,16 @@ haproxy_backend 'should_not_exist' do
 end
 
 haproxy_backend 'app' do
+  mode 'http'
+  acls [
+    {
+      'name' => 'inside',
+      'criterion' => 'src 10.0.0.0/8'
+    }
+  ]
+  description 'app pool'
+  balance 'roundrobin'
+  source node['ipaddress']
   servers app_members
   config [
     'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost'
@@ -67,8 +82,38 @@ haproxy_backend 'app' do
 end
 
 haproxy_frontend 'www' do
+  mode 'http'
+  acls [
+    {
+      'name' => 'inside',
+      'criterion' => 'src 10.0.0.0/8'
+    }
+  ]
+  description 'http frontend'
   bind '*:80'
   default_backend 'app'
+  use_backends [
+    {
+      'backend' => 'app',
+      'condition' => 'if inside'
+    }
+  ]
+  config [
+    'option clitcpka'
+  ]
+end
+
+haproxy_defaults 'HTTP' do
+  mode 'http'
+  default_backend 'app'
+  balance 'roundrobin'
+  source node['ipaddress']
+  config [
+    'maxconn 50000',
+    'timeout connect 5s',
+    'timeout client 50s',
+    'timeout server 50s'
+  ]
 end
 
 include_recipe 'haproxy-ng'
