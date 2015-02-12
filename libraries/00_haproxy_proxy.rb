@@ -19,6 +19,7 @@ class Chef::Resource
     def type(arg = nil)
       set_or_return(
         :type, arg,
+        :required => true,
         :kind_of => String,
         :equal_to => %w( defaults frontend backend listen )
       )
