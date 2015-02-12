@@ -18,10 +18,6 @@
 
 include_recipe "#{cookbook_name}::install"
 
-if node['haproxy']['use_default_proxies']
-  include_recipe "#{cookbook_name}::proxies"
-end
-
 execute 'validate-haproxy_instance-haproxy' do
   command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
   notifies :reload, 'service[haproxy]', :delayed

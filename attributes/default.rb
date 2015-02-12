@@ -19,8 +19,7 @@
 default['haproxy'].tap do |haproxy|
   haproxy['install_method'] = 'package'
   haproxy['app_role'] = 'app'
-  haproxy['proxies'] = %w( TCP redis HTTP www app )
-  haproxy['use_default_proxies'] = true
+  haproxy['proxies'] = [] 
   haproxy['config'] = [
     'daemon',
     'user haproxy',
