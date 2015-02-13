@@ -1,3 +1,8 @@
+# 0.2.1 / 2015-02-13
+
+* permit abuse of proxy resource for configuration of peers, userlists
+* various testing improvements
+
 # 0.2.0 / 2015-02-11
 
 * set type as required attribute for haproxy_proxy resource
