@@ -11,8 +11,8 @@ describe 'my-lb::default' do
       expect(chef_run).to create_haproxy_defaults 'TCP'
     end
 
-    it 'creates haproxy_listen redis' do
-      expect(chef_run).to create_haproxy_listen 'redis'
+    it 'creates haproxy_listen mysql' do
+      expect(chef_run).to create_haproxy_listen 'mysql'
     end
 
     it 'creates haproxy_defaults HTTP' do

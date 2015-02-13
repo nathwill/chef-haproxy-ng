@@ -1,1 +1,1 @@
-default['haproxy']['proxies'] = %w( TCP redis HTTP www app )
+default['haproxy']['proxies'] = %w( TCP mysql HTTP www app )

@@ -1,9 +1,0 @@
-{
-  "name": "redis01",
-  "chef_environment": "_default",
-  "run_list": ["role[redis]"],
-  "automatic": {
-    "ipaddress": "12.34.6.78",
-    "hostname": "redis01"
-  }
-}

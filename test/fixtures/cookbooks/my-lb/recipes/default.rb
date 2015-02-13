@@ -1,16 +1,16 @@
 # Exercise all resources and their attributes for testing,
 # even though this generates a pretty silly configuration.
 
-redis_members = search(:node, 'role:redis').map do |s|
+mysql_members = search(:node, 'role:mysql').map do |s|
   {
     'name' => s.name,
     'address' => s.ipaddress,
-    'port' => 6379,
-    'config' => 'backup check inter 1000 rise 2 fall 5'
+    'port' => 3306,
+    'config' => 'maxconn 500 check port 3306 inter 2s backup'
   }
 end
 
-haproxy_listen 'redis' do
+haproxy_listen 'mysql' do
   mode 'tcp'
   acls [
     {
@@ -18,19 +18,13 @@ haproxy_listen 'redis' do
       'criterion' => 'src 10.0.0.0/8'
     }
   ]
-  description 'redis pool'
+  description 'mysql pool'
   balance 'leastconn'
   source node['ipaddress']
-  bind '0.0.0.0:6379'
-  servers redis_members
+  bind '0.0.0.0:3306'
+  servers mysql_members
   config [
-    'option tcp-check',
-    'tcp-check send PING\r\n',
-    'tcp-check expect string +PONG',
-    'tcp-check send info\ replication\r\n',
-    'tcp-check expect string role:master',
-    'tcp-check send QUIT\r\n',
-    'tcp-check expect string +OK'
+    'option mysql-check'
   ]
 end
 
