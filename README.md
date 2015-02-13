@@ -147,7 +147,7 @@ and most likely to a running service.
 ### haproxy_proxy
 
 The simplest proxy representation and base-class for the other
-proxy resources (defaults, frontend, backend, listen).
+proxy resources (defaults, frontend, backend, listen, peers, userlist).
 
 <table>
   <thead>
@@ -176,6 +176,9 @@ proxy resources (defaults, frontend, backend, listen).
     </tr>
   </tbody>
 </table>
+
+See `test/fixtures/cookbooks/my-lb/recipes/default.rb` for an example of 
+abusing the proxy resource to configure peers and userlists.
 
 ### haproxy_defaults
 
