@@ -131,20 +131,6 @@ and most likely to a running service.
       <td><code>app</code></td>
     </tr>
     <tr>
-      <td>userlists</td>
-      <td>
-        Not yet implemented.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>peers</td>
-      <td>
-        Not yet implemented.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
       <td>proxies</td>
       <td>
         Array of Chef::Resource::HaproxyProxy instances 
