@@ -103,7 +103,7 @@ haproxy_defaults 'HTTP' do
   balance 'roundrobin'
   source node['ipaddress']
   config [
-    'maxconn 50000',
+    'maxconn 2000',
     'timeout connect 5s',
     'timeout client 50s',
     'timeout server 50s'
