@@ -1,6 +1,27 @@
 # Exercise all resources and their attributes for testing,
 # even though this generates a pretty silly configuration.
 
+lb_peers = search(:node, 'role:lb').map do |lb|
+  "peer #{lb.name} #{lb['ipaddress']}:1024"
+end
+
+haproxy_proxy 'lb' do
+  type 'peers'
+  config lb_peers
+  not_if { platform?('ubuntu') && node['platform_version'] =~ /1(2|4).04/ }
+end
+
+haproxy_proxy 'L1' do
+  type 'userlist'
+  config [
+    'group G1 users tiger,scott',
+    'group G2 users xdb,scott',
+    'user tiger insecure-password password123',
+    'user scott insecure-password pa55word123',
+    'user xdb insecure-password hello',
+  ]
+end
+
 mysql_members = search(:node, 'role:mysql').map do |s|
   {
     'name' => s.name,

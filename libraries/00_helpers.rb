@@ -123,6 +123,8 @@ module Haproxy
   module Proxy
     MODES = %w( tcp http health )
 
+    PEERS = %w( peers )
+    USERLIST = %w( userlist )
     KEYWORD_ALL = %w( defaults frontend listen backend )
     KEYWORD_DEFAULTS_FRONTEND = %w( defaults frontend listen )
     KEYWORD_DEFAULTS_BACKEND = %w( defaults backend listen )
@@ -131,6 +133,9 @@ module Haproxy
     KEYWORD_NON_DEFAULTS = %w( frontend listen backend )
 
     KEYWORD_MATRIX = {
+      'peer' => PEERS,
+      'user' => USERLIST,
+      'group' => USERLIST,
       'acl' => KEYWORD_NON_DEFAULTS,
       'appsession' => KEYWORD_BACKEND,
       'backlog' => KEYWORD_DEFAULTS_FRONTEND,

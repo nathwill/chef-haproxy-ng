@@ -1,0 +1,9 @@
+{
+  "name": "lb01",
+  "chef_environment": "_default",
+  "run_list": ["role[lb]"],
+  "automatic": {
+    "ipaddress": "12.4.56.78",
+    "hostname": "lb01"
+  }
+}

@@ -21,7 +21,7 @@ class Chef::Resource
         :type, arg,
         :required => true,
         :kind_of => String,
-        :equal_to => %w( defaults frontend backend listen )
+        :equal_to => %w( defaults frontend backend listen peers userlist )
       )
     end
 
