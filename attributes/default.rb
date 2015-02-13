@@ -28,4 +28,10 @@ default['haproxy'].tap do |haproxy|
   haproxy['tuning'] = [
     'maxconn 50000'
   ]
+
+  haproxy['source'].tap do |source|
+    source['version'] = '1.5'
+    source['release'] = '1.5.11'
+    source['checksum'] = '5500a79d0d2b238d4a1e9749bd0c2cb2'
+  end
 end

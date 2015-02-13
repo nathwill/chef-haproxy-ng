@@ -147,7 +147,7 @@ and most likely to a running service.
 ### haproxy_proxy
 
 The simplest proxy representation and base-class for the other
-proxy resources (defaults, frontend, backend, listen, peers, userlist).
+proxy resources (defaults, frontend, backend, listen).
 
 <table>
   <thead>
