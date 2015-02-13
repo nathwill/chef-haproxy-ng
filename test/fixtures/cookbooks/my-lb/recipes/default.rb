@@ -5,6 +5,8 @@ lb_peers = search(:node, 'role:lb').map do |lb|
   "peer #{lb.name} #{lb['ipaddress']}:1024"
 end
 
+lb_peers.unshift "peer #{node.name}.vagrantup.com #{node['ipaddress']}:1024"
+
 haproxy_proxy 'lb' do
   type 'peers'
   config lb_peers
