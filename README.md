@@ -162,7 +162,7 @@ proxy resources (defaults, frontend, backend, listen).
       <td>type</td>
       <td>
         String representing the proxy type. One of: 
-        defaults, frontend, backend, listen.
+        defaults, frontend, backend, listen, peers, userlist.
       </td>
       <td><code>nil</code></td>
     </tr>
