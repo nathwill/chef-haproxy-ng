@@ -7,14 +7,12 @@ end
 
 lb_peers.unshift "peer #{node.name}.vagrantup.com #{node['ipaddress']}:1024"
 
-haproxy_proxy 'lb' do
-  type 'peers'
+haproxy_peers 'lb' do
   config lb_peers
   not_if { platform?('ubuntu') && node['platform_version'] =~ /1(2|4).04/ }
 end
 
-haproxy_proxy 'L1' do
-  type 'userlist'
+haproxy_userlist 'L1' do
   config [
     'group G1 users tiger,scott',
     'group G2 users xdb,scott',
