@@ -18,9 +18,9 @@ suites:
     attributes:
       haproxy:
         install_method: package
-#  - name: source
-#    run_list:
-#      - recipe[haproxy-ng::default]
-#    attributes:
-#      haproxy:
-#        install_method: source
+  - name: source
+    run_list:
+      - recipe[my-lb]
+    attributes:
+      haproxy:
+        install_method: source
