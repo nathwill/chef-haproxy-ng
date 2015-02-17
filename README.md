@@ -57,7 +57,7 @@ configure a service instance per haproxy_instance.
     <tr>
       <td>install_method</td>
       <td>
-        Not fully implemented. One of: ['package', 'source']
+        One of: 'package', 'source'
       </td>
       <td><code>package</code></td>
     </tr>
