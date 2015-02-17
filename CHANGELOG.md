@@ -1,3 +1,8 @@
+# 0.2.2 / 2015-02-17
+
+* enable source install
+* docs and testing updates
+
 # 0.2.1 / 2015-02-13
 
 * permit abuse of proxy resource for configuration of peers, userlists
