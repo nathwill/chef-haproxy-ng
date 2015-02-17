@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe 'haproxy-ng::default' do
   describe 'installs haproxy' do
-    describe command('which haproxy') do
-      its(:stdout) { should match /haproxy/ }
-      its(:exit_status) { should eq 0 }
+    describe command('/usr/local/sbin/haproxy -vv') do
+      its(:stdout) { should match /supports TLS extensions : yes/ }
+      its(:stdout) { should match /supports SNI : yes/ }
     end
   end
 
@@ -22,7 +22,7 @@ describe 'haproxy-ng::default' do
       end
     end
 
-    describe command('haproxy -c -f /etc/haproxy/haproxy.cfg') do
+    describe command('/usr/local/sbin/haproxy -c -f /etc/haproxy/haproxy.cfg') do
       its(:stdout) { should_not match /warning/i }
       its(:stdout) { should match /valid/ }
     end
