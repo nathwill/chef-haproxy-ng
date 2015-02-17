@@ -31,8 +31,7 @@ proxying service reloads through a validating execute resource.
 ### haproxy-ng::install
 
 Installs haproxy via the `node['haproxy']['install_method']` method.
-
-Currently only supports installation from a package.
+Supports 'package' and 'source'.
 
 ### haproxy-ng::service
 

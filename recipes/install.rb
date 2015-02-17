@@ -20,7 +20,69 @@ case node['haproxy']['install_method']
 when 'package'
   package 'haproxy'
 when 'source'
-  Chef::Log.warn 'Source install not yet implemented!'
+  node.default['haproxy']['source']['archive_url'] = [
+    node['haproxy']['source']['url'],
+    node['haproxy']['source']['version'],
+    'src',
+    "haproxy-#{node['haproxy']['source']['release']}.tar.gz"
+  ].join('/')
+
+  src = node['haproxy']['source']
+
+  src['dependencies'].each do |dep|
+    package dep
+  end
+
+  download_path = Chef::Config['file_cache_path'] || '/tmp'
+  pkg_path = "#{download_path}/haproxy-#{src['release']}.tar.gz"
+
+  execute 'compile-haproxy' do
+    cwd "#{download_path}/haproxy-#{src['release']}"
+    command <<-EOC
+      make #{src['make_args']} && \
+      make install
+    EOC
+    action :nothing
+  end
+
+  execute 'extract-haproxy' do
+    cwd download_path
+    command <<-EOC
+      tar xzf #{::File.basename(pkg_path)} -C #{download_path}
+    EOC
+    action :nothing
+    notifies :run, 'execute[compile-haproxy]', :immediately
+  end
+
+  remote_file 'haproxy-src-archive' do
+    path pkg_path
+    source src['archive_url']
+    notifies :run, 'execute[extract-haproxy]', :immediately
+  end
+
+  directory '/etc/haproxy'
+
+  user 'haproxy' do
+    home '/var/lib/haproxy'
+    shell '/usr/sbin/nologin'
+    system true
+  end
+
+  directory '/var/lib/haproxy' do
+    owner 'haproxy'
+    group 'haproxy'
+  end
+
+  cookbook_file '/etc/init/haproxy.conf' do
+    source 'haproxy.conf'
+    mode '0755'
+    not_if { platform_family?('rhel') && node['platform_version'].to_f >= 7.0 }
+  end
+
+  cookbook_file '/etc/systemd/system/haproxy.service' do
+    source 'haproxy.service'
+    only_if { platform_family?('rhel') && node['platform_version'].to_f >= 7.0 }
+  end
 else
   Chef::Log.warn 'Unknown install_method for haproxy. Skipping install!'
 end
