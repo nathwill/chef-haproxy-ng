@@ -1,3 +1,8 @@
+# 0.2.3 / 2015-02-19
+
+* add peers resource
+* add userlist resource
+
 # 0.2.2 / 2015-02-17
 
 * enable source install
