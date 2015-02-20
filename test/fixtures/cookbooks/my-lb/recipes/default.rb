@@ -2,23 +2,33 @@
 # even though this generates a pretty silly configuration.
 
 lb_peers = search(:node, 'role:lb').map do |lb|
-  "peer #{lb.name} #{lb['ipaddress']}:1024"
+  {
+    'name' => lb.name,
+    'address' => lb.ipaddress,
+    'port' => 1024
+  }
 end
 
-lb_peers.unshift "peer #{node.name}.vagrantup.com #{node['ipaddress']}:1024"
+lb_peers << {
+  'name' => "#{node.name}.vagrantup.com",
+  'address' => node.ipaddress,
+  'port' => 1024
+}
 
 haproxy_peers 'lb' do
-  config lb_peers
+  peers lb_peers
   not_if { platform?('ubuntu') && node['platform_version'] =~ /1(2|4).04/ }
 end
 
 haproxy_userlist 'L1' do
-  config [
-    'group G1 users tiger,scott',
-    'group G2 users xdb,scott',
-    'user tiger insecure-password password123',
-    'user scott insecure-password pa55word123',
-    'user xdb insecure-password hello',
+  groups [
+    { 'name' => 'G1', 'config' => 'users tiger,scott' },
+    { 'name' => 'G2', 'config' => 'users xdb,scott' }
+  ]
+  users [
+    { 'name' => 'tiger', 'config' => 'insecure-password password123' },
+    { 'name' => 'scott', 'config' => 'insecure-password pa55word123' },
+    { 'name' => 'xdb', 'config' => 'insecure-password hello' }
   ]
 end
 

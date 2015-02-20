@@ -40,6 +40,42 @@ describe 'haproxy-ng::default' do
     end
   end
 
+  describe 'configures peers correctly' do
+    %w(
+      /etc/haproxy/haproxy.cfg
+      /tmp/kitchen/cache/haproxy.peers.lb.cfg
+    ).each do |f|
+      describe file(f) do
+        [
+          'peers lb',
+          'peer lb01 12.4.56.78:1024',
+          'peer lb02 12.34.56.8:1024'
+        ].each do |directive|
+          its(:content) { should match %r{#{directive}} }
+        end
+      end
+    end
+  end
+
+  describe 'configures userlists correctly' do
+    %w(
+      /etc/haproxy/haproxy.cfg
+      /tmp/kitchen/cache/haproxy.userlist.L1.cfg
+    ).each do |f|
+      describe file(f) do
+        [
+          'group G1 users tiger,scott',
+          'group G2 users xdb,scott',
+          'user tiger insecure-password password123',
+          'user scott insecure-password pa55word123',
+          'user xdb insecure-password hello'
+        ].each do |directive|
+          its(:content) { should match %r{#{directive}} }
+        end
+      end
+    end
+  end
+
   describe 'configures individual proxies correctly' do
     %w(
       /etc/haproxy/haproxy.cfg

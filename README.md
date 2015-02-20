@@ -179,6 +179,76 @@ proxy resources (defaults, frontend, backend, listen).
 See `test/fixtures/cookbooks/my-lb/recipes/default.rb` for an example of 
 abusing the proxy resource to configure peers and userlists.
 
+### haproxy_peers
+
+Maps to a peers block in haproxy configuration.
+
+<table>
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+      <th>Default Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>peers</td>
+      <td>
+        Array of Hashes. Hashes require keys 'name', 'config'.
+      </td>
+      <td><code>[]</code></td>
+    </tr>
+    <tr>
+      <td>config</td>
+      <td>
+        Array of peers keywords, validated against valid peers keywords.
+        See `library/helpers.rb` or haproxy manual for permissible keywords.
+      </td>
+      <td><code>[]</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### haproxy_userlist
+
+Maps to a userlist block in haproxy configuration.
+
+<table>
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th>Description</th>
+      <th>Default Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>groups</td>
+      <td>
+        Array of Hashes. Hashes require keys 'name', 'config.
+      </td>
+      <td><code>[]</code></td>
+    </tr>
+    <tr>
+      <td>users</td>
+      <td>
+        Array of Hashes. Hashes require keys 'name', 'config'.
+      </td>
+      <td><code>[]</code></td>
+    </tr>
+    <tr>
+      <td>config</td>
+      <td>
+        Array of userlist keywords, validated against valid userlist keywords.
+        See `library/helpers.rb` or haproxy manual for permissible keywords.
+      </td>
+      <td><code>[]</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
 ### haproxy_defaults
 
 Maps to a 'defaults' block in haproxy configuration.
