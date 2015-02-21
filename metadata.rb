@@ -6,6 +6,6 @@ description      'Installs/Configures haproxy-ng'
 long_description 'Installs/Configures haproxy-ng'
 version          '0.2.3'
 
-%w( redhat scientific centos fedora ubuntu ).each do |platform|
+%w( fedora redhat centos scientific ubuntu ).each do |platform|
   supports platform
 end
