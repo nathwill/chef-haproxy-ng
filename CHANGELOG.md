@@ -1,3 +1,7 @@
+# 0.2.4 / 2015-02-23
+
+* fix stick-table entry
+
 # 0.2.3 / 2015-02-19
 
 * add peers resource
