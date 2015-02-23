@@ -312,7 +312,7 @@ module Haproxy
       'stick on' => KEYWORD_BACKEND,
       'stick store-request' => KEYWORD_BACKEND,
       'stick store-response' => KEYWORD_BACKEND,
-      'stick-table type' => KEYWORD_BACKEND,
+      'stick-table type' => KEYWORD_NON_DEFAULTS,
       'tcp-check connect' => KEYWORD_BACKEND,
       'tcp-check expect' => KEYWORD_BACKEND,
       'tcp-check send' => KEYWORD_BACKEND,
