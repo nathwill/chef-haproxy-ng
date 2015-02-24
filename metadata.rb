@@ -4,8 +4,10 @@ maintainer_email 'nath.e.will@gmail.com'
 license          'apache2'
 description      'Installs/Configures haproxy-ng'
 long_description 'Installs/Configures haproxy-ng'
-version          '0.2.4'
+version          '0.2.5'
 
 %w( fedora redhat centos scientific ubuntu ).each do |platform|
   supports platform
 end
+
+depends 'apt'
