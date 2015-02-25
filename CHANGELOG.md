@@ -1,3 +1,7 @@
+# 0.2.5 / 2015-02-25
+
+* fix service setup on fedora when doing source install
+
 # 0.2.4 / 2015-02-23
 
 * fix stick-table entry
