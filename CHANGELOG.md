@@ -1,3 +1,7 @@
+# 0.2.6 / 2015-02-25
+
+* add ppa install method (thanks @elementai!)
+
 # 0.2.5 / 2015-02-25
 
 * fix service setup on fedora when doing source install
