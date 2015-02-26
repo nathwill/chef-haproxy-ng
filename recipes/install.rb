@@ -19,6 +19,15 @@
 case node['haproxy']['install_method']
 when 'package'
   package 'haproxy'
+when 'ppa'
+  apt_repository 'haproxy' do
+    uri node['haproxy']['ppa']['uri']
+    distribution node['lsb']['codename']
+    components ['main']
+    keyserver 'keyserver.ubuntu.com'
+    key node['haproxy']['ppa']['key']
+  end
+  package 'haproxy'
 when 'source'
   node.default['haproxy']['source']['archive_url'] = [
     node['haproxy']['source']['url'],

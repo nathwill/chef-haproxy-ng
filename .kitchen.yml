@@ -25,3 +25,13 @@ suites:
     attributes:
       haproxy:
         install_method: source
+  - name: ppa
+    run_list:
+      - recipe[my-lb]
+    attributes:
+      haproxy:
+        install_method: ppa
+    excludes:
+      - name: centos-6.5
+      - name: centos-7.0
+      - name: fedora-21

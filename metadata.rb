@@ -9,3 +9,5 @@ version          '0.2.5'
 %w( fedora redhat centos scientific ubuntu ).each do |platform|
   supports platform
 end
+
+depends 'apt'
