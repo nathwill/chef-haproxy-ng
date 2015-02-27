@@ -140,7 +140,7 @@ module Haproxy
       'appsession' => KEYWORD_BACKEND,
       'backlog' => KEYWORD_DEFAULTS_FRONTEND,
       'balance' => KEYWORD_DEFAULTS_BACKEND,
-      'bind' => KEYWORD_NON_DEFAULTS,
+      'bind' => KEYWORD_FRONTEND,
       'bind-process' => KEYWORD_ALL,
       'block' => KEYWORD_NON_DEFAULTS,
       'capture cookie' => KEYWORD_FRONTEND,
