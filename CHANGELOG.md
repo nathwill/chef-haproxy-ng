@@ -1,3 +1,7 @@
+# 0.2.8 / 2015-02-27
+
+* doc updates
+
 # 0.2.7 / 2015-02-27
 
 * unit testing improvements
