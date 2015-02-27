@@ -4,9 +4,9 @@ maintainer_email 'nath.e.will@gmail.com'
 license          'apache2'
 description      'modern, resource-driven cookbook for managing haproxy'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.2.7'
 source_url       'https://github.com/nathwill/chef-haproxy-ng'
 issues_url       'https://github.com/nathwill/chef-haproxy-ng/issues'
+version          '0.2.7'
 
 %w( fedora redhat centos scientific ubuntu ).each do |platform|
   supports platform
