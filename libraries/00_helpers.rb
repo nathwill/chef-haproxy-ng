@@ -40,7 +40,6 @@ module Haproxy
       'log-tag',
       'nbproc',
       'pidfile',
-      'ulimit-n',
       'user',
       'ssl-default-bind-ciphers',
       'ssl-default-bind-options',
@@ -54,7 +53,6 @@ module Haproxy
       'uid',
       'ulimit-n',
       'unix-bind',
-      'user',
       'node',
       'description'
     ]
@@ -123,8 +121,8 @@ module Haproxy
   module Proxy
     MODES = %w( tcp http health )
 
-    PEERS = %w( peers )
-    USERLIST = %w( userlist )
+    KEYWORD_PEERS = %w( peers )
+    KEYWORD_USERLIST = %w( userlist )
     KEYWORD_ALL = %w( defaults frontend listen backend )
     KEYWORD_DEFAULTS_FRONTEND = %w( defaults frontend listen )
     KEYWORD_DEFAULTS_BACKEND = %w( defaults backend listen )
@@ -133,14 +131,14 @@ module Haproxy
     KEYWORD_NON_DEFAULTS = %w( frontend listen backend )
 
     KEYWORD_MATRIX = {
-      'peer' => PEERS,
-      'user' => USERLIST,
-      'group' => USERLIST,
+      'peer' => KEYWORD_PEERS,
+      'user' => KEYWORD_USERLIST,
+      'group' => KEYWORD_USERLIST,
       'acl' => KEYWORD_NON_DEFAULTS,
       'appsession' => KEYWORD_BACKEND,
       'backlog' => KEYWORD_DEFAULTS_FRONTEND,
       'balance' => KEYWORD_DEFAULTS_BACKEND,
-      'bind' => KEYWORD_NON_DEFAULTS,
+      'bind' => KEYWORD_FRONTEND,
       'bind-process' => KEYWORD_ALL,
       'block' => KEYWORD_NON_DEFAULTS,
       'capture cookie' => KEYWORD_FRONTEND,
