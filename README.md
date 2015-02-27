@@ -115,7 +115,7 @@ and most likely to a running service.
         Array of global keywords relevant to process management.
         See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
       </td>
-      <td><code>['daemon','user haproxy', 'group haproxy', 'pidfile /var/run/haproxy.pid']</code></td>
+      <td><code>['daemon']</code></td>
     </tr>
     <tr>
       <td>tuning</td>
@@ -123,7 +123,7 @@ and most likely to a running service.
         Array of global keywords relevant to performance tuning.
         See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
       </td>
-      <td><code>['maxconn 50000']</code></td>
+      <td><code>['maxconn 256']</code></td>
     </tr>
     <tr>
       <td>debug</td>
