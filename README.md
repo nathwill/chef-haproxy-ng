@@ -26,11 +26,12 @@ Configures a default instance, 'haproxy_instance[haproxy]', and corresponding
 'haproxy' service via the `config`, `tuning`, and `proxies` cookbook attributes 
 (which are mapped onto the corresponding resource attributes).
 
-This recipe also provides a useful example of using the provided helper to map a 
-list of proxies to their corresponding resources in the resource collection
-via the `Haproxy::Helpers#proxy` method. It also illustrates the suggested pattern of 
-proxying service reloads through a validating execute resource. See wrapper example
-at 'test/fixtures/cookbooks/my-lb'.
+This recipe also provides a useful example of using the provided helper, 
+`Haproxy::Helpers#proxy`, to map a list of proxies to their corresponding 
+resources in the resource collection. It also illustrates the recommended 
+pattern of proxying service reloads through a validating execute resource. 
+
+See wrapper cookbook example at 'test/fixtures/cookbooks/my-lb'.
 
 ### haproxy-ng::install
 
@@ -41,11 +42,10 @@ Supports 'package', 'source', and 'ppa'.
 
 Configures a default-named ("haproxy") service resource.
  
-Useful for typical installs running a single haproxy service ("service" in the 
-init-system sense) under the default 'haproxy' service name.
-
-Service providers, or those running multiple haproxy instances on a single host 
-will most likely want to configure a service instance per haproxy_instance.
+Useful for typical installs running a single haproxy daemon under the default 
+'haproxy' service name. Service providers, or those running multiple haproxy 
+daemons on a single host will most likely want to configure a service instance 
+per haproxy_instance.
 
 ## Attributes
 
