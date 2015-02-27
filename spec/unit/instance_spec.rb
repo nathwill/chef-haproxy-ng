@@ -6,14 +6,6 @@ describe Haproxy::Instance do
     Chef::Resource::HaproxyInstance.new('dummy', chef_run.run_context)
   end
 
-  it 'defines accepted config keywords' do
-    expect(Haproxy::Instance::CONFIG_KEYWORDS).to be_an Array
-  end
-
-  it 'defines accepted tuning keywords' do
-    expect(Haproxy::Instance::TUNING_KEYWORDS).to be_an Array
-  end
-
   it 'identifies valid configs' do
     expect(Haproxy::Instance.valid_config?( ['daemon'] ) ).to eq true
     expect(Haproxy::Instance.valid_config?( ['demon'] ) ).to eq false
