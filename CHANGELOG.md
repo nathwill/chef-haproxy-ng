@@ -1,3 +1,8 @@
+# 0.2.7 / 2015-02-27
+
+* unit testing improvements
+* fix bind keyword matrix entry
+
 # 0.2.6 / 2015-02-25
 
 * add ppa install method (thanks @elementai!)
