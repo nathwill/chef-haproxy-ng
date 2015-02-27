@@ -4,6 +4,7 @@ describe Haproxy::Proxy::DefaultsBackend do
   let(:chef_run) { ChefSpec::ServerRunner.new.converge('my-lb::default') }
   let(:dummy_backend) do
     r = Chef::Resource::HaproxyBackend.new('web', chef_run.run_context)
+    r.config ['fullconn 100']
     r.balance 'roundrobin'
     r.source '1.2.3.4'
     r
@@ -13,6 +14,6 @@ describe Haproxy::Proxy::DefaultsBackend do
     expect(
       Haproxy::Proxy::DefaultsBackend
         .merged_config(dummy_backend.config, dummy_backend)
-    ).to match_array ['balance roundrobin', 'source 1.2.3.4']
+    ).to match_array ['fullconn 100', 'balance roundrobin', 'source 1.2.3.4']
   end
 end
