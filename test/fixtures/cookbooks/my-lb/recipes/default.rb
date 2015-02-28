@@ -10,7 +10,7 @@ lb_peers = search(:node, 'role:lb').map do |lb|
 end
 
 lb_peers << {
-  'name' => node.machinename,
+  'name' => node['machinename'],
   'address' => node.ipaddress,
   'port' => 1024
 }
