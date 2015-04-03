@@ -6,7 +6,7 @@ describe Haproxy::Proxy::Backend do
     r = Chef::Resource::HaproxyBackend.new('web', chef_run.run_context)
     r.config ['fullconn 100']
     r.servers [
-      { 'name' => 'app02', 'address' => '1.2.3.5', 'port' => 80, 'config' => 'backup'
+      { 'name' => 'app02', 'address' => '1.2.3.5', 'port' => 80, 'config' => 'backup' },
       { 'name' => 'app01', 'address' => '1.2.3.4', 'port' => 80, 'config' => 'backup' }
     ]
     r
