@@ -1,3 +1,10 @@
+# 0.2.9 / 2015-04-03
+
+* misc. doc updates
+* misc. testing improvements
+* backport upstream improvements to systemd service file
+* sort servers by name to reduce unnecessary restart/reload
+
 # 0.2.8 / 2015-02-27
 
 * doc updates
