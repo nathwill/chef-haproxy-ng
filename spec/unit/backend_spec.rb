@@ -16,6 +16,6 @@ describe Haproxy::Proxy::Backend do
     expect(
       Haproxy::Proxy::Backend
         .merged_config(dummy_backend.config, dummy_backend)
-    ).to equal ['fullconn 100', 'server app01 1.2.3.4:80 backup', 'server app02 1.2.3.5:80 backup']
+    ).to eq(['fullconn 100', 'server app01 1.2.3.4:80 backup', 'server app02 1.2.3.5:80 backup'])
   end
 end
