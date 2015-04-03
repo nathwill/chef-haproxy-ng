@@ -429,7 +429,7 @@ module Haproxy
       # rubocop: disable MethodLength
       def servers(arg = nil)
         set_or_return(
-          :servers, arg,
+          :servers, arg.sort_by { |s| s['name'] },
           :kind_of => Array,
           :default => [],
           :callbacks => {
