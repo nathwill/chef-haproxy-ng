@@ -27,6 +27,7 @@ when 'ppa'
     keyserver 'keyserver.ubuntu.com'
     key node['haproxy']['ppa']['key']
   end
+
   package 'haproxy'
 when 'source'
   node.default['haproxy']['source']['archive_url'] = [
@@ -82,20 +83,18 @@ when 'source'
     group 'haproxy'
   end
 
-  svc_provider = Chef::Platform.find_provider_for_node(node, :service)
-
   cookbook_file '/etc/init/haproxy.conf' do
     source 'haproxy.conf'
     mode '0755'
-    not_if do
-      svc_provider == Chef::Provider::Service::Systemd
+    only_if do
+      ::File.directory?('/etc/init')
     end
   end
 
   cookbook_file '/etc/systemd/system/haproxy.service' do
     source 'haproxy.service'
     only_if do
-      svc_provider == Chef::Provider::Service::Systemd
+      ::File.directory?('/etc/systemd/system')
     end
   end
 else
