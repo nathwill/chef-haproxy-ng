@@ -14,7 +14,7 @@ module Haproxy
     end
 
     def self.proxy(name, run_context)
-      proxies(run_context).select { |p| p.name == name }.first
+      proxies(run_context).find { |p| p.name == name }
     end
 
     private
