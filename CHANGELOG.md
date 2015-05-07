@@ -1,3 +1,7 @@
+# 0.2.12 / 2015-05-07
+
+* explicitly list supported service actions (thanks @alefend)
+
 # 0.2.10 / 2015-05-06
 
 * fix cops
