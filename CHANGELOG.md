@@ -1,3 +1,8 @@
+# 0.2.10 / 2015-05-06
+
+* fix cops
+* bump to latest stable haproxy for source build
+
 # 0.2.9 / 2015-04-03
 
 * misc. doc updates
