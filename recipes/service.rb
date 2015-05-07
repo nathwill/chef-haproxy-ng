@@ -23,4 +23,5 @@ end
 
 service 'haproxy' do
   action [:enable, :start]
+  supports :status => :true, :restart => :true, :reload => :true
 end
