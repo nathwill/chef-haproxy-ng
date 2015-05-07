@@ -28,6 +28,7 @@ default['haproxy']['source'].tap do |source|
   )
 
   source['make_args'] = %w(
+    TARGET=linux2628
     CPU=native
     USE_LIBCRYPT=1
     USE_LINUX_SPLICE=1
