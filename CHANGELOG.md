@@ -1,4 +1,8 @@
-# 0.2.12 / 2015-05-07
+# 0.2.12 / 2015-05-09
+
+* add extra keyword
+
+# 0.2.11 / 2015-05-07
 
 * explicitly list supported service actions (thanks @alefend)
 
