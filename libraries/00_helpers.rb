@@ -201,6 +201,8 @@ module Haproxy
       'option forceclose' => KEYWORD_ALL,
       'no option forceclose' => KEYWORD_ALL,
       'option forwardfor' => KEYWORD_ALL,
+      'option http-ignore-probes' => KEYWORD_DEFAULTS_FRONTEND,
+      'no option http-ignore-probes' => KEYWORD_DEFAULTS_FRONTEND,
       'option http-keep-alive' => KEYWORD_ALL,
       'no option http-keep-alive' => KEYWORD_ALL,
       'option http-no-delay' => KEYWORD_ALL,
