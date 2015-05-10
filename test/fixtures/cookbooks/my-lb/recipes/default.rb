@@ -88,19 +88,13 @@ end
 # Temporarily disable the validation so we can create a bogus resource.
 # Reusing the actionable proxy test lets us confirm disabling compile-time
 # validation works, without also screwing up the rendered configuration.	
-
-node.default['haproxy']['validate_at_compile'] = false
-
 haproxy_backend 'should_not_exist' do
+  validate_at_compile false
   config [
     'bind 127.0.0.1:8080' # bogus config
   ]
   not_if { true }
 end
-
-node.default['haproxy']['validate_at_compile'] = true
-
-# Back to normal mode
 
 haproxy_backend 'app' do
   mode 'http'

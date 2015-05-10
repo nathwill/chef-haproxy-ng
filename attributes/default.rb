@@ -17,7 +17,6 @@
 # limitations under the License.
 
 default['haproxy'].tap do |haproxy|
-  haproxy['validate_at_compile'] = true
   haproxy['install_method'] = 'package'
   haproxy['proxies'] = []
   haproxy['config'] = [
