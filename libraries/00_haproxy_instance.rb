@@ -31,7 +31,7 @@ class Chef::Resource
         :default => %w( daemon ),
         :callbacks => {
           'is a valid config' => lambda do |spec|
-            Haproxy::Instance.valid_config?(spec)
+            !validate_at_compile || Haproxy::Instance.valid_config?(spec)
           end
         }
       )
@@ -44,7 +44,7 @@ class Chef::Resource
         :default => ['maxconn 256'],
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
-            Haproxy::Instance.valid_tuning?(spec)
+            !validate_at_compile || Haproxy::Instance.valid_tuning?(spec)
           end
         }
       )
@@ -68,6 +68,14 @@ class Chef::Resource
             spec.all? { |p| p.is_a? Chef::Resource::HaproxyProxy }
           end
         }
+      )
+    end
+
+    def validate_at_compile(arg = nil)
+      set_or_return(
+        :validate_at_compile, arg,
+        :kind_of => [TrueClass, FalseClass],
+        :default => true
       )
     end
   end
@@ -122,6 +130,9 @@ class Chef::Provider
       @tpl.path "/etc/haproxy/#{@current_resource.name}.cfg"
       @tpl.source 'haproxy.cfg.erb'
       @tpl.variables :instance => @current_resource
+      if Chef::VERSION.to_f >= 12
+        @tpl.verify { |path| "haproxy -q -c -f #{path}" }
+      end
       @tpl.run_action exec_action
       @tpl.updated_by_last_action?
     end

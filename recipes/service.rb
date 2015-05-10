@@ -24,4 +24,6 @@ end
 service 'haproxy' do
   action [:enable, :start]
   supports :status => :true, :restart => :true, :reload => :true
+  subscribes :reload, 'haproxy_instance[haproxy]', :delayed
+  subscribes :reload, 'cookbook_file[/etc/default/haproxy]', :delayed
 end
