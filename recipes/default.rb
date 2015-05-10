@@ -18,12 +18,6 @@
 
 include_recipe "#{cookbook_name}::install"
 
-execute 'validate-haproxy_instance-haproxy' do
-  command 'haproxy -c -f /etc/haproxy/haproxy.cfg'
-  notifies :reload, 'service[haproxy]', :delayed
-  action :nothing
-end
-
 my_proxies = node['haproxy']['proxies'].map do |p|
   Haproxy::Helpers.proxy(p, run_context)
 end
@@ -32,7 +26,6 @@ haproxy_instance 'haproxy' do
   config node['haproxy']['config']
   tuning node['haproxy']['tuning']
   proxies my_proxies
-  notifies :run, 'execute[validate-haproxy_instance-haproxy]', :immediately
 end
 
 include_recipe "#{cookbook_name}::service"

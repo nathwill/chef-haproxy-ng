@@ -130,6 +130,11 @@ class Chef::Provider
       @tpl.path "/etc/haproxy/#{@current_resource.name}.cfg"
       @tpl.source 'haproxy.cfg.erb'
       @tpl.variables :instance => @current_resource
+      if Chef::VERSION.to_f >= 12
+        @tpl.verify do |path|
+          "haproxy -q -c -f #{path}"
+        end
+      end
       @tpl.run_action exec_action
       @tpl.updated_by_last_action?
     end
