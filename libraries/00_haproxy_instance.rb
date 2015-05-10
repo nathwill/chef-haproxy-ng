@@ -31,7 +31,7 @@ class Chef::Resource
         :default => %w( daemon ),
         :callbacks => {
           'is a valid config' => lambda do |spec|
-            Haproxy::Instance.valid_config?(spec)
+            !node['haproxy']['validate_at_compile'] || Haproxy::Instance.valid_config?(spec) # rubocop: disable LineLength
           end
         }
       )
@@ -44,7 +44,7 @@ class Chef::Resource
         :default => ['maxconn 256'],
         :callbacks => {
           'is a valid tuning' => lambda do |spec|
-            Haproxy::Instance.valid_tuning?(spec)
+            !node['haproxy']['validate_at_compile'] || Haproxy::Instance.valid_tuning?(spec) # rubocop: disable LineLength
           end
         }
       )

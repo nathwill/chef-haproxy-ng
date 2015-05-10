@@ -32,7 +32,7 @@ class Chef::Resource
         :default => [],
         :callbacks => {
           "is a valid #{type} config" => lambda do |spec|
-            Haproxy::Proxy.valid_config?(spec, type)
+            !node['haproxy']['validate_at_compile'] || Haproxy::Proxy.valid_config?(spec, type) # rubocop: disable LineLength
           end
         }
       )
