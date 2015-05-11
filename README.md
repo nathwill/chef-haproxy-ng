@@ -49,49 +49,15 @@ per haproxy_instance.
 
 ## Attributes
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>install_method</td>
-      <td>
-        One of: 'package', 'source', 'ppa'
-      </td>
-      <td><code>package</code></td>
-    </tr>
-    <tr>
-      <td>proxies</td>
-      <td>
-        Array of proxy names for the default haproxy_instance[haproxy].
-        Useful when used in conjunction with a wrapper cookbook that
-        includes the default recipe.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of global configuration keywords passed to the `config` attribute
-        of the haproxy_instance[haproxy] resource in the default recipe.
-      </td>
-      <td><code>See `attributes/default.rb`</code></td>
-    </tr>
-    <tr>
-      <td>tuning</td>
-      <td>
-        Array of global configuration keywords passed to the `tuning` attribute
-        of the haproxy_instance[haproxy] resource in the default recipe.
-      </td>
-      <td><code>See `attributes/default.rb`</code></td>
-    </tr>
-  </tbody>
-</table>
+
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|install_method|One of: 'package', 'source', 'ppa'|`package`|
+|proxies|Array of proxy names for the default haproxy_instance[haproxy]|[]|
+|config|global config of resource haproxy_instance[haproxy]|See `attributes/default.rb`|
+|tuning|global tuning of resource haproxy_instance[haproxy]|See `attributes/default.rb`|
+
+And more! (see `attributes/*.rb`)
 
 ## Resources
 
@@ -100,348 +66,92 @@ per haproxy_instance.
 The "parent" resource. Maps 1-to-1 with a generated haproxy config file, 
 and most likely to a running service.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of global keywords relevant to process management.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>['daemon']</code></td>
-    </tr>
-    <tr>
-      <td>tuning</td>
-      <td>
-        Array of global keywords relevant to performance tuning.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>['maxconn 256']</code></td>
-    </tr>
-    <tr>
-      <td>debug</td>
-      <td>
-        Global keyword string relevant to debugging (either 'debug', or 'quiet').
-      </td>
-      <td><code>app</code></td>
-    </tr>
-    <tr>
-      <td>proxies</td>
-      <td>
-        Array of Chef::Resource::HaproxyProxy instances
-        (`haproxy_{peers,userlist,defaults,frontend,backend,listen}` included).
-        See the `default` recipe for an example of using the provided
-        `Haproxy::Helpers#proxy` method to generate this list from the
-        resource_collection.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|config|global keywords for process mgmt|`['daemon']`|
+|tuning|global keywords for performance|`['maxconn 256']`|
+|debug|global keyword for debugging ('debug', 'quiet')|`nil`|
+|proxies|array of proxies, see `default` recipe for example|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_proxy
 
 The simplest proxy representation and base class for the other
 proxy resources (peers, userlist, defaults, frontend, backend, listen).
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>type</td>
-      <td>
-        String representing the proxy type. One of: 
-        defaults, frontend, backend, listen, peers, userlist.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of proxy keywords, validated against specified proxy type.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|type|String denoting proxy type. (defaults, frontend, backend, listen, peers, userlist)|nil|
+|config|array of keywords, validated against specified type|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_peers
 
 Maps to a peers block in haproxy configuration. Not actually a proxy,
 but treating it like one is useful for code reusability. Don't judge me.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>peers</td>
-      <td>
-        Array of Hashes. Hashes require keys 'name', 'config'.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of peers keywords, validated against valid peers keywords.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|peers|array of hashes. each hash requires 'name', 'config' keys|[]|
+|config|array of peers keywords. validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_userlist
 
 Maps to a userlist block in haproxy configuration. Also not actually a proxy, 
 as such.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>groups</td>
-      <td>
-        Array of Hashes. Hashes require keys 'name', 'config.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>users</td>
-      <td>
-        Array of Hashes. Hashes require keys 'name', 'config'.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of userlist keywords, validated against valid userlist keywords.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
-
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|groups|array of hashes. hashes require 'name', 'config' keys|[]|
+|users|array of hashes. hashes require 'name', 'config' keys|[]|
+|config|array of userlist keywords, validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_defaults
 
 Maps to a 'defaults' block in haproxy configuration. Convention
 suggests that resource names be capitalized (e.g. haproxy_defaults[HTTP]).
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>mode</td>
-      <td>
-        String specifying listener mode. One of: http, tcp, health.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>default_backend</td>
-      <td>
-        String specifying argument to `default_backend` keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>balance</td>
-      <td>
-        String specifying the desired load-balancing algorithm.
-        See `BALANCE_ALGORITHMS` in libraries/00_helpers.rb or haproxy
-        manual for permissible `balance` keyword arguments.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>source</td>
-      <td>
-        `String` specifying arguments to the 'source' keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of proxy keywords, validated against 'defaults' proxy type.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|mode|specifies listener mode (http, tcp, health)|nil|
+|default_backend|argument to `default_backend` keyword|nil|
+|balance|desired balancing algo (see docs for permitted values)|nil|
+|source|argument to source keyword|nil|
+|config|array of defaults keywords, validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_frontend
 
 Maps to a frontend block in the instance configuration, 
 and typically to one or more listening ports or sockets.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>mode</td>
-      <td>
-        String specifying listener mode. One of: http, tcp, health.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>acls</td>
-      <td>
-        Array of hashes. Each hash must contain keys `name`, and `criterion`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>description</td>
-      <td>
-        A `String` describing the related proxy.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>bind</td>
-      <td>
-        `String` or `Array` of strings containing arguments to `bind` keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>default_backend</td>
-      <td>
-        String specifying argument to `default_backend` keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>use_backends</td>
-      <td>
-        Array of Hashes mapping to a list of `use_backend` directives.
-        Each hash is verified to have keys `backend` and `condition`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of proxy keywords, validated against 'frontend' proxy type.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|mode|specifies listener mode (http, tcp, health)|nil|
+|acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
+|description|string describing proxy|nil|
+|bind|args to `bind` keyword|nil|
+|default_backend|argument to `default_backend` keyword|nil|
+|use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
+|config|array of frontend keywords, validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_backend
 
 Maps to a backend configuration block in haproxy configuration.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>mode</td>
-      <td>
-        String specifying proxy mode. One of: http, tcp, health.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>acls</td>
-      <td>
-        Array of hashes. Each hash must contain keys `name`, and `criterion`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>description</td>
-      <td>
-        A `String` describing the related proxy.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>balance</td>
-      <td>
-        String specifying the desired load-balancing algorithm.
-        See `BALANCE_ALGORITHMS` in libraries/00_helpers.rb or haproxy
-        manual for permissible `balance` keyword arguments.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>source</td>
-      <td>
-        `String` specifying arguments to the 'source' keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>servers</td>
-      <td>
-        Array of `Hashes`. Each `Hash` must contain keys `name`, `address`, `port`,
-        and optionally `config`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of proxy keywords, validated against 'backend' proxy type.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|mode|specifies listener mode (http, tcp, health)|nil|
+|acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
+|description|string describing proxy|nil|
+|balance|desired balancing algo (see docs for permitted values)|nil|
+|source|string specifying args to source keyword|nil|
+|servers|array of hashes, each requiring 'name', 'address', 'port' keys. 'config' key optional|[]|
+|config|array of backend keywords, validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_listen
 
@@ -449,89 +159,17 @@ Maps to a listen configuration block, combines frontend and backend config
 blocks into a single proxy. Less flexible, but more concise. Typically used
 for tcp-mode proxies with a 1:1 frontend:backend mapping.
 
-<table>
-  <thead>
-    <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Default Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>mode</td>
-      <td>
-        String specifying proxy mode. One of: http, tcp, health.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>acls</td>
-      <td>
-        Array of hashes. Each hash must contain keys `name`, and `criterion`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>description</td>
-      <td>
-        A `String` describing the related proxy.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>balance</td>
-      <td>
-        String specifying the desired load-balancing algorithm.
-        See `BALANCE_ALGORITHMS` in libraries/00_helpers.rb or haproxy
-        manual for permissible `balance` keyword arguments.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>source</td>
-      <td>
-        `String` specifying arguments to the 'source' keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>servers</td>
-      <td>
-        Array of `Hashes`. Each `Hash` must contain keys `name`, `address`, `port`,
-        and optionally `config`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>bind</td>
-      <td>
-        `String` or `Array` of strings containing arguments to `bind` keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>default_backend</td>
-      <td>
-        String specifying argument to `default_backend` keyword.
-      </td>
-      <td><code>nil</code></td>
-    </tr>
-    <tr>
-      <td>use_backends</td>
-      <td>
-        Array of `Hash`es mapping to a list of `use_backend` directives.
-        Each hash is verified to have keys `backend` and `condition`.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-    <tr>
-      <td>config</td>
-      <td>
-        Array of proxy keywords, validated against 'backend' proxy type.
-        See `libraries/00_helpers.rb` or haproxy manual for permissible keywords.
-      </td>
-      <td><code>[]</code></td>
-    </tr>
-  </tbody>
-</table>
+|Attribute|Description|Default|
+|---------|-----------|-------|
+|mode|specifies listener mode (http, tcp, health)|nil|
+|acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
+|description|string describing proxy|nil|
+|balance|desired balancing algo (see docs for permitted values)|nil|
+|source|string specifying args to source keyword|nil|
+|servers|array of hashes, each requiring 'name', 'address', 'port' keys. 'config' key optional|[]|
+|bind|args to `bind` keyword|nil|
+|default_backend|argument to `default_backend` keyword|nil|
+|use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
+|config|array of listen keywords, validated against whitelist|[]|
+|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
+
