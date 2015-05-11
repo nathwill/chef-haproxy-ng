@@ -1,3 +1,11 @@
+# 0.3.0 / 2015-05-??
+
+* add ability to disable compile-time validation of proxy/instance
+  resources with the "validate_at_compile" resource attribute
+* add new verify attribute to instance template when chef > 12;
+  replaces validating execute resource
+* updated testing/documentation
+
 # 0.2.12 / 2015-05-09
 
 * add extra keyword
