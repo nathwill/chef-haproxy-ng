@@ -1,4 +1,9 @@
-# 0.3.0 / 2015-05-??
+# 0.4.0 / 2015-05-17
+
+* rename validate_at_compile option to 'verify' to adhere to chef norms
+* skip instance config verification if 'verify' attribute is false
+
+# 0.3.0 / 2015-05-15
 
 * add ability to disable compile-time validation of proxy/instance
   resources with the "validate_at_compile" resource attribute
