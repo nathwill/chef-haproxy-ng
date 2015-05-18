@@ -89,7 +89,7 @@ end
 # Reusing the actionable proxy test lets us confirm disabling compile-time
 # validation works, without also screwing up the rendered configuration.	
 haproxy_backend 'should_not_exist' do
-  validate_at_compile false
+  verify false
   config [
     'bind 127.0.0.1:8080' # bogus config
   ]

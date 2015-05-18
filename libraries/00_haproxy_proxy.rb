@@ -32,15 +32,15 @@ class Chef::Resource
         :default => [],
         :callbacks => {
           "is a valid #{type} config" => lambda do |spec|
-            !validate_at_compile || Haproxy::Proxy.valid_config?(spec, type)
+            !verify || Haproxy::Proxy.valid_config?(spec, type)
           end
         }
       )
     end
 
-    def validate_at_compile(arg = nil)
+    def verify(arg = nil)
       set_or_return(
-        :validate_at_compile, arg,
+        :verify, arg,
         :kind_of => [TrueClass, FalseClass],
         :default => true
       )
@@ -62,6 +62,7 @@ class Chef::Provider
       @current_resource ||= Chef::Resource::HaproxyProxy.new(new_resource.name)
       @current_resource.type new_resource.type
       @current_resource.config new_resource.config
+      @current_resource.verify new_resource.verify
       @current_resource
     end
 
