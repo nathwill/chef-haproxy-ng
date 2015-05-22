@@ -1,3 +1,9 @@
+# 0.4.1 / 2015-05-22
+
+* doc updates related to 0.4.0
+* fix disabling verification for proxy sub-resources
+* demo using consul-template with haproxy-ng
+
 # 0.4.0 / 2015-05-17
 
 * rename validate_at_compile option to 'verify' to adhere to chef norms
