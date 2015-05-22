@@ -2,8 +2,11 @@
 # even though this generates a pretty silly configuration.
 
 haproxy_peers 'lb' do
-  peers lb_peers
-  not_if { platform?('ubuntu') && node['platform_version'] =~ /1(2|4).04/ }
+  verify false
+  config [
+    '{{range service "haproxy-peers"}}',
+    'peer {{.Node}} {{.Address}}:{{.Port}}{{end}}'
+  ]
 end
 
 haproxy_userlist 'L1' do
@@ -19,6 +22,7 @@ haproxy_userlist 'L1' do
 end
 
 haproxy_listen 'mysql' do
+  verify false
   mode 'tcp'
   acls [
     {
@@ -27,12 +31,12 @@ haproxy_listen 'mysql' do
     }
   ]
   description 'mysql pool'
-  balance 'leastconn'
   source node['ipaddress']
   bind '0.0.0.0:3306'
-  servers mysql_members
   config [
-    'option mysql-check'
+    'option mysql-check',
+    '{{range service "mysql"}}',
+    'server {{.Node}} {{.Address}}:{{.Port}}{{end}}'
   ]
 end
 
@@ -61,6 +65,7 @@ haproxy_backend 'should_not_exist' do
 end
 
 haproxy_backend 'app' do
+  verify false
   mode 'http'
   acls [
     {
@@ -71,9 +76,10 @@ haproxy_backend 'app' do
   description 'app pool'
   balance 'roundrobin'
   source node['ipaddress']
-  servers app_members
   config [
-    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost'
+    'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost',
+    '{{range service "my-app"}}',
+    'server {{.Node}} {{.Address}}:{{.Port}}{{end}}'
   ]
 end
 
@@ -119,6 +125,7 @@ my_proxies = node['haproxy']['proxies'].map do |p|
 end
 
 haproxy_instance 'consul' do
+  verify false
   config node['haproxy']['config']
   tuning node['haproxy']['tuning']
   proxies my_proxies

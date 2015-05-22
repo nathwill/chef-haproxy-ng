@@ -1,4 +1,3 @@
-
 include_recipe 'consul-template'
 
 consul_template_config 'haproxy' do
