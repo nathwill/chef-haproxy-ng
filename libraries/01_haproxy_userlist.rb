@@ -57,6 +57,7 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||=
         Chef::Resource::HaproxyUserlist.new(new_resource.name)
+      @current_resource.verify new_resource.verify
       @current_resource.type new_resource.type
       @current_resource.users new_resource.users
       @current_resource.groups new_resource.groups

@@ -100,11 +100,11 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||=
         Chef::Resource::HaproxyInstance.new(new_resource.name)
+      @current_resource.verify new_resource.verify
       @current_resource.cookbook new_resource.cookbook
       @current_resource.config new_resource.config
       @current_resource.tuning new_resource.tuning
       @current_resource.debug new_resource.debug
-      @current_resource.verify new_resource.verify
       @current_resource.proxies actionable_proxies(new_resource.proxies)
       @current_resource
     end
