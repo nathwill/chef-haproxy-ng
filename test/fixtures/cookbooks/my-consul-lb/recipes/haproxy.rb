@@ -5,7 +5,8 @@ haproxy_peers 'lb' do
   verify false
   config [
     '{{range service "haproxy-peers"}}',
-    'peer {{.Node}} {{.Address}}:{{.Port}}{{end}}'
+    'peer {{.Node}} {{.Address}}:{{.Port}}',
+    '{{end}}',
   ]
 end
 
@@ -36,7 +37,8 @@ haproxy_listen 'mysql' do
   config [
     'option mysql-check',
     '{{range service "mysql"}}',
-    'server {{.Node}} {{.Address}}:{{.Port}}{{end}}'
+    'server {{.Node}} {{.Address}}:{{.Port}}',
+    '{{end}}',
   ]
 end
 
@@ -79,7 +81,8 @@ haproxy_backend 'app' do
   config [
     'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost',
     '{{range service "my-app"}}',
-    'server {{.Node}} {{.Address}}:{{.Port}}{{end}}'
+    'server {{.Node}} {{.Address}}:{{.Port}}',
+    '{{end}}',
   ]
 end
 
@@ -129,4 +132,5 @@ haproxy_instance 'consul-template' do
   config node['haproxy']['config']
   tuning node['haproxy']['tuning']
   proxies my_proxies
+  notifies :reload, 'service[consul-template]', :delayed
 end
