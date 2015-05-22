@@ -124,7 +124,7 @@ my_proxies = node['haproxy']['proxies'].map do |p|
   Haproxy::Helpers.proxy(p, run_context)
 end
 
-haproxy_instance 'consul' do
+haproxy_instance 'consul-template' do
   verify false
   config node['haproxy']['config']
   tuning node['haproxy']['tuning']

@@ -19,7 +19,7 @@ describe 'my-consul-lb' do
     end
 
     describe file('/etc/consul-template.d/haproxy') do
-      its(:content) { should match %r{source = "/etc/haproxy/consul.cfg"} }
+      its(:content) { should match %r{source = "/etc/haproxy/consul-template.cfg"} }
       its(:content) { should match %r{destination = "/etc/haproxy/haproxy.cfg"} }
       its(:content) { should match %r{command = "systemctl restart haproxy.service"} }
     end
