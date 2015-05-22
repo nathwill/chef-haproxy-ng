@@ -74,7 +74,6 @@ and most likely to a running service.
 |tuning|global keywords for performance|`['maxconn 256']`|
 |debug|global keyword for debugging ('debug', 'quiet')|`nil`|
 |proxies|array of proxies, see `default` recipe for example|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_proxy
 
@@ -86,7 +85,6 @@ proxy resources (peers, userlist, defaults, frontend, backend, listen).
 |verify|whether to perform resource whitelist validation|true|
 |type|String denoting proxy type. (defaults, frontend, backend, listen, peers, userlist)|nil|
 |config|array of keywords, validated against specified type|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_peers
 
@@ -98,7 +96,6 @@ but treating it like one is useful for code reusability. Don't judge me.
 |verify|whether to perform resource whitelist validation|true|
 |peers|array of hashes. each hash requires 'name', 'config' keys|[]|
 |config|array of peers keywords. validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_userlist
 
@@ -111,7 +108,6 @@ as such.
 |groups|array of hashes. hashes require 'name', 'config' keys|[]|
 |users|array of hashes. hashes require 'name', 'config' keys|[]|
 |config|array of userlist keywords, validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_defaults
 
@@ -126,7 +122,6 @@ suggests that resource names be capitalized (e.g. haproxy_defaults[HTTP]).
 |balance|desired balancing algo (see docs for permitted values)|nil|
 |source|argument to source keyword|nil|
 |config|array of defaults keywords, validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_frontend
 
@@ -143,7 +138,6 @@ and typically to one or more listening ports or sockets.
 |default_backend|argument to `default_backend` keyword|nil|
 |use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
 |config|array of frontend keywords, validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_backend
 
@@ -159,7 +153,6 @@ Maps to a backend configuration block in haproxy configuration.
 |source|string specifying args to source keyword|nil|
 |servers|array of hashes, each requiring 'name', 'address', 'port' keys. 'config' key optional|[]|
 |config|array of backend keywords, validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
 ### haproxy_listen
 
@@ -180,5 +173,4 @@ for tcp-mode proxies with a 1:1 frontend:backend mapping.
 |default_backend|argument to `default_backend` keyword|nil|
 |use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
 |config|array of listen keywords, validated against whitelist|[]|
-|validate_at_compile|boolean. controls whether to validate against config whitelist|true|
 
