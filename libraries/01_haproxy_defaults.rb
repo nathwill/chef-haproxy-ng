@@ -28,6 +28,7 @@ class Chef::Provider
     def load_current_resource
       @current_resource ||=
         Chef::Resource::HaproxyDefaults.new(new_resource.name)
+      @current_resource.verify new_resource.verify
       @current_resource.type new_resource.type
       @current_resource.config merged_config(new_resource)
       @current_resource
