@@ -58,6 +58,7 @@ class Chef::Provider
       )
     end
 
+    # rubocop: disable AbcSize
     def load_current_resource
       @current_resource ||= Chef::Resource::HaproxyProxy.new(new_resource.name)
       @current_resource.verify new_resource.verify
@@ -66,6 +67,7 @@ class Chef::Provider
       @current_resource.verify new_resource.verify
       @current_resource
     end
+    # rubocop: enable AbcSize
 
     def action_create
       new_resource.updated_by_last_action(edit_proxy(:create))

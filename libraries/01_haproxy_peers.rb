@@ -38,6 +38,7 @@ end
 
 class Chef::Provider
   class HaproxyPeers < Chef::Provider::HaproxyProxy
+    # rubocop: disable AbcSize
     def load_current_resource
       @current_resource ||=
         Chef::Resource::HaproxyPeers.new(new_resource.name)
@@ -47,6 +48,7 @@ class Chef::Provider
       @current_resource.config merged_config(new_resource)
       @current_resource
     end
+    # rubocop: enable AbcSize
 
     private
 
