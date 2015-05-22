@@ -35,3 +35,11 @@ suites:
       - centos-6.6
       - centos-7.0
       - fedora-21
+  - name: consul
+    run_list:
+      - recipe[my-consul-lb]
+    excludes:
+      - ubuntu-12.04
+      - ubuntu-14.04
+      - centos-6.6
+      - fedora-21
