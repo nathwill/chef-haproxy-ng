@@ -16,7 +16,8 @@ Suggested background reading:
 
 - [The Fine Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
 - This README, the modules in `libraries/00_helpers.rb`, and the individual resources/providers
-- the test target and example wrapper cookbook 'test/fixtures/cookbooks/my-lb'
+- the test target and example wrapper cookbook: 'test/fixtures/cookbooks/my-lb'
+- the consul-template powered example wrapper cookbook:  'test/fixtures/cookbooks/my-consul-lb'
 
 ## Recipes
 
@@ -68,6 +69,7 @@ and most likely to a running service.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |config|global keywords for process mgmt|`['daemon']`|
 |tuning|global keywords for performance|`['maxconn 256']`|
 |debug|global keyword for debugging ('debug', 'quiet')|`nil`|
@@ -81,6 +83,7 @@ proxy resources (peers, userlist, defaults, frontend, backend, listen).
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |type|String denoting proxy type. (defaults, frontend, backend, listen, peers, userlist)|nil|
 |config|array of keywords, validated against specified type|[]|
 |validate_at_compile|boolean. controls whether to validate against config whitelist|true|
@@ -92,6 +95,7 @@ but treating it like one is useful for code reusability. Don't judge me.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |peers|array of hashes. each hash requires 'name', 'config' keys|[]|
 |config|array of peers keywords. validated against whitelist|[]|
 |validate_at_compile|boolean. controls whether to validate against config whitelist|true|
@@ -103,6 +107,7 @@ as such.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |groups|array of hashes. hashes require 'name', 'config' keys|[]|
 |users|array of hashes. hashes require 'name', 'config' keys|[]|
 |config|array of userlist keywords, validated against whitelist|[]|
@@ -115,6 +120,7 @@ suggests that resource names be capitalized (e.g. haproxy_defaults[HTTP]).
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |mode|specifies listener mode (http, tcp, health)|nil|
 |default_backend|argument to `default_backend` keyword|nil|
 |balance|desired balancing algo (see docs for permitted values)|nil|
@@ -129,6 +135,7 @@ and typically to one or more listening ports or sockets.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |mode|specifies listener mode (http, tcp, health)|nil|
 |acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
 |description|string describing proxy|nil|
@@ -144,6 +151,7 @@ Maps to a backend configuration block in haproxy configuration.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |mode|specifies listener mode (http, tcp, health)|nil|
 |acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
 |description|string describing proxy|nil|
@@ -161,6 +169,7 @@ for tcp-mode proxies with a 1:1 frontend:backend mapping.
 
 |Attribute|Description|Default|
 |---------|-----------|-------|
+|verify|whether to perform resource whitelist validation|true|
 |mode|specifies listener mode (http, tcp, health)|nil|
 |acls|array of hashes, each requiring 'name', 'criterion' keys|[]|
 |description|string describing proxy|nil|
