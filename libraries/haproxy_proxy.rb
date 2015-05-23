@@ -1,123 +1,32 @@
 #
-# Cookbook Name: haproxy-ng
-# Helpers:: haproxy
+# Cookbook Name:: haproxy-ng
+# Library:: Haproxy::Proxy
+#
+# Author:: Nathan Williams <nath.e.will@gmail.com>
+#
+# Copyright 2015, Nathan Williams
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
+require_relative 'haproxy_proxy_all'
+require_relative 'haproxy_proxy_backend'
+require_relative 'haproxy_proxy_defaults_backend'
+require_relative 'haproxy_proxy_frontend'
+require_relative 'haproxy_proxy_defaults_frontend'
+require_relative 'haproxy_proxy_non_defaults'
+
 module Haproxy
-  module Helpers
-    def self.config_block(declaration, configuration)
-      "#{declaration}\n  #{configuration.join("\n  ")}"
-    end
-
-    def self.proxies(run_context)
-      resources(Chef::Resource::HaproxyProxy, run_context)
-    end
-
-    def self.proxy(name, run_context)
-      proxies(run_context).find { |p| p.name == name }
-    end
-
-    private
-
-    def self.resources(resource, run_context)
-      run_context.resource_collection.select do |r|
-        r.is_a?(resource)
-      end
-    end
-  end
-
-  module Instance
-    CONFIG_KEYWORDS = [
-      'ca-base',
-      'chroot',
-      'cpu-map',
-      'crt-base',
-      'daemon',
-      'gid',
-      'group',
-      'log',
-      'log-send-hostname',
-      'log-tag',
-      'nbproc',
-      'pidfile',
-      'user',
-      'ssl-default-bind-ciphers',
-      'ssl-default-bind-options',
-      'ssl-default-server-ciphers',
-      'ssl-default-server-options',
-      'ssl-server-verify',
-      'stats bind-process',
-      'stats socket',
-      'stats timeout',
-      'stats maxconn',
-      'uid',
-      'ulimit-n',
-      'unix-bind',
-      'node',
-      'description'
-    ]
-
-    TUNING_KEYWORDS = %w(
-      max-spread-checks
-      maxconn
-      maxconnrate
-      maxcomprate
-      maxcompcpuusage
-      maxpipes
-      maxsessrate
-      maxsslconn
-      maxsslrate
-      maxzlibmem
-      noepoll
-      nokqueue
-      nopoll
-      nosplice
-      nogetaddrinfo
-      spread-checks
-      tune.bufsize
-      tune.chksize
-      tune.comp.maxlevel
-      tune.http.cookielen
-      tune.http.maxhdr
-      tune.idletimer
-      tune.maxaccept
-      tune.maxpollevents
-      tune.maxrewrite
-      tune.pipesize
-      tune.rcvbuf.client
-      tune.rcvbuf.server
-      tune.sndbuf.client
-      tune.sndbuf.server
-      tune.ssl.cachesize
-      tune.ssl.force-private-cache
-      tune.ssl.lifetime
-      tune.ssl.maxrecord
-      tune.ssl.default-dh-param
-      tune.zlib.memlevel
-      tune.zlib.windowsize
-    )
-
-    def self.valid_config?(conf)
-      conf.all? do |c|
-        Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
-          c.start_with? kw
-        end
-      end
-    end
-
-    def self.valid_tuning?(conf)
-      conf.all? do |c|
-        Haproxy::Instance::TUNING_KEYWORDS.any? do |kw|
-          c.start_with? kw
-        end
-      end
-    end
-
-    def self.config_block(instance)
-      Haproxy::Helpers.config_block('global', instance.config + instance.tuning)
-    end
-  end
-
   module Proxy
     MODES = %w( tcp http health )
 
@@ -354,186 +263,6 @@ module Haproxy
 
       config.all? do |c|
         valid_keywords.keys.any? { |kw| c.start_with? kw }
-      end
-    end
-
-    module Frontend
-      def bind(arg = nil)
-        set_or_return(
-          :bind, arg,
-          :kind_of => [String, Array]
-        )
-      end
-
-      # rubocop: disable MethodLength
-      def use_backends(arg = nil)
-        set_or_return(
-          :use_backends, arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
-            'is a valid use_backends list' => lambda do |spec|
-              spec.empty? || spec.all? do |u|
-                %w( backend condition ).all? do |a|
-                  u.keys.include? a
-                end
-              end
-            end
-          }
-        )
-      end
-      # rubocop: enable MethodLength
-
-      def self.merged_config(config, frontend)
-        Array(frontend.bind).each do |bind|
-          config.unshift("bind #{bind}")
-        end
-        frontend.use_backends.each do |ub|
-          config << "use_backend #{ub['backend']} #{ub['condition']}"
-        end
-        config
-      end
-    end
-
-    module DefaultsFrontend
-      def default_backend(arg = nil)
-        set_or_return(
-          :default_backend, arg,
-          :kind_of => String,
-          :callbacks => {
-            'backend exists' => lambda do |spec|
-              Haproxy::Helpers.proxy(spec, run_context)
-                .is_a? Chef::Resource::HaproxyProxy
-            end
-          }
-        )
-      end
-
-      def self.merged_config(conf, df)
-        conf << "default_backend #{df.default_backend}" if df.default_backend
-        conf
-      end
-    end
-
-    module Backend
-      BALANCE_ALGORITHMS = %w(
-        roundrobin
-        static-rr
-        leastconn
-        first
-        source
-        uri
-        url_param
-        hdr
-        rdp-cookie
-      )
-
-      # rubocop: disable MethodLength
-      def servers(arg = nil)
-        set_or_return(
-          :servers, arg ? arg.sort_by { |s| s['name'] } : arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
-            'is a valid servers list' => lambda do |spec|
-              spec.empty? || spec.all? do |s|
-                %w( name address port ).all? do |a|
-                  s.keys.include? a
-                end
-              end
-            end
-          }
-        )
-      end
-      # rubocop: enable MethodLength
-
-      def self.merged_config(c, backend)
-        backend.servers.each do |s|
-          c << "server #{s['name']} #{s['address']}:#{s['port']} #{s['config']}"
-        end
-        c
-      end
-    end
-
-    module DefaultsBackend
-      # rubocop: disable MethodLength
-      def balance(arg = nil)
-        set_or_return(
-          :balance, arg,
-          :kind_of => String,
-          :callbacks => {
-            'is a valid balance algorithm' => lambda do |spec|
-              Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
-                spec.start_with? a
-              end
-            end
-          }
-        )
-      end
-      # rubocop: enable MethodLength
-
-      def source(arg = nil)
-        set_or_return(
-          :source, arg,
-          :kind_of => String
-        )
-      end
-
-      def self.merged_config(conf, db)
-        conf.unshift("balance #{db.balance}") if db.balance
-        conf << "source #{db.source}" if db.source
-        conf
-      end
-    end
-
-    module NonDefaults
-      # rubocop: disable MethodLength
-      def acls(arg = nil)
-        set_or_return(
-          :acls, arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
-            'is a valid list of acls' => lambda do |spec|
-              spec.empty? || spec.all? do |a|
-                %w( name criterion ).all? do |k|
-                  a.keys.include? k
-                end
-              end
-            end
-          }
-        )
-      end
-      # rubocop: enable MethodLength
-
-      def description(arg = nil)
-        set_or_return(
-          :description, arg,
-          :kind_of => String
-        )
-      end
-
-      def self.merged_config(conf, nd)
-        conf << "description #{nd.description}" if nd.description
-        nd.acls.each do |acl|
-          conf << "acl #{acl['name']} #{acl['criterion']}"
-        end
-        conf
-      end
-    end
-
-    module All
-      def mode(arg = nil)
-        set_or_return(
-          :mode, arg,
-          :kind_of => String,
-          :equal_to => Haproxy::Proxy::MODES
-        )
-      end
-
-      def self.merged_config(conf, proxy)
-        conf.unshift("mode #{proxy.mode}") if proxy.mode
-        conf
       end
     end
   end
