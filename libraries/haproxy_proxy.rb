@@ -27,6 +27,7 @@ require_relative 'haproxy_proxy_defaults_frontend'
 require_relative 'haproxy_proxy_non_defaults'
 
 module Haproxy
+  # rubocop: disable ModuleLength
   module Proxy
     MODES = %w( tcp http health )
 
@@ -266,4 +267,5 @@ module Haproxy
       end
     end
   end
+  # rubocop: enable ModuleLength
 end
