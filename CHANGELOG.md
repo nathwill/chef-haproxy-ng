@@ -1,3 +1,8 @@
+# 0.5.0 / 2015-05-28
+
+* break up the hwrp-supporting modules into smaller pieces
+* update source installation to use the ark cookbook
+
 # 0.4.1 / 2015-05-22
 
 * doc updates related to 0.4.0
