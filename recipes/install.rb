@@ -30,44 +30,10 @@ when 'ppa'
 
   package 'haproxy'
 when 'source'
-  node.default['haproxy']['source']['archive_url'] = [
-    node['haproxy']['source']['url'],
-    node['haproxy']['source']['version'],
-    'src',
-    "haproxy-#{node['haproxy']['source']['release']}.tar.gz"
-  ].join('/')
-
   src = node['haproxy']['source']
 
   src['dependencies'].each do |dep|
     package dep
-  end
-
-  download_path = Chef::Config['file_cache_path'] || '/tmp'
-  pkg_path = "#{download_path}/haproxy-#{src['release']}.tar.gz"
-
-  execute 'compile-haproxy' do
-    cwd "#{download_path}/haproxy-#{src['release']}"
-    command <<-EOC
-      make #{src['make_args']} && \
-      make install
-    EOC
-    action :nothing
-  end
-
-  execute 'extract-haproxy' do
-    cwd download_path
-    command <<-EOC
-      tar xzf #{::File.basename(pkg_path)} -C #{download_path}
-    EOC
-    action :nothing
-    notifies :run, 'execute[compile-haproxy]', :immediately
-  end
-
-  remote_file 'haproxy-src-archive' do
-    path pkg_path
-    source src['archive_url']
-    notifies :run, 'execute[extract-haproxy]', :immediately
   end
 
   directory '/etc/haproxy'
@@ -83,18 +49,26 @@ when 'source'
     group 'haproxy'
   end
 
+  ark 'haproxy' do
+    url src['url']
+    version src['url'].match(/\d\.\d/).to_s
+    checksum src['checksum']
+    make_opts src['make_args'].map { |k, v| "#{k}=#{v}" }
+    action :install_with_make
+  end
+
   cookbook_file '/etc/init/haproxy.conf' do
     source 'haproxy.conf'
     mode '0755'
     only_if do
-      ::File.directory?('/etc/init')
+      File.directory?('/etc/init')
     end
   end
 
   cookbook_file '/etc/systemd/system/haproxy.service' do
     source 'haproxy.service'
     only_if do
-      ::File.directory?('/etc/systemd/system')
+      File.directory?('/etc/systemd/system') && File.directory?('/etc/init')
     end
   end
 else

@@ -17,24 +17,25 @@
 # limitations under the License.
 
 default['haproxy']['source'].tap do |source|
-  source['release'] = '1.5.12'
-  source['version'] = source['release'].to_f
-  source['checksum'] = '4b94b257f16d88c315716b062b22e48a'
-  source['url'] = 'http://www.haproxy.org/download'
+  source['url'] =
+    'http://www.haproxy.org/download/1.5/src/haproxy-1.5.12.tar.gz'
+
+  source['checksum'] =
+    '6648dd7d6b958d83dd7101eab5792178212a66c884bec0ebcd8abc39df83bb78'
 
   source['dependencies'] = value_for_platform_family(
     'debian' => %w( libpcre3-dev libssl-dev gcc make ),
     'default' => %w( pcre-devel openssl-devel gcc make )
   )
 
-  source['make_args'] = %w(
-    TARGET=linux2628
-    CPU=native
-    USE_LIBCRYPT=1
-    USE_LINUX_SPLICE=1
-    USE_LINUX_TPROXY=1
-    USE_PCRE=1
-    USE_OPENSSL=1
-    USE_ZLIB=1
-  ).join(' ')
+  source['make_args'] = {
+    'TARGET' => 'linux2628',
+    'CPU' => 'native',
+    'USE_LIBCRYPT' => 1,
+    'USE_LINUX_SPLICE' => 1,
+    'USE_LINUX_TPROXY' => 1,
+    'USE_PCRE' => 1,
+    'USE_OPENSSL' => 1,
+    'USE_ZLIB' => 1
+  }
 end
