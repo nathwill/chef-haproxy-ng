@@ -60,16 +60,13 @@ when 'source'
   cookbook_file '/etc/init/haproxy.conf' do
     source 'haproxy.conf'
     mode '0755'
-    only_if do
-      File.directory?('/etc/init')
-    end
+    only_if { File.directory?('/etc/init') }
   end
 
   cookbook_file '/etc/systemd/system/haproxy.service' do
     source 'haproxy.service'
-    only_if do
-      File.directory?('/etc/systemd/system') && File.directory?('/etc/init')
-    end
+    only_if { File.directory?('/etc/systemd/system') }
+    not_if { File.directory?('/etc/init') }
   end
 else
   Chef::Log.warn 'Unknown install_method for haproxy. Skipping install!'
