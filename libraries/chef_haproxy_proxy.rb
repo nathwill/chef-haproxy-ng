@@ -85,7 +85,6 @@ class Chef::Provider
       @current_resource.verify new_resource.verify
       @current_resource.type new_resource.type
       @current_resource.config new_resource.config
-      @current_resource.verify new_resource.verify
       @current_resource
     end
     # rubocop: enable AbcSize
