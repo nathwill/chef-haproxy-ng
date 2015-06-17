@@ -6,26 +6,11 @@ provisioner:
   name: chef_zero
 
 platforms:
-<%
-%w(
-  ubuntu-12.04
-  ubuntu-14.04
-  centos-6.6
-  centos-7.0
-).each do |p|
-%>
-  - name: <%= p %>-chef-11
-    driver:
-      box: opscode-<%= p %>
-    provisioner:
-      require_chef_omnibus: 11
-
-  - name: <%= p %>-chef-12
-    driver:
-      box: opscode-<%= p %>
-    provisioner:
-      require_chef_omnibus: 12
-<% end %>
+  - name: ubuntu-12.04
+  - name: ubuntu-14.04
+  - name: centos-6.6
+  - name: centos-7.0
+  - name: fedora-21
 
 suites:
   - name: package
@@ -47,16 +32,14 @@ suites:
       haproxy:
         install_method: ppa
     excludes:
-    <% %w( 11 12 ).each do |v| %>
-      - centos-6.6-chef-<%= v %>
-      - centos-7.0-chef-<%= v %>
-    <% end %>
+      - centos-6.6
+      - centos-7.0
+      - fedora-21
   - name: consul
     run_list:
       - recipe[my-consul-lb]
     excludes:
-    <% %w( 11 12 ).each do |v| %>
-      - ubuntu-12.04-chef-<%= v %>
-      - ubuntu-14.04-chef-<%= v %>
-      - centos-6.6-chef-<%= v %>
-    <% end %>
+      - ubuntu-12.04
+      - ubuntu-14.04
+      - centos-6.6
+      - fedora-21
