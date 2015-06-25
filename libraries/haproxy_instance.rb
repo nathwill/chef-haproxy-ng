@@ -19,6 +19,8 @@
 # limitations under the License.
 #
 
+require_relative 'haproxy_helpers'
+
 module Haproxy
   module Instance
     CONFIG_KEYWORDS ||= [
@@ -93,7 +95,7 @@ module Haproxy
 
     def self.valid_config?(conf)
       conf.all? do |c|
-        Haproxy::Instance::CONFIG_KEYWORDS.any? do |kw|
+        CONFIG_KEYWORDS.any? do |kw|
           c.start_with? kw
         end
       end
@@ -101,7 +103,7 @@ module Haproxy
 
     def self.valid_tuning?(conf)
       conf.all? do |c|
-        Haproxy::Instance::TUNING_KEYWORDS.any? do |kw|
+        TUNING_KEYWORDS.any? do |kw|
           c.start_with? kw
         end
       end

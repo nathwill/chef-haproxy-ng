@@ -19,6 +19,7 @@
 # limitations under the License.
 #
 
+require_relative 'haproxy_helpers'
 require_relative 'haproxy_proxy_all'
 require_relative 'haproxy_proxy_backend'
 require_relative 'haproxy_proxy_defaults_backend'

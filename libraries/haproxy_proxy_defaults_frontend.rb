@@ -19,6 +19,8 @@
 # limitations under the License.
 #
 
+require_relative 'haproxy_helpers'
+
 module Haproxy
   module Proxy
     module DefaultsFrontend
