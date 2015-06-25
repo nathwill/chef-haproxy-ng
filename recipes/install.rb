@@ -51,7 +51,7 @@ when 'source'
 
   ark 'haproxy' do
     url src['url']
-    version src['url'].match(/\d\.\d/).to_s
+    version src['url'].match(/(\d+\.?){2}\d+/).to_s
     checksum src['checksum']
     make_opts src['make_args'].map { |k, v| "#{k}=#{v}" }
     action :install_with_make
