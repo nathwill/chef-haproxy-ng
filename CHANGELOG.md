@@ -1,3 +1,9 @@
+# 0.5.2 / 2015-06-24
+
+* add missing requires to libraries
+* fix service provider for upstart service with package-install
+* update version matching for ark resource
+
 # 0.5.1 / 2015-06-24
 
 * fix compile-time constant initialization warnings
