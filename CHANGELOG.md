@@ -1,3 +1,8 @@
+# 0.5.1 / 2015-06-24
+
+* fix compile-time constant initialization warnings
+* fix upstart service on EL6
+
 # 0.5.0 / 2015-05-28
 
 * break up the hwrp-supporting modules into smaller pieces
