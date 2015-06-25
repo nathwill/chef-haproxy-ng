@@ -59,7 +59,7 @@ when 'source'
 
   cookbook_file '/etc/init/haproxy.conf' do
     source 'haproxy.conf'
-    mode '0755'
+    mode '0644'
     only_if { File.directory?('/etc/init') }
   end
 

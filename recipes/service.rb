@@ -22,6 +22,7 @@ cookbook_file '/etc/default/haproxy' do
 end
 
 service 'haproxy' do
+  provider Chef::Provider::Service::Upstart if File.directory?('/etc/init')
   action [:enable, :start]
   supports :status => :true, :restart => :true, :reload => :true
   subscribes :reload, 'haproxy_instance[haproxy]', :delayed
