@@ -29,18 +29,18 @@ require_relative 'haproxy_proxy_non_defaults'
 module Haproxy
   # rubocop: disable ModuleLength
   module Proxy
-    MODES = %w( tcp http health )
+    MODES ||= %w( tcp http health )
 
-    KEYWORD_PEERS = %w( peers )
-    KEYWORD_USERLIST = %w( userlist )
-    KEYWORD_ALL = %w( defaults frontend listen backend )
-    KEYWORD_DEFAULTS_FRONTEND = %w( defaults frontend listen )
-    KEYWORD_DEFAULTS_BACKEND = %w( defaults backend listen )
-    KEYWORD_FRONTEND = %w( frontend listen )
-    KEYWORD_BACKEND = %w( backend listen )
-    KEYWORD_NON_DEFAULTS = %w( frontend listen backend )
+    KEYWORD_PEERS ||= %w( peers )
+    KEYWORD_USERLIST ||= %w( userlist )
+    KEYWORD_ALL ||= %w( defaults frontend listen backend )
+    KEYWORD_DEFAULTS_FRONTEND ||= %w( defaults frontend listen )
+    KEYWORD_DEFAULTS_BACKEND ||= %w( defaults backend listen )
+    KEYWORD_FRONTEND ||= %w( frontend listen )
+    KEYWORD_BACKEND ||= %w( backend listen )
+    KEYWORD_NON_DEFAULTS ||= %w( frontend listen backend )
 
-    KEYWORD_MATRIX = {
+    KEYWORD_MATRIX ||= {
       'peer' => KEYWORD_PEERS,
       'user' => KEYWORD_USERLIST,
       'group' => KEYWORD_USERLIST,

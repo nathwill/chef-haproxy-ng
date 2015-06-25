@@ -22,7 +22,7 @@
 module Haproxy
   module Proxy
     module Backend
-      BALANCE_ALGORITHMS = %w(
+      BALANCE_ALGORITHMS ||= %w(
         roundrobin
         static-rr
         leastconn

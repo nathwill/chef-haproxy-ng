@@ -21,7 +21,7 @@
 
 module Haproxy
   module Instance
-    CONFIG_KEYWORDS = [
+    CONFIG_KEYWORDS ||= [
       'ca-base',
       'chroot',
       'cpu-map',
@@ -51,7 +51,7 @@ module Haproxy
       'description'
     ]
 
-    TUNING_KEYWORDS = %w(
+    TUNING_KEYWORDS ||= %w(
       max-spread-checks
       maxconn
       maxconnrate
