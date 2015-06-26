@@ -15,7 +15,7 @@ proxy types.
 Suggested background reading:
 
 - [The Fine Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
-- This README, the modules in `libraries/00_helpers.rb`, and the individual resources/providers
+- This README, the modules in `libraries/haproxy*.rb`, and the individual resources/providers (`libraries/chef_haproxy*.rb`)
 - the test target and example wrapper cookbook: 'test/fixtures/cookbooks/my-lb'
 - the consul-template powered example wrapper cookbook:  'test/fixtures/cookbooks/my-consul-lb'
 
