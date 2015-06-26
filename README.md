@@ -113,7 +113,6 @@ haproxy_peers 'lb' do
       'port' => 1_024
     },
   ]
-  not_if { platform?('ubuntu') && node['platform_version'] =~ /1(2|4).04/ }
 end
 ```
 
