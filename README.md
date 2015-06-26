@@ -29,8 +29,7 @@ Configures a default instance, 'haproxy_instance[haproxy]', and corresponding
 
 This recipe also provides a useful example of using the provided helper, 
 `Haproxy::Helpers#proxy`, to map a list of proxies to their corresponding 
-resources in the resource collection. It also illustrates the recommended 
-pattern of proxying service reloads through a validating execute resource. 
+resources in the resource collection. 
 
 See wrapper cookbook example at 'test/fixtures/cookbooks/my-lb'.
 
