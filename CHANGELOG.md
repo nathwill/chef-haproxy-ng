@@ -1,3 +1,8 @@
+# 1.0.0 / 2015-06-26
+
+* remove world-readability from config templates
+* update to latest source release
+
 # 0.5.2 / 2015-06-24
 
 * add missing requires to libraries
