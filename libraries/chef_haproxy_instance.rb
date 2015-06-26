@@ -141,6 +141,7 @@ class Chef::Provider
 
     def edit_instance(exec_action)
       @tpl.cookbook @current_resource.cookbook
+      @tpl.mode '0640'
       @tpl.path "/etc/haproxy/#{@current_resource.name}.cfg"
       @tpl.source 'haproxy.cfg.erb'
       @tpl.variables :instance => @current_resource

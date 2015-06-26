@@ -100,6 +100,7 @@ class Chef::Provider
     private
 
     def edit_proxy(exec_action)
+      @proxy_file.mode '0640'
       @proxy_file.path ::File.join(
         Chef::Config['file_cache_path'] || '/tmp',
         "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
