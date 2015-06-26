@@ -18,10 +18,10 @@
 
 default['haproxy']['source'].tap do |source|
   source['url'] =
-    'http://www.haproxy.org/download/1.5/src/haproxy-1.5.12.tar.gz'
+    'http://www.haproxy.org/download/1.5/src/haproxy-1.5.13.tar.gz'
 
   source['checksum'] =
-    '6648dd7d6b958d83dd7101eab5792178212a66c884bec0ebcd8abc39df83bb78'
+    'de901c23d976cb21b816dc671924176918b691a430fb5a52e0f1afbc6faeb5f9'
 
   source['dependencies'] = value_for_platform_family(
     'debian' => %w( libpcre3-dev libssl-dev gcc make ),
