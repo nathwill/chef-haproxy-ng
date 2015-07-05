@@ -1,3 +1,7 @@
+# 1.0.1 / 2015-07-04
+
+* update to haproxy 1.5.14
+
 # 1.0.0 / 2015-06-26
 
 * remove world-readability from config templates
