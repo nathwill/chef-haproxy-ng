@@ -1,3 +1,7 @@
+# 1.0.2 / 2015-08-25
+
+* fix config merge when passing an attribute instead of an array (thanks @kwilczynski and @andrewdutton!)
+
 # 1.0.1 / 2015-07-04
 
 * update to haproxy 1.5.14
