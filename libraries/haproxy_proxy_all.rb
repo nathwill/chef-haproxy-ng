@@ -33,6 +33,7 @@ module Haproxy
       end
 
       def self.merged_config(conf, proxy)
+        conf = conf.is_a?(Chef::Node::ImmutableArray) ? conf.to_a : conf
         conf.unshift("mode #{proxy.mode}") if proxy.mode
         conf
       end
