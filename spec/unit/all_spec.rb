@@ -15,4 +15,18 @@ describe Haproxy::Proxy::All do
         .merged_config(dummy_defaults.config, dummy_defaults)
     ).to match_array ['mode http', 'option clitcpka']
   end
+
+  it 'works with Chef attributes' do
+    chef_run.node.default['dummy']['attribute'] = [
+      'timeout client 3h',
+      'timeout server 6h'
+    ]
+
+    expect(chef_run.node['dummy']['attribute']).to be_a Chef::Node::ImmutableArray
+
+    expect(
+      Haproxy::Proxy::All
+        .merged_config(chef_run.node['dummy']['attribute'], dummy_defaults)
+    ).to match_array ['mode http', 'timeout client 3h','timeout server 6h']
+  end
 end
