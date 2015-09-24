@@ -49,6 +49,7 @@ module Haproxy
       # rubocop: enable MethodLength
 
       def self.merged_config(config, frontend)
+        config = Haproxy::Helpers.from_immutable_array(config)
         Array(frontend.bind).each do |bind|
           config.unshift("bind #{bind}")
         end

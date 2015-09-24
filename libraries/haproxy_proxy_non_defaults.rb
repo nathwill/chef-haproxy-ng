@@ -48,12 +48,13 @@ module Haproxy
         )
       end
 
-      def self.merged_config(conf, nd)
-        conf << "description #{nd.description}" if nd.description
-        nd.acls.each do |acl|
-          conf << "acl #{acl['name']} #{acl['criterion']}"
+      def self.merged_config(config, non_defaults)
+        config = Haproxy::Helpers.from_immutable_array(config)
+        config << "description #{non_defaults.description}" if non_defaults.description
+        non_defaults.acls.each do |acl|
+          config << "acl #{acl['name']} #{acl['criterion']}"
         end
-        conf
+        config
       end
     end
   end
