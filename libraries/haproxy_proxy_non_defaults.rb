@@ -48,6 +48,7 @@ module Haproxy
         )
       end
 
+      # rubocop: disable LineLength
       def self.merged_config(config, non_defaults)
         config = Haproxy::Helpers.from_immutable_array(config)
         config << "description #{non_defaults.description}" if non_defaults.description
