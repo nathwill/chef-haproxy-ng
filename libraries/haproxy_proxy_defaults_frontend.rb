@@ -37,9 +37,11 @@ module Haproxy
         )
       end
 
-      def self.merged_config(conf, df)
-        conf << "default_backend #{df.default_backend}" if df.default_backend
-        conf
+      # rubocop: disable LineLength
+      def self.merged_config(config, frontend)
+        config = Haproxy::Helpers.from_immutable_array(config)
+        config << "default_backend #{frontend.default_backend}" if frontend.default_backend
+        config
       end
     end
   end

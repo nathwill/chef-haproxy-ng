@@ -18,4 +18,23 @@ describe Haproxy::Proxy::Backend do
         .merged_config(dummy_backend.config, dummy_backend)
     ).to eq(['fullconn 100', 'server app01 1.2.3.4:80 backup', 'server app02 1.2.3.5:80 backup'])
   end
+
+  it 'works with Chef attributes' do
+    chef_run.node.default['dummy']['attribute'] = [
+      'tcp-check connect',
+      'tcp-check expect'
+    ]
+
+    expect(chef_run.node['dummy']['attribute']).to be_a Chef::Node::ImmutableArray
+
+    expect(
+      Haproxy::Proxy::Backend
+        .merged_config(chef_run.node['dummy']['attribute'], dummy_backend)
+    ).to match_array [
+      'server app01 1.2.3.4:80 backup',
+      'server app02 1.2.3.5:80 backup',
+      'tcp-check connect',
+      'tcp-check expect'
+    ]
+  end
 end

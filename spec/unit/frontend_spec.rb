@@ -16,4 +16,23 @@ describe Haproxy::Proxy::Frontend do
         .merged_config(dummy_frontend.config, dummy_frontend)
     ).to match_array ['bind *:80', 'option clitcpka', 'use_backend dummy if dummy']
   end
+
+  it 'works with Chef attributes' do
+    chef_run.node.default['dummy']['attribute'] = [
+      'timeout http-keep-alive 10s',
+      'timeout http-request 30s'
+    ]
+
+    expect(chef_run.node['dummy']['attribute']).to be_a Chef::Node::ImmutableArray
+
+    expect(
+      Haproxy::Proxy::Frontend
+        .merged_config(chef_run.node['dummy']['attribute'], dummy_frontend)
+    ).to match_array [
+      'bind *:80',
+      'use_backend dummy if dummy',
+      'timeout http-keep-alive 10s',
+      'timeout http-request 30s'
+    ]
+  end
 end

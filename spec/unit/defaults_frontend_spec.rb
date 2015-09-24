@@ -15,4 +15,18 @@ describe Haproxy::Proxy::DefaultsFrontend do
         .merged_config(dummy_frontend.config, dummy_frontend)
     ).to match_array ['bind *:80', 'default_backend app']
   end
+
+  it 'works with Chef attributes' do
+    chef_run.node.default['dummy']['attribute'] = [
+      'option tcpka',
+      'option tcplog'
+    ]
+
+    expect(chef_run.node['dummy']['attribute']).to be_a Chef::Node::ImmutableArray
+
+    expect(
+      Haproxy::Proxy::Frontend
+        .merged_config(chef_run.node['dummy']['attribute'], dummy_frontend)
+    ).to match_array ['option tcpka', 'option tcplog']
+  end
 end

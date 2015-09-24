@@ -33,6 +33,10 @@ module Haproxy
       proxies(run_context).find { |p| p.name == name }
     end
 
+    def self.from_immutable_array(value)
+      value.is_a?(Chef::Node::ImmutableArray) ? value.to_a : value
+    end
+
     private
 
     def self.resources(resource, run_context)

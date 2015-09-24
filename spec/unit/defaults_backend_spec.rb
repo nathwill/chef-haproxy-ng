@@ -16,4 +16,23 @@ describe Haproxy::Proxy::DefaultsBackend do
         .merged_config(dummy_backend.config, dummy_backend)
     ).to match_array ['fullconn 100', 'balance roundrobin', 'source 1.2.3.4']
   end
+
+  it 'works with Chef attributes' do
+    chef_run.node.default['dummy']['attribute'] = [
+      'timeout connect 10s',
+      'timeout server 30s'
+    ]
+
+    expect(chef_run.node['dummy']['attribute']).to be_a Chef::Node::ImmutableArray
+
+    expect(
+      Haproxy::Proxy::DefaultsBackend
+        .merged_config(chef_run.node['dummy']['attribute'], dummy_backend)
+    ).to match_array [
+      'balance roundrobin',
+      'source 1.2.3.4',
+      'timeout connect 10s',
+      'timeout server 30s'
+    ]
+  end
 end
