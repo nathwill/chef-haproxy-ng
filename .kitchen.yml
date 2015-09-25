@@ -32,8 +32,8 @@ suites:
       haproxy:
         install_method: ppa
     excludes:
-      - centos-6.6
-      - centos-7.0
+      - centos-6.7
+      - centos-7.1
       - fedora-21
   - name: consul
     run_list:
@@ -41,5 +41,5 @@ suites:
     excludes:
       - ubuntu-12.04
       - ubuntu-14.04
-      - centos-6.6
+      - centos-6.7
       - fedora-21
