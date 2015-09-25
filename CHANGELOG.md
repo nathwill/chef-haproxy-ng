@@ -1,3 +1,8 @@
+# 1.1.0 / 2015-09-25
+
+* continuation of config merge fix to handle attributes (thanks @kwilczynski!)
+* updated init system handling (added systemd cookbook dependency)
+
 # 1.0.2 / 2015-08-25
 
 * fix config merge when passing an attribute instead of an array (thanks @kwilczynski and @andrewdutton!)
