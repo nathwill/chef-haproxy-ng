@@ -60,13 +60,22 @@ when 'source'
   cookbook_file '/etc/init/haproxy.conf' do
     source 'haproxy.conf'
     mode '0644'
-    only_if { File.directory?('/etc/init') }
+    only_if { File.executable?('/sbin/initctl') }
   end
 
-  cookbook_file '/etc/systemd/system/haproxy.service' do
-    source 'haproxy.service'
-    only_if { File.directory?('/etc/systemd/system') }
-    not_if { File.directory?('/etc/init') }
+  systemd_service 'haproxy' do
+    description 'HAProxy Load Balancer'
+    documentation 'http://www.haproxy.org/#docs'
+    install do
+      wanted_by 'multi-user.target'
+    end
+    service do
+      exec_start_pre '/usr/local/sbin/haproxy -f /etc/haproxy/haproxy.cfg -c -q'
+      exec_start '/usr/local/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid' # rubocop: disable LineLength
+      exec_reload '/bin/kill -USR2 $MAINPID'
+      restart 'always'
+    end
+    only_if { IO.read('/proc/1/comm').chomp == 'systemd' }
   end
 else
   Chef::Log.warn 'Unknown install_method for haproxy. Skipping install!'

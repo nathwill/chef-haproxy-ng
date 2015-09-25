@@ -22,7 +22,7 @@ cookbook_file '/etc/default/haproxy' do
 end
 
 service 'haproxy' do
-  if File.directory?('/etc/init') &&
+  if File.executable?('/sbin/initctl') &&
      node['haproxy']['install_method'] == 'source'
     provider Chef::Provider::Service::Upstart
   end

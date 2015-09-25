@@ -14,3 +14,4 @@ end
 
 depends 'apt'
 depends 'ark'
+depends 'systemd'
