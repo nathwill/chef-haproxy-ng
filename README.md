@@ -224,6 +224,7 @@ and typically to one or more listening ports or sockets.
 |default_backend|argument to `default_backend` keyword|nil|
 |use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
 |config|array of frontend keywords, validated against whitelist|[]|
+|config_tail|same as 'config' only appended after acls|[]|
 
 For example, this resource:
 
@@ -248,6 +249,9 @@ haproxy_frontend 'www' do
   config [
     'option clitcpka'
   ]
+  config_tail [
+    'http-request allow if inside'
+  ]
 end
 ```
 
@@ -260,6 +264,7 @@ frontend www
   option clitcpka
   description http frontend
   acl inside src 10.0.0.0/8
+  http-request allow if inside
   default_backend app
   use_backend app if inside
 ```
@@ -278,6 +283,7 @@ Maps to a backend configuration block in haproxy configuration.
 |source|string specifying args to source keyword|nil|
 |servers|array of hashes, each requiring 'name', 'address', 'port' keys. 'config' key optional|[]|
 |config|array of backend keywords, validated against whitelist|[]|
+|config_tail|same as 'config' only appended after acls|[]|
 
 For example, this resource:
 
@@ -310,6 +316,9 @@ haproxy_backend 'app' do
   config [
     'option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost'
   ]
+  config_tail [
+    'http-request allow if inside'
+  ]
 end
 ```
 
@@ -322,6 +331,7 @@ backend app
   option httpchk GET /health_check HTTP/1.1\r\nHost:\ localhost
   description app pool
   acl inside src 10.0.0.0/8
+  http-request allow if inside
   source 10.0.2.15
   server app01 12.34.56.78:80 check inter 5000 rise 2 fall 5
   server app02 22.4.56.78:80 check inter 5000 rise 2 fall 5
@@ -346,6 +356,7 @@ for tcp-mode proxies with a 1:1 frontend:backend mapping.
 |default_backend|argument to `default_backend` keyword|nil|
 |use_backends|array of hashes, each requiring 'backend', 'condition', keys|[]|
 |config|array of listen keywords, validated against whitelist|[]|
+|config_tail|same as 'config' only appended after acls|[]|
 
 For example, this resource:
 
@@ -379,6 +390,9 @@ haproxy_listen 'mysql' do
   config [
     'option mysql-check'
   ]
+  config_tail [
+    'http-request allow if inside'
+  ]
 end
 ```
 
@@ -392,6 +406,7 @@ listen mysql
   option mysql-check
   description mysql pool
   acl inside src 10.0.0.0/8
+  http-request allow if inside
   source 10.0.2.15
   server mysql01 12.34.56.89:3306 maxconn 500 check port 3306 inter 2s backup
   server mysql02 12.34.56.90:3306 maxconn 500 check port 3306 inter 2s backup

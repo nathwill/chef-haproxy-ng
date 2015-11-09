@@ -41,6 +41,21 @@ module Haproxy
       end
       # rubocop: enable MethodLength
 
+      # rubocop: disable MethodLength
+      def config_tail(arg = nil)
+        set_or_return(
+          :config_tail, arg,
+          :kind_of => Array,
+          :default => [],
+          :callbacks => {
+            'is a valid config' => lambda do |spec|
+              !verify || Haproxy::Proxy.valid_config?(spec, type)
+            end
+          }
+        )
+      end
+
+      # rubocop: enable MethodLength
       def description(arg = nil)
         set_or_return(
           :description, arg,
@@ -54,6 +69,9 @@ module Haproxy
         config << "description #{non_defaults.description}" if non_defaults.description
         non_defaults.acls.each do |acl|
           config << "acl #{acl['name']} #{acl['criterion']}"
+        end
+        non_defaults.config_tail.each do |cnf|
+          config << cnf
         end
         config
       end
