@@ -41,7 +41,6 @@ module Haproxy
       end
       # rubocop: enable MethodLength
 
-      # rubocop: disable MethodLength
       def config_tail(arg = nil)
         set_or_return(
           :config_tail, arg,
@@ -55,7 +54,6 @@ module Haproxy
         )
       end
 
-      # rubocop: enable MethodLength
       def description(arg = nil)
         set_or_return(
           :description, arg,
@@ -63,10 +61,9 @@ module Haproxy
         )
       end
 
-      # rubocop: disable LineLength
       def self.merged_config(config, non_defaults)
         config = Haproxy::Helpers.from_immutable_array(config)
-        config << "description #{non_defaults.description}" if non_defaults.description
+        config << "description #{non_defaults.description}" if non_defaults.description # rubocop: disable LineLength
         non_defaults.acls.each do |acl|
           config << "acl #{acl['name']} #{acl['criterion']}"
         end
