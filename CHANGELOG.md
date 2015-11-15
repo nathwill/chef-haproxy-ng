@@ -1,3 +1,7 @@
+# 1.1.1 / 2015-11-11
+
+* add config_tail option for adding config after acls (thanks @balexx!)
+
 # 1.1.0 / 2015-09-25
 
 * continuation of config merge fix to handle attributes (thanks @kwilczynski!)
