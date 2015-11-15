@@ -71,7 +71,7 @@ class Chef::Provider
       action a do
         r = new_resource
 
-        path = File.join(
+        path = ::File.join(
           Chef::Config[:file_cache_path] || '/tmp',
           "haproxy.#{r.type}.#{r.name}.cfg"
         )
