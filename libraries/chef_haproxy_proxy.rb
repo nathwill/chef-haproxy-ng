@@ -46,41 +46,24 @@ end
 
 class Chef::Provider
   class HaproxyProxy < Chef::Provider
-    def initialize(*args)
-      super
-      @proxy_file = Chef::Resource::File.new(
-        "haproxy-#{new_resource.type}-#{new_resource.name}",
-        run_context
-      )
-    end
+    provides :haproxy_proxy
 
-    def load_current_resource
-      @current_resource ||= Chef::Resource::HaproxyProxy.new(new_resource.name)
-      @current_resource.verify new_resource.verify
-      @current_resource.type new_resource.type
-      @current_resource.config new_resource.config
-      @current_resource
-    end
+    %i( create delete ).each do |a|
+      action a do
+        r = new_resource
 
-    def action_create
-      new_resource.updated_by_last_action(edit_proxy(:create))
-    end
+        path = File.join(
+          Chef::Config[:file_cache_path] || '/tmp',
+          "haproxy.#{r.type}.#{r.name}.cfg"
+        )
 
-    def action_delete
-      new_resource.updated_by_last_action(edit_proxy(:delete))
-    end
+        f = file path do
+          content Haproxy::Proxy.config_block(r)
+          action a
+        end
 
-    private
-
-    def edit_proxy(exec_action)
-      @proxy_file.mode '0640'
-      @proxy_file.path ::File.join(
-        Chef::Config['file_cache_path'] || '/tmp',
-        "haproxy.#{@current_resource.type}.#{@current_resource.name}.cfg"
-      )
-      @proxy_file.content Haproxy::Proxy.config_block(@current_resource)
-      @proxy_file.run_action exec_action
-      @proxy_file.updated_by_last_action?
+        new_resource.updated_by_last_action(f.updated_by_last_action?)
+      end
     end
   end
 end
