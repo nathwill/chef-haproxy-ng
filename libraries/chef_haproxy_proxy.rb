@@ -24,6 +24,7 @@ require_relative 'haproxy'
 
 class Chef::Resource
   class HaproxyProxy < Chef::Resource::LWRPBase
+    include Chef::Mixin::ParamsValidate
     include Haproxy
 
     resource_name :haproxy_proxy
@@ -32,20 +33,38 @@ class Chef::Resource
     actions :create, :delete
     default_action :create
 
-    attribute :verify, kind_of: [TrueClass, FalseClass], default: true
-    attribute :type, kind_of: String, required: true, equal_to: %w(
-      defaults frontend backend listen peers userlist
-    )
-    attribute :config, kind_of: Array, default: [], callbacks: {
-      "is a valid #{type} config" => lambda do |spec|
-        !verify || Haproxy::Proxy.valid_config?(spec, type)
-      end
-    }
+    def verify(arg = nil)
+      set_or_return(
+        :verify, arg,
+        kind_of: [TrueClass, FalseClass],
+        default: true
+      )
+    end
+
+    def type(arg = nil)
+      set_or_return(
+        :type, arg,
+        kind_of: String,
+        required: true,
+        equal_to: %w( defaults frontend backend listen peers userlist )
+      )
+    end
+
+    def config(arg = nil)
+      set_or_return(
+        :config, arg,
+        kind_of: Array, default: [], callbacks: {
+          "is a valid #{type} config" => lambda do |spec|
+            !verify || Haproxy::Proxy.valid_config?(spec, type)
+          end
+        }
+      )
+    end
   end
 end
 
 class Chef::Provider
-  class HaproxyProxy < Chef::Provider
+  class HaproxyProxy < Chef::Provider::LWRPBase
     provides :haproxy_proxy
 
     %i( create delete ).each do |a|
