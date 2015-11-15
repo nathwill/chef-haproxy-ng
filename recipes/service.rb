@@ -27,7 +27,7 @@ service 'haproxy' do
     provider Chef::Provider::Service::Upstart
   end
   action [:enable, :start]
-  supports :status => :true, :restart => :true, :reload => :true
+  supports status: :true, restart: :true, reload: :true
   subscribes :reload, 'haproxy_instance[haproxy]', :delayed
   subscribes :reload, 'cookbook_file[/etc/default/haproxy]', :delayed
 end

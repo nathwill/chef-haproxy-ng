@@ -40,9 +40,9 @@ class Chef::Resource
     def peers(arg = nil)
       set_or_return(
         :peers, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
+        kind_of: Array,
+        default: [],
+        callbacks: {
           'valid peers list' => lambda do |spec|
             spec.empty? || spec.all? do |p|
               %w( name address port ).all? { |a| p.keys.include? a }

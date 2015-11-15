@@ -27,8 +27,8 @@ module Haproxy
       def default_backend(arg = nil)
         set_or_return(
           :default_backend, arg,
-          :kind_of => String,
-          :callbacks => {
+          kind_of: String,
+          callbacks: {
             'backend exists' => lambda do |spec|
               Haproxy::Helpers.proxy(spec, run_context)
                 .is_a? Chef::Resource::HaproxyProxy

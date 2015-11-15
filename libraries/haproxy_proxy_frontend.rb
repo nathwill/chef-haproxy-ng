@@ -25,7 +25,7 @@ module Haproxy
       def bind(arg = nil)
         set_or_return(
           :bind, arg,
-          :kind_of => [String, Array]
+          kind_of: [String, Array]
         )
       end
 
@@ -33,9 +33,9 @@ module Haproxy
       def use_backends(arg = nil)
         set_or_return(
           :use_backends, arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
+          kind_of: Array,
+          default: [],
+          callbacks: {
             'is a valid use_backends list' => lambda do |spec|
               spec.empty? || spec.all? do |u|
                 %w( backend condition ).all? do |a|

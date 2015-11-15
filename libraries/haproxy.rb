@@ -27,8 +27,8 @@ module Haproxy
   def verify(arg = nil)
     set_or_return(
       :verify, arg,
-      :kind_of => [TrueClass, FalseClass],
-      :default => true
+      kind_of: [TrueClass, FalseClass],
+      default: true
     )
   end
 end

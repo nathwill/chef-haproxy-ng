@@ -28,8 +28,8 @@ module Haproxy
       def balance(arg = nil)
         set_or_return(
           :balance, arg,
-          :kind_of => String,
-          :callbacks => {
+          kind_of: String,
+          callbacks: {
             'is a valid balance algorithm' => lambda do |spec|
               Haproxy::Proxy::Backend::BALANCE_ALGORITHMS.any? do |a|
                 spec.start_with? a
@@ -43,7 +43,7 @@ module Haproxy
       def source(arg = nil)
         set_or_return(
           :source, arg,
-          :kind_of => String
+          kind_of: String
         )
       end
 

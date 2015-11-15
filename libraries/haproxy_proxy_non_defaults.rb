@@ -26,9 +26,9 @@ module Haproxy
       def acls(arg = nil)
         set_or_return(
           :acls, arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
+          kind_of: Array,
+          default: [],
+          callbacks: {
             'is a valid list of acls' => lambda do |spec|
               spec.empty? || spec.all? do |a|
                 %w( name criterion ).all? do |k|
@@ -44,9 +44,9 @@ module Haproxy
       def config_tail(arg = nil)
         set_or_return(
           :config_tail, arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
+          kind_of: Array,
+          default: [],
+          callbacks: {
             'is a valid config' => lambda do |spec|
               !verify || Haproxy::Proxy.valid_config?(spec, type)
             end
@@ -57,7 +57,7 @@ module Haproxy
       def description(arg = nil)
         set_or_return(
           :description, arg,
-          :kind_of => String
+          kind_of: String
         )
       end
 

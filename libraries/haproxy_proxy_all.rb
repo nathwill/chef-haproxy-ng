@@ -27,8 +27,8 @@ module Haproxy
       def mode(arg = nil)
         set_or_return(
           :mode, arg,
-          :kind_of => String,
-          :equal_to => Haproxy::Proxy::MODES
+          kind_of: String,
+          equal_to: Haproxy::Proxy::MODES
         )
       end
 
