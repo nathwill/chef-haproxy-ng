@@ -20,6 +20,7 @@
 # limitations under the License.
 #
 
+require 'chef/resource'
 require_relative 'haproxy'
 
 class Chef::Resource
