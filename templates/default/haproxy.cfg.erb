@@ -3,5 +3,5 @@
 <%= Haproxy::Instance.config_block(@instance) %>
 <% @instance.proxies.each do |p| %>
 
-<%= Haproxy::Proxy.config_block(p) %>
+<%= ::File.read(::File.join(Chef::Config['file_cache_path'] || '/tmp', "haproxy.#{p.type}.#{p.name}.cfg")) %>
 <% end %>
