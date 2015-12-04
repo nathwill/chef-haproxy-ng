@@ -1,3 +1,7 @@
+# 1.2.0 / 2015-12-03
+
+* fix issue with using attributes as proxy config arg by reading proxy-provider generated stub (thanks @wktmeow)
+
 # 1.1.1 / 2015-11-11
 
 * add config_tail option for adding config after acls (thanks @balexx!)
