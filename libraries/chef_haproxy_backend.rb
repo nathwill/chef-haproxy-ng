@@ -24,18 +24,12 @@ require_relative 'chef_haproxy_proxy'
 
 class Chef::Resource
   class HaproxyBackend < Chef::Resource::HaproxyProxy
-    identity_attr :name
+    resource_name :haproxy_backend
 
     include ::Haproxy::Proxy::All
     include ::Haproxy::Proxy::NonDefaults
     include ::Haproxy::Proxy::DefaultsBackend
     include ::Haproxy::Proxy::Backend
-
-    def initialize(name, run_context = nil)
-      super
-      @resource_name = :haproxy_backend
-      @provider = Chef::Provider::HaproxyBackend
-    end
 
     def type(_ = nil)
       'backend'
@@ -45,14 +39,7 @@ end
 
 class Chef::Provider
   class HaproxyBackend < Chef::Provider::HaproxyProxy
-    def load_current_resource
-      @current_resource ||=
-        Chef::Resource::HaproxyBackend.new(new_resource.name)
-      @current_resource.verify new_resource.verify
-      @current_resource.type new_resource.type
-      @current_resource.config merged_config(new_resource)
-      @current_resource
-    end
+    provides :haproxy_backend
 
     private
 

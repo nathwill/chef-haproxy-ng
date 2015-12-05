@@ -38,9 +38,9 @@ class Chef::Resource
     def users(arg = nil)
       set_or_return(
         :user, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
+        kind_of: Array,
+        default: [],
+        callbacks: {
           'valid users list' => lambda do |spec|
             spec.empty? || spec.all? do |u|
               %w( name config ).all? { |a| u.keys.include? a }
@@ -53,9 +53,9 @@ class Chef::Resource
     def groups(arg = nil)
       set_or_return(
         :group, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
+        kind_of: Array,
+        default: [],
+        callbacks: {
           'valid groups list' => lambda do |spec|
             spec.empty? || spec.all? do |g|
               %w( name config ).all? { |a| g.keys.include? a }

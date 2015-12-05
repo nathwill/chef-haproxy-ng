@@ -40,17 +40,17 @@ class Chef::Resource
     def cookbook(arg = nil)
       set_or_return(
         :cookbook, arg,
-        :kind_of => String,
-        :default => 'haproxy-ng'
+        kind_of: String,
+        default: 'haproxy-ng'
       )
     end
 
     def config(arg = nil)
       set_or_return(
         :config, arg,
-        :kind_of => Array,
-        :default => %w( daemon ),
-        :callbacks => {
+        kind_of: Array,
+        default: %w( daemon ),
+        callbacks: {
           'is a valid config' => lambda do |spec|
             !verify || Haproxy::Instance.valid_config?(spec)
           end
@@ -61,9 +61,9 @@ class Chef::Resource
     def tuning(arg = nil)
       set_or_return(
         :tuning, arg,
-        :kind_of => Array,
-        :default => ['maxconn 256'],
-        :callbacks => {
+        kind_of: Array,
+        default: ['maxconn 256'],
+        callbacks: {
           'is a valid tuning' => lambda do |spec|
             !verify || Haproxy::Instance.valid_tuning?(spec)
           end
@@ -74,17 +74,17 @@ class Chef::Resource
     def debug(arg = nil)
       set_or_return(
         :debug, arg,
-        :kind_of => String,
-        :equal_to => %w( debug quiet )
+        kind_of: String,
+        equal_to: %w( debug quiet )
       )
     end
 
     def proxies(arg = nil)
       set_or_return(
         :proxies, arg,
-        :kind_of => Array,
-        :default => [],
-        :callbacks => {
+        kind_of: Array,
+        default: [],
+        callbacks: {
           'is a valid proxy list' => lambda do |spec|
             spec.all? { |p| p.is_a? Chef::Resource::HaproxyProxy }
           end
@@ -144,7 +144,7 @@ class Chef::Provider
       @tpl.mode '0640'
       @tpl.path "/etc/haproxy/#{@current_resource.name}.cfg"
       @tpl.source 'haproxy.cfg.erb'
-      @tpl.variables :instance => @current_resource
+      @tpl.variables instance: @current_resource
       if @current_resource.verify && (Chef::VERSION.to_f >= 12)
         @tpl.verify { |path| "haproxy -q -c -f #{path}" }
       end

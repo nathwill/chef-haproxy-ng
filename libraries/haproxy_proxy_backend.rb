@@ -38,9 +38,9 @@ module Haproxy
       def servers(arg = nil)
         set_or_return(
           :servers, arg ? arg.sort_by { |s| s['name'] } : arg,
-          :kind_of => Array,
-          :default => [],
-          :callbacks => {
+          kind_of: Array,
+          default: [],
+          callbacks: {
             'is a valid servers list' => lambda do |spec|
               spec.empty? || spec.all? do |s|
                 %w( name address port ).all? do |a|
