@@ -28,4 +28,5 @@ default['haproxy'].tap do |haproxy|
   haproxy['tuning'] = [
     'maxconn 50000'
   ]
+  haproxy['restart'] = false
 end
