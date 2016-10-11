@@ -1,3 +1,7 @@
+# 1.2.1 / 2016-10-11
+
+* Add an attribute to allow restart or reload service control
+
 # 1.2.0 / 2015-12-03
 
 * fix issue with using attributes as proxy config arg by reading proxy-provider generated stub (thanks @wktmeow)
