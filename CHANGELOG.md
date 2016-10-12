@@ -1,4 +1,4 @@
-# 1.2.1 / 2016-10-11
+# 1.2.1 / 2016-10-12
 
 * Add an attribute to allow restart or reload service control
 
