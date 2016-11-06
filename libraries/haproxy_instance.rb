@@ -29,28 +29,28 @@ module Haproxy
       'cpu-map',
       'crt-base',
       'daemon',
+      'description',
       'gid',
       'group',
       'log',
       'log-send-hostname',
       'log-tag',
       'nbproc',
+      'node',
       'pidfile',
-      'user',
       'ssl-default-bind-ciphers',
       'ssl-default-bind-options',
       'ssl-default-server-ciphers',
       'ssl-default-server-options',
       'ssl-server-verify',
       'stats bind-process',
+      'stats maxconn',
       'stats socket',
       'stats timeout',
-      'stats maxconn',
       'uid',
       'ulimit-n',
       'unix-bind',
-      'node',
-      'description'
+      'user'
     ]
 
     TUNING_KEYWORDS ||= %w(
@@ -65,10 +65,10 @@ module Haproxy
       maxsslrate
       maxzlibmem
       noepoll
+      nogetaddrinfo
       nokqueue
       nopoll
       nosplice
-      nogetaddrinfo
       spread-checks
       tune.bufsize
       tune.chksize
@@ -85,10 +85,10 @@ module Haproxy
       tune.sndbuf.client
       tune.sndbuf.server
       tune.ssl.cachesize
+      tune.ssl.default-dh-param
       tune.ssl.force-private-cache
       tune.ssl.lifetime
       tune.ssl.maxrecord
-      tune.ssl.default-dh-param
       tune.zlib.memlevel
       tune.zlib.windowsize
     )
