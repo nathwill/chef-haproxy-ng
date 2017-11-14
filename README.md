@@ -1,5 +1,8 @@
 # haproxy-ng cookbook  [![Build Status](https://travis-ci.org/nathwill/chef-haproxy-ng.svg?branch=master)](https://travis-ci.org/nathwill/chef-haproxy-ng)
 
+This cookbook is deprecated, check out the [haproxy](https://github.com/sous-chefs/haproxy) cookbook instead.
+
+
 A resource-driven cookbook for configuring [HAProxy](http://www.haproxy.org/).
 
 Cookbook builds on 2 core resources:
